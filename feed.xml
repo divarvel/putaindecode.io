@@ -1,82 +1,123 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 05 Dec 2015 15:29:37 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 05 Dec 2015 20:13:42 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
+Elles n’apportent rien de plus en terme de fonctionnalité. Toutefois, l’objectif
+de cette évolution est de rendre le code plus lisible et plus facilement
+accessible.</p>
+<h2 id="d-claration-de-classes"><a class="markdownIt-Anchor" href="#d-claration-de-classes">#</a> Déclaration de classes</h2>
+<p>Oubliez les fonctions anonymes et les prototypes, la sémantique a pris le
+relais, comme vous pouvez le constater dans l’exemple de déclaration de la
+classe <code>User</code> :</p>
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+  <span class="hljs-comment">// méthode constructor</span>
+  constructor(firstname, lastname) {
+    <span class="hljs-keyword">this</span>.firstname = firstname;
+    <span class="hljs-keyword">this</span>.lastname = lastname;
+  }
 
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+  sayName() {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span> <span class="hljs-subst">${this.lastname}</span>`</span>
+  }
+}
 
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
+
+<span class="hljs-comment">// appel de la méthode sayName()</span>
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
+<p>Pour rappelle, voici une <a href="https://gist.github.com/magsout/a876b2fa8240a987e523">façon possible
+d’écrire</a> cette classe en
+<code>es5</code> :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">User</span>(<span class="hljs-params">firstname, lastname</span>) </span>{
+  <span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> User)) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">"Class constructors cannot be invoked without 'new'"</span>)
+  }
+  <span class="hljs-keyword">this</span>.firstname = firstname
+  <span class="hljs-keyword">this</span>.lastname = lastname
+}
+
+User.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstname + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.lastname
+}
+
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
+
+<span class="hljs-comment">// appel de la méthode sayName()</span>
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
+<h2 id="expressions-de-classes"><a class="markdownIt-Anchor" href="#expressions-de-classes">#</a> Expressions de classes</h2>
+<p>Toutes les méthodes s’écrivent comme de simples fonctions à l’intérieur de la
+classe. Bien entendu les getter/setter sont toujours de la partie mais, bien
+plus simple à utiliser :</p>
+<pre><code class="language-JS"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+  <span class="hljs-comment">// constructor</span>
+  constructor(firstname, lastname, type) {
+    <span class="hljs-keyword">this</span>.firstname = firstname
+    <span class="hljs-keyword">this</span>.lastname = lastname
+    <span class="hljs-keyword">this</span>.type = type
+  }
+
+  <span class="hljs-comment">// méthode</span>
+  sayName() {
+   <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span>  <span class="hljs-subst">${this.lastname}</span>`</span>
+  }
+
+  <span class="hljs-comment">// getter</span>
+  get role() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type
+  }
+
+  <span class="hljs-comment">// setter</span>
+  set role(value) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type = value
+  }
+}
+
+<span class="hljs-comment">// le `new` est obligatoire pour appeler une classe</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>, <span class="hljs-string">"Contributor"</span>)
+
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span>
+<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Contributor</span>
+user.role = <span class="hljs-string">"owner"</span>
+<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Owner</span></code></pre>
+<h2 id="l-h-ritage"><a class="markdownIt-Anchor" href="#l-h-ritage">#</a> L’héritage</h2>
+<p>Pour qu’une sous-classe hérite d’une autre classe on utilisera pour cela le mot
+clé <code>extends</code>.</p>
+<p>En utilisant notre exemple précédent :</p>
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname, numberCommit) {
+
+    <span class="hljs-comment">// le mot clé super est utilisé comme super contructeur. Il permet d'appeler</span>
+    <span class="hljs-comment">// et d'avoir accés aux méthodes du parent</span>
+    <span class="hljs-keyword">super</span>(firstname, lastname)
+    <span class="hljs-keyword">this</span>.numberCommit = numberCommit
+  }
+
+  sayNameWithCommit() {
+    <span class="hljs-comment">// on peut appeler une méthode de la classe parente avec `super.method`</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.sayName() + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.sayNumberCommit()
+  }
+
+  sayNumberCommit() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numberCommit
+  }
+}
+
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">const</span> contributor = <span class="hljs-keyword">new</span> Contributor(<span class="hljs-string">'Jane'</span>, <span class="hljs-string">'Smith'</span>, <span class="hljs-number">10</span>)
+
+<span class="hljs-comment">// appel de la méthode sayName()</span>
+<span class="hljs-built_in">console</span>.log(contributor.sayName())
+<span class="hljs-built_in">console</span>.log(contributor.sayNumberCommit())</code></pre>
+<p>A ce propos, voici une <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">vidéo</a> très
+intéressante sur le principe de la composition plutôt que de l’héritage.</p>
+<h2 id="that-s-it"><a class="markdownIt-Anchor" href="#that-s-it">#</a> That’s it</h2>
+<p>Concrètement, tout ce qui est possible de faire avec cette nouvelle notation l’était bien entendue
+<a href="https://gist.github.com/bloodyowl/7edc9c973d2236ed17e1">avant</a>.</p>
+<p>Au final, on gagne en clarté, en lisibilité et donc en maintenabilité.</p>
+<p>À l’heure actuelle, il est nécessaire de passer par un transpileur comme
+<a href="https://babeljs.io/">babel</a> pour utiliser les classes.</p>
+<p>Une dernière petite chose, en utilisant les classes on active automatiquement le
+<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">mode strict</a>, il n’est donc pas nécessaire de le rajouter manuellement.</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -155,7 +196,85 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
@@ -2578,121 +2697,4 @@ avec : <code>docker stop node-app</code> et le supprimer avec <code>docker rm no
 Docker Hub et comment les instancier afin de créer des conteneurs. Mais pour aller
 plus loin, ce serait bien si nous pouvions créer nos propres images, c’est ce que
 nous apprendrons à faire à l’aide des Dockerfile dans le prochain article.</p>
-]]></description><link>http://putaindecode.io/fr/articles/docker/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/docker/</guid><pubDate>Thu, 11 Jun 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Les webhooks GitHub]]></title><description><![CDATA[<p>Vous avez pu lire récemment une <a href="/fr/articles/ci/deploiement-continu/">introduction sur l’intégration
-continue</a> qui mène vers <a href="/fr/articles/ci/">le déploiement
-continu</a>. Si vous utilisez GitHub pour héberger vos
-sources et que vous cherchez un moyen très simple (peut-être un peu trop) de
-mettre en place le déploiement continu <em>sans serveur d’intégration continue
-dédié</em>, alors les webhooks peuvent répondre parfaitement à votre besoin.</p>
-<h2 id="les-quoi"><a class="markdownIt-Anchor" href="#les-quoi">#</a> Les quoi ?</h2>
-<p>Les webhooks permettent de lancer une action de façon automatique par
-l’intermédiaire d’un ou plusieurs événements depuis un dépôt
-<a href="http://github.com">GitHub</a>. Concrètement, il va être possible de déployer son
-projet sur un serveur de production, sauvegarder son site Internet, ou même
-mettre à jour des stats dès qu’un commit sera envoyé ou même une issue ouverte.
-Il est possible de faire tout ce que l’on veut dans la limite de son imagination
-comme l’explique GitHub.</p>
-<h2 id="comment-a-marche"><a class="markdownIt-Anchor" href="#comment-a-marche">#</a> Comment ça marche ?</h2>
-<p>Le fonctionnement est on ne peut plus simple, un événement (merge, push, release
-etc.) va déclencher une requête HTTP POST vers l’URL que vous avez configurée.
-Le reste de l’exécution se fera sur le serveur où pointe l’URL, libre à vous
-d’écrire le script que vous voulez pour effectuer les opérations que vous
-souhaitez.</p>
-<p>Il faut cependant être conscient que la simplification a un coût, à savoir que
-même si une PR ou un commit venaient à rendre inopérant votre projet l’événement
-se lancerait quand même.</p>
-<h2 id="la-mise-en-place"><a class="markdownIt-Anchor" href="#la-mise-en-place">#</a> La mise en place</h2>
-<p>Seul le propriétaire d’un dépôt dispose des droits nécessaires pour configurer
-un webhook. Il suffit pour cela de se rendre dans <code>Settings</code> puis <code>Webhooks &amp; Services</code> :</p>
-<p><img src="setting_webhook.jpg" alt="Settings Webhooks GitHub"></p>
-<p>Un petit clic sur <code>Add webhook</code> et vous obtenez une interface encore une fois
-très simple :</p>
-<p><img src="configuration_webhook.jpg" alt="Configuration Webhooks GitHub"></p>
-<p>Cette interface se compose de trois parties :</p>
-<ol>
-<li>l’URL vers laquelle votre requête sera lancée</li>
-<li>une secret key pour sécuriser votre requête</li>
-<li>l’événement qui va déclencher votre requête</li>
-</ol>
-<p>La partie événement est relativement complète et là encore vous disposez de
-trois possibilités :</p>
-<ol>
-<li>se déclenche au push</li>
-<li>se déclenche à chaque événement</li>
-<li>à vous de choisir les événements (un ou plusieurs) qui vous conviennent</li>
-</ol>
-<p>Une fois le <em>Webhook</em> activé un premier test ou plus exactement un <code>ping</code> va se
-lancer. Il permettra de détecter que votre serveur répond bien à la requête :</p>
-<p><img src="test_webhook.jpg" alt="Test Webhooks request GitHub"></p>
-<p>La requête envoyée est très basique et embarque un JSON sur les informations de
-votre dépôt (description, URL) et une liste des API mises à disposition. Le
-reste du travail doit se faire sur votre serveur par l’intermédiaire de votre
-API/script, etc.</p>
-<p>Voici un petit exemple utilisant <code>express</code> :</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express"</span>)
-<span class="hljs-keyword">var</span> app = express()
-<span class="hljs-keyword">var</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">"body-parser"</span>)
-<span class="hljs-keyword">var</span> xhub = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express-x-hub"</span>)
-
-<span class="hljs-comment">//Const</span>
-<span class="hljs-keyword">var</span> xhubSecret = <span class="hljs-string">"MySecretKey"</span>
-<span class="hljs-keyword">var</span> port = <span class="hljs-string">"8085"</span>
-<span class="hljs-keyword">var</span> host = <span class="hljs-string">"localhost"</span>
-
-<span class="hljs-comment">//Secret key</span>
-app.use(xhub({ algorithm: <span class="hljs-string">"sha1"</span>, secret: xhubSecret }))
-
-<span class="hljs-comment">// Configure express json</span>
-app.use(bodyParser.json())
-
-<span class="hljs-comment">// Main : Start the express http server</span>
-<span class="hljs-keyword">var</span> server = app.listen(port, host, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(
-    <span class="hljs-string">"App listening at http://%s:%s"</span>,
-    server.address().address,
-    server.address().port
-  )
-})
-
-<span class="hljs-comment">// Add default route</span>
-app.post(<span class="hljs-string">"/webhook"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
-  <span class="hljs-keyword">if</span>(!req.isXHubValid()){
-    res.status(<span class="hljs-number">400</span>).send(<span class="hljs-string">'Invalid X-Hub Request'</span>)
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Secret key is invalid"</span>)
-    <span class="hljs-keyword">return</span>
-  }
-
-  <span class="hljs-keyword">var</span> command = req.headers[<span class="hljs-string">"x-github-event"</span>]
-
-  <span class="hljs-keyword">switch</span>(command) {
-
-    <span class="hljs-comment">//Event create (Branch, or tag created)</span>
-    <span class="hljs-keyword">case</span> <span class="hljs-string">"create"</span>:
-      res.send(<span class="hljs-string">"Event create trigger"</span>)
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Create event"</span>)
-      <span class="hljs-keyword">break</span>
-
-    <span class="hljs-comment">//Event release (Release published in a repository)</span>
-    <span class="hljs-keyword">case</span> <span class="hljs-string">"release"</span>:
-      res.send(<span class="hljs-string">"Event release trigger"</span>)
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Release Event"</span>)
-      <span class="hljs-keyword">break</span>
-
-    <span class="hljs-keyword">default</span>:
-      res.status(<span class="hljs-number">400</span>).send(<span class="hljs-string">"Event not supported : "</span> + command)
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Event not supported : "</span> + req.headers[<span class="hljs-string">"X-Github-Event"</span>])
-  }
-})</code></pre>
-<p>Pour vous donner une idée de ce que peut envoyer GitHub, voici deux gists :</p>
-<ul>
-<li><a href="header.txt">Headers</a></li>
-<li><a href="payload.json">Payload</a></li>
-</ul>
-<h2 id="this-is-just-the-beginning"><a class="markdownIt-Anchor" href="#this-is-just-the-beginning">#</a> This is just the beginning</h2>
-<p>Cette solution est un début de piste pour le déploiement continu, mais elle ne
-doit pas se faire sans une solution de test que ce soit coté GitHub ou coté
-serveur.</p>
-<p>Si vous souhaitez plus d’informations ou même pousser un peu plus la mise en
-place des webhooks, GitHub a comme à son habitude publié un
-<a href="https://developer.github.com/webhooks/">guide</a> très bien détaillé et complet.</p>
-]]></description><link>http://putaindecode.io/fr/articles/github/webhooks/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/github/webhooks/</guid><pubDate>Tue, 09 Jun 2015 00:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>http://putaindecode.io/fr/articles/docker/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/docker/</guid><pubDate>Thu, 11 Jun 2015 00:00:00 GMT</pubDate></item></channel></rss>
