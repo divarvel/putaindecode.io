@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:28:58 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:34:12 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -68,7 +68,7 @@ Les tags sont des fonctions que l’on place juste avant une template string et
 qui permettent de modifier le contenu de la dite chaîne de caractères.</p>
 <p>Ce tag aura pour paramètres un tableau de “literals” (les chaines de caractères),
 et ensuite tous les paramètres correspondront aux valeurs interpolées qui auront
-déjà évaluées, mais que l’on pourra quand même modifier.</p>
+déjà été évaluées, mais que l’on pourra quand même modifier.</p>
 <pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
 
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
