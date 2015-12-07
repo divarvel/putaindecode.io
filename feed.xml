@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:13:39 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:28:58 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -120,7 +120,7 @@ et on peut s’en servir, ou ne pas l’être, dans ce cas une erreur arrive et 
 peut réagir en conséquence.</p>
 <p>Ce mécanisme permet de remplacer les callbacks d’une manière plus élégante. Au
 revoir, la suite de callbacks qui rend votre code illisible ! Vous ne me croyez
-pas ? Voici un exemple pour vous le prouvez :</p>
+pas ? Voici un exemple pour vous le prouver :</p>
 <pre><code class="language-javascript"><span class="hljs-comment">// En utilisant les callbacks</span>
 <span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
 <span class="hljs-comment">// plus ou moins complexes (requête HTTP, appel à une base de données</span>
