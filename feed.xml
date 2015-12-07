@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 07:15:53 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 07:49:13 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -411,7 +411,7 @@ classe <code>User</code> :</p>
 
 <span class="hljs-comment">// appel de la méthode sayName()</span>
 <span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
-<p>Pour rappelle, voici une <a href="https://gist.github.com/magsout/a876b2fa8240a987e523">façon possible
+<p>Pour rappel, voici une <a href="https://gist.github.com/magsout/a876b2fa8240a987e523">façon possible
 d’écrire</a> cette classe en
 <code>es5</code> :</p>
 <pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">User</span>(<span class="hljs-params">firstname, lastname</span>) </span>{
@@ -433,8 +433,8 @@ User.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">
 <span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
 <h2 id="expressions-de-classes"><a class="markdownIt-Anchor" href="#expressions-de-classes">#</a> Expressions de classes</h2>
 <p>Toutes les méthodes s’écrivent comme de simples fonctions à l’intérieur de la
-classe. Bien entendu les getter/setter sont toujours de la partie mais, bien
-plus simple à utiliser :</p>
+classe. Bien entendu, les getter/setter sont toujours de la partie mais bien
+plus simples à utiliser :</p>
 <pre><code class="language-JS"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
   <span class="hljs-comment">// constructor</span>
   constructor(firstname, lastname, type) {
@@ -467,14 +467,14 @@ plus simple à utiliser :</p>
 user.role = <span class="hljs-string">"owner"</span>
 <span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Owner</span></code></pre>
 <h2 id="l-h-ritage"><a class="markdownIt-Anchor" href="#l-h-ritage">#</a> L’héritage</h2>
-<p>Pour qu’une sous-classe hérite d’une autre classe on utilisera pour cela le mot
+<p>Pour qu’une sous-classe hérite d’une autre classe on utilisera le mot
 clé <code>extends</code>.</p>
 <p>En utilisant notre exemple précédent :</p>
 <pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">User</span> </span>{
   constructor(firstname, lastname, numberCommit) {
 
     <span class="hljs-comment">// le mot clé super est utilisé comme super contructeur. Il permet d'appeler</span>
-    <span class="hljs-comment">// et d'avoir accés aux méthodes du parent</span>
+    <span class="hljs-comment">// et d'avoir accès aux méthodes du parent</span>
     <span class="hljs-keyword">super</span>(firstname, lastname)
     <span class="hljs-keyword">this</span>.numberCommit = numberCommit
   }
@@ -495,10 +495,10 @@ clé <code>extends</code>.</p>
 <span class="hljs-comment">// appel de la méthode sayName()</span>
 <span class="hljs-built_in">console</span>.log(contributor.sayName())
 <span class="hljs-built_in">console</span>.log(contributor.sayNumberCommit())</code></pre>
-<p><strong>Rappel: <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">préférez la composition à l’héritage</a>.</strong></p>
+<p><strong>Rappel : <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">préférez la composition à l’héritage</a>.</strong></p>
 <h2 id="that-s-it"><a class="markdownIt-Anchor" href="#that-s-it">#</a> That’s it</h2>
 <p>Concrètement, tout ce qui est possible de faire avec cette nouvelle notation
-l’était bien entendue
+l’était bien entendu
 <a href="https://gist.github.com/bloodyowl/7edc9c973d2236ed17e1">avant</a>.</p>
 <p>Au final, on gagne en clarté, en lisibilité et donc en maintenabilité.</p>
 <p>À l’heure actuelle, il est nécessaire de passer par un transpileur comme
