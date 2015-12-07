@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:34:12 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:42:52 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des templates strings qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
-<p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
+<p>Pour définir une chaine en JavaScript, il faut utiliser soit des single quotes,
 soit des double quotes. Malheureusement ces délimiteurs posent quelques
 problème lorsque justement la chaine contient un single quote ou une
 double quote.</p>
-<p>Ainsi les templates strings utilisent le caractère “backtick” ou accent grave
-simple pour délimiter les chaînes de caractères.</p>
+<p>Ainsi, les templates strings utilisent le caractère “backtick” ou accent grave
+simple pour délimiter les chaines de caractères.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'Je suis une "chaines de caractères"'</span>
+<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'Je suis une "chaine de caractères"'</span>
 
 <span class="hljs-comment">// Maintenant en ES6</span>
 <span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`Je suis une "template string"`</span></code></pre>
 <p>Jusque là, rien de bien novateur mais voyons un exemple que l’on rencontre
-tout le temps : l’interpolation d’expression dans les chaînes de texte.</p>
+tout le temps : l’interpolation d’expression dans les chaines de texte.</p>
 <h2 id="interpolation-d-expression"><a class="markdownIt-Anchor" href="#interpolation-d-expression">#</a> Interpolation d’expression</h2>
 <p>On peut maintenant directement utiliser les variables dans une template string
-si on les insert dans un placeholder qui s’écrit <code>${variable}</code>.</p>
+si on les insère dans un placeholder qui s’écrit <code>${variable}</code>.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
 <span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
 <span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
@@ -25,7 +25,7 @@ si on les insert dans un placeholder qui s’écrit <code>${variable}</code>.</p
 <span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
 <span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
 <p>Il est également possible de faire des traitements dans un placeholder et
-d’appeler des fonctions</p>
+d’appeler des fonctions.</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
 <span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
 <span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
@@ -36,10 +36,10 @@ d’appeler des fonctions</p>
 <span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
 <p>Ce qui rend l’utilisation des template strings extrêmement intéressante.</p>
 <h2 id="les-template-strings-multi-lignes"><a class="markdownIt-Anchor" href="#les-template-strings-multi-lignes">#</a> Les template strings multi-lignes</h2>
-<p>Une autre avancée des template strings est le support multi-ligne, en effet en
+<p>Une autre avancée des templates strings est le support multi-ligne, en effet en
 ES5 il n’existe aucune solution esthétique (et pratique) pour générer des
-chaines multi-ligne.
-Ce problème disparait avec les template strings.</p>
+chaines multi-lignes.
+Ce problème disparait avec les templates strings.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
 <span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
                  bar \
@@ -63,9 +63,9 @@ bar`</span>;
 
 str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
 <h2 id="les-template-strings-taggu-s"><a class="markdownIt-Anchor" href="#les-template-strings-taggu-s">#</a> Les template strings taggués</h2>
-<p>On entre dans les fonctions moins connues et peu utilisées des template strings.
+<p>On entre dans les fonctions moins connues et peu utilisées des templates strings.
 Les tags sont des fonctions que l’on place juste avant une template string et
-qui permettent de modifier le contenu de la dite chaîne de caractères.</p>
+qui permettent de modifier le contenu de la dite chaine de caractères.</p>
 <p>Ce tag aura pour paramètres un tableau de “literals” (les chaines de caractères),
 et ensuite tous les paramètres correspondront aux valeurs interpolées qui auront
 déjà été évaluées, mais que l’on pourra quand même modifier.</p>
@@ -97,16 +97,16 @@ capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-c
 <span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
 capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
 <p>Voici un exemple intéressant d’utilisation des template strings taggués qui
-présente un système <a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">de localization de chaînes de caractères</a>.</p>
+présente un système <a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">de localisation de chaines de caractères</a>.</p>
 <h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
 <p>Et pour finir, une nouvelle fonction a été ajouté au prototype de <code>String</code> qui
 permet d’afficher le contenu d’un template string brut. C’est à dire que la
-fonction permettra de voir les caractères d’échappements qui sont
+fonction permettra de voir les caractères d’échappement qui sont
 automatiquement gérés avec une template string.</p>
 <pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
 <h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
 <p>Les template strings sont bien utiles au quotidien, l’ajout de l’interpolation
-simplifie grandement la vie et permettent d’oublier les erreurs d’échappements.</p>
+simplifie grandement la vie et permet d’oublier les erreurs d’échappement.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des template strings…</p>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promises]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
