@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 06:41:59 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 06:51:05 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
 Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
 feature.</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -187,7 +187,172 @@ automatiquement gérés avec une template string.</p>
 simplifie grandement la vie et permettent d’oublier les erreurs d’échappements.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des template strings…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promises]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
+Javascript, les promises ! Visible depuis longtemps dans l’écosystème Javascript
+grâce a diverses librairies, on peut maintenant utiliser directement la
+spécification officiel.</p>
+<h2 id="c-est-quoi-une-promise"><a class="markdownIt-Anchor" href="#c-est-quoi-une-promise">#</a> C’est quoi une promise ?</h2>
+<p>Une promise peut être vue comme la promesse d’une valeur non-disponible
+immédiatement. Comme toute promesse, elle peut être tenue, la valeur est arrivée
+et on peut s’en servir, ou ne pas l’être, dans ce cas une erreur arrive et on
+peut réagir en conséquence.</p>
+<p>Ce mécanisme permet de remplacer les callback d’une manière plus élégante. Au
+revoir, la suite de callback qui rend votre code illisible ! Vous ne me croyez
+pas ? Voici un exemple pour vous le prouvez :</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// En utilisant les callback</span>
+<span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
+<span class="hljs-comment">// plus ou moins complexe (requête HTTP, appelle à une base de données</span>
+<span class="hljs-comment">// ou encore lecture de fichier)</span>
+<span class="hljs-keyword">const</span> functionWithCallback1 = callback =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback5 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback6 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+
+functionWithCallback1((result1, err) =&gt; {
+  <span class="hljs-keyword">if</span> (err) {
+    <span class="hljs-keyword">throw</span> err
+  }
+  functionWithCallback2(result1, (result2, err) =&gt; {
+    <span class="hljs-keyword">if</span> (err) {
+      <span class="hljs-keyword">throw</span> err
+    }
+    functionWithCallback3(result2, (result3, err) =&gt; {
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">throw</span> err
+      }
+      functionWithCallback4(result3, (result4, err) =&gt; {
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">throw</span> err
+        }
+        functionWithCallback5(result4, (result5, err) =&gt; {
+          <span class="hljs-keyword">if</span> (err) {
+            <span class="hljs-keyword">throw</span> err
+          }
+          functionWithCallback6(result5, (result6, err) =&gt; {
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">throw</span> err
+            }
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Exemple avec les callback : <span class="hljs-subst">${result6}</span>`</span>)
+          })
+        })
+      })
+    })
+  })
+})
+
+<span class="hljs-comment">// En utilisant les promises</span>
+<span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
+<span class="hljs-comment">// plus ou moins complexe (requête HTTP, appelle à une base de données</span>
+<span class="hljs-comment">// ou encore lecture de fichier)</span>
+<span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
+<span class="hljs-keyword">const</span> functionWithPromise2 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise3 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise4 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise5 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise6 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+
+functionWithPromise1()
+  .then(functionWithPromise2)
+  .then(functionWithPromise3)
+  .then(functionWithPromise4)
+  .then(functionWithPromise5)
+  .then(functionWithPromise6)
+  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Exemple avec les promises : <span class="hljs-subst">${result}</span>`</span>))
+  .catch(err =&gt; {
+    <span class="hljs-keyword">throw</span> err
+  })</code></pre>
+<p>Comme vous pouvez le voir l’exemple avec le promise est tout de même plus
+lisible !</p>
+<h2 id="trop-bien-comment-je-les-utilise"><a class="markdownIt-Anchor" href="#trop-bien-comment-je-les-utilise">#</a> Trop bien ! Comment je les utilise ?</h2>
+<p>Une promise peut avoir plusieurs états au cours de son existence :</p>
+<ul>
+<li>En cours : la valeur qu’elle contient n’est pas encore arrivée</li>
+<li>Résolue : la valeur est arrivée, on peut l’utiliser</li>
+<li>Rejetée : une erreur est survenue, on peut y réagir</li>
+</ul>
+<p>Une promise possède 2 fonctions : <code>then</code> et <code>catch</code>, vous pouvez utiliser <code>then</code>
+pour récupérer le resultat ou l’erreur d’une promise et <code>catch</code> pour récuperer
+l’erreur d’une ou plusieurs promise.</p>
+<p>Voyons comment utiliser les promise à l’aide de la future implémentation de
+fetch.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// À ce moment, la promise est en attente</span>
+<span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+
+<span class="hljs-comment">// Quand la requête est terminée la promise est résolue avec le résultat de</span>
+<span class="hljs-comment">// la requête</span>
+<span class="hljs-keyword">const</span> parsePromise = fetchPromise.then(fetchResult =&gt; {
+  <span class="hljs-comment">// Je peux retourner une nouvelle promise à partir d'un then, ici</span>
+  <span class="hljs-comment">// j'appelle .text() qui parse le contenu de la requête et retourne</span>
+  <span class="hljs-comment">// une promise</span>
+  <span class="hljs-keyword">return</span> fetchResult.text()
+})
+
+<span class="hljs-comment">// Quand le parsing est terminé je peux recuperer son contenu</span>
+parsePromise.then(textResult =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
+})
+
+<span class="hljs-comment">// Si la requête a un problème, la promise est rejetée avec une erreur</span>
+fetchPromise.catch(fetchError =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête : <span class="hljs-subst">${fetchError}</span>`</span>)
+})
+
+<span class="hljs-comment">// S'il y a une erreur pendant le parsing, je peux la récupérer</span>
+parsePromise.catch(parseError =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
+})
+
+<span class="hljs-comment">// Peut aussi être écrit</span>
+fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+  .then(fetchResult =&gt; fetchResult.text())
+  .then(textResult =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
+  })
+  .catch(error =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête ou le parsing : <span class="hljs-subst">${error}</span>`</span>)
+  })
+
+<span class="hljs-comment">// Ou encore</span>
+fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+  .then(fetchResult =&gt; {
+    <span class="hljs-keyword">return</span> fetchResult.text()
+  }, fetchError =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête : <span class="hljs-subst">${fetchError}</span>`</span>)
+  })
+  .then(textResult =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
+  }, parseError =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
+  })</code></pre>
+<h2 id="mais-comment-je-cr-e-mes-propres-promise"><a class="markdownIt-Anchor" href="#mais-comment-je-cr-e-mes-propres-promise">#</a> Mais comment je crée mes propres promise ?</h2>
+<p>C’est bien beau d’utiliser les promises, mais c’est encore mieux de savoir créer
+les vôtres ! Je vous rassure, c’est très simple.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> functionThatReturnAPromise = () =&gt; {
+  <span class="hljs-comment">// On utilise la classe Promise pour en créer une, le constructeur prend 2</span>
+  <span class="hljs-comment">// fonctions en paramètre :</span>
+  <span class="hljs-comment">// - resolve que l'on pourra appeler avec le résultat de notre fonction</span>
+  <span class="hljs-comment">// - reject que l'on pourra appeler avec une erreur s'il y a une erreur</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resove, reject) =&gt; {
+    <span class="hljs-keyword">if</span> (success) {
+      resolve(<span class="hljs-string">'success'</span>)
+    } <span class="hljs-keyword">else</span> {
+      reject(<span class="hljs-string">'failed'</span>)
+    }
+  })
+}
+
+<span class="hljs-comment">// Vous pouvez maintenant utiliser votre fonction comme vu précédemment</span>
+functionThatReturnAPromise()
+  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res)) <span class="hljs-comment">// log : 'success'</span>
+  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error)) <span class="hljs-comment">// log : 'failed'</span></code></pre>
+<h2 id="et-demain"><a class="markdownIt-Anchor" href="#et-demain">#</a> Et demain ?</h2>
+<p>Une fonctionnalité encore plus pratique que les promises arrivent en Javascript,
+les mots-clés async et await ! Ces mots-clés vous permettront d’avoir un code
+encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne pas
+ES2015 :)</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
 Elles n’apportent rien de plus en terme de fonctionnalité. Toutefois, l’objectif
 de cette évolution est de rendre le code plus lisible et plus facilement
 accessible.</p>
@@ -546,7 +711,80 @@ this way using ES5 :</p>
 <p>About the compatibility (at the time of the writing): only Firefox ≥ 43
 support this feature (and just for function…).
 So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
+an array based on their structure.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
+<span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>,
+}
+
+<span class="hljs-comment">// With ES5, you need to do</span>
+<span class="hljs-keyword">var</span> foo = myObject.foo
+<span class="hljs-keyword">var</span> bar = myObject.bar
+
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// With ES6, you can write the same with</span>
+<span class="hljs-keyword">const</span> { foo, bar } = myObject
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
+<span class="hljs-comment">// returns a function or an array)</span>
+<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    foo: <span class="hljs-number">1</span>,
+    bar: <span class="hljs-number">2</span>,
+  }
+}
+<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span></code></pre>
+<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
+<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
+<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
+<span class="hljs-comment">// of an array</span>
+<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
+<span class="hljs-comment">// commas</span>
+<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+first <span class="hljs-comment">// 1</span>
+second <span class="hljs-comment">// 2</span>
+fourth <span class="hljs-comment">// 4</span></code></pre>
+<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
+<p>For an object, the default behavior is that the name of a variable will match
+the name of the key.
+So if you have already a variable with this name, you can choose another one.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>
+}
+<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
+renamedFoo <span class="hljs-comment">// 1</span></code></pre>
+<p>This syntax doesn’t offer a good readability.</p>
+<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
+<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
+	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
+}
+
+myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
+<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
+<p>We can also nest the assignments.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: {
+    bar: <span class="hljs-number">1</span>,
+  },
+}
+<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
+bar <span class="hljs-comment">// 1</span></code></pre>
+<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
+(if the value doesn’t exist), be sure that you will have a nesting error, since
+a value will try to be retrieved from an <code>undefined</code> property.
+To prevent this issue, you will need to define
+<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Le destructuring consiste à assigner des variables provenant d’un objet ou
 tableau en reposant sur leur structure.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Partons d'un objet `myObject`</span>
@@ -620,154 +858,7 @@ bar <span class="hljs-comment">// 1</span></code></pre>
 nesting, puisqu’il essaiera d’aller chercher une propriété d’<code>undefined</code>.
 Pour pallier ces soucis, rendez-vous pour l’article sur les
 <a href="/fr/articles/js/es2015/defaults/">defaults</a>.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
-an array based on their structure.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
-<span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>,
-}
-
-<span class="hljs-comment">// With ES5, you need to do</span>
-<span class="hljs-keyword">var</span> foo = myObject.foo
-<span class="hljs-keyword">var</span> bar = myObject.bar
-
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// With ES6, you can write the same with</span>
-<span class="hljs-keyword">const</span> { foo, bar } = myObject
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
-<span class="hljs-comment">// returns a function or an array)</span>
-<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    foo: <span class="hljs-number">1</span>,
-    bar: <span class="hljs-number">2</span>,
-  }
-}
-<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span></code></pre>
-<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
-<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
-<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
-<span class="hljs-comment">// of an array</span>
-<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
-<span class="hljs-comment">// commas</span>
-<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
-first <span class="hljs-comment">// 1</span>
-second <span class="hljs-comment">// 2</span>
-fourth <span class="hljs-comment">// 4</span></code></pre>
-<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
-<p>For an object, the default behavior is that the name of a variable will match
-the name of the key.
-So if you have already a variable with this name, you can choose another one.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>
-}
-<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
-renamedFoo <span class="hljs-comment">// 1</span></code></pre>
-<p>This syntax doesn’t offer a good readability.</p>
-<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
-<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
-	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
-}
-
-myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
-<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
-<p>We can also nest the assignments.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: {
-    bar: <span class="hljs-number">1</span>,
-  },
-}
-<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
-bar <span class="hljs-comment">// 1</span></code></pre>
-<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
-(if the value doesn’t exist), be sure that you will have a nesting error, since
-a value will try to be retrieved from an <code>undefined</code> property.
-To prevent this issue, you will need to define
-<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
-<strong>storyboards</strong>.</p>
-<blockquote>
-<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
-C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
-entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
-de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
-mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
-graphiquement et simplement le workflow de l’application.</p>
-</blockquote>
-<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
-<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
-c’est génial. Mais alors pourquoi les diviser ?</p>
-<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
-<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
-conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
-même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
-est de prendre celui de quelqu’un et refaire les changements ou de corriger les
-sources en croisant les doigts. Accompagné de 4 L de café.<br>
-Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
-travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
-chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
-de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
-<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
-<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
-groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
-facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
-une <code>scene</code> à l’autre bout du storyboard.</p>
-<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
-<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
-grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
-d’éléments vous avez à recompiler, plus vite ça ira.</p>
-<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
-<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
-pour les clients, vous pouvez vous faire des petits storyboards que vous
-réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
-faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
-<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
-<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
-<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
-<span class="hljs-comment">// Aller chercher le storyboard</span>
-<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-keyword">let</span> controllerSettings =
-storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
-<span class="hljs-comment">// Présenter</span>
-<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
-<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
-<span class="hljs-comment">// Aller chercher le sotyboard</span>
-<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
-bundle:<span class="hljs-literal">nil</span>];
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
-instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
-<span class="hljs-comment">// Présenter</span>
-[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
-<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
-fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
-<ul>
-<li>créez un nouveau storyboard pour votre <em>secteur</em>
-(File→New→File→[OS]→User Interface),</li>
-<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
-(sinon le compilateur n’aime pas),</li>
-<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
-<code>Utilies&gt;Identity Inspector</code>,</li>
-<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
-<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
-<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
-votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
-<em>storyboardID</em> de la <code>scene</code>,</li>
-<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
-<em>Storyboard Reference</em> voulus.</li>
-</ul>
-<p>Plus long à lire qu’à faire !</p>
-]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
 variables grâce à <code>let</code> et <code>const</code> mais garde aussi la déclaration par <code>var</code>
 dans la spécification du langage.</p>
 <p>Première étape, on oublie tout ce qu’on sait sur <code>var</code>.</p>
@@ -995,7 +1086,81 @@ exist yet.</p>
 variable, switch to <code>let</code> (that might happen 1% of the time)</li>
 <li>If you are in the worst use-case of the world, use <code>var</code> (you can do the math)</li>
 </ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
+<strong>storyboards</strong>.</p>
+<blockquote>
+<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
+C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
+entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
+de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
+mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
+graphiquement et simplement le workflow de l’application.</p>
+</blockquote>
+<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
+<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
+c’est génial. Mais alors pourquoi les diviser ?</p>
+<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
+<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
+conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
+même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
+est de prendre celui de quelqu’un et refaire les changements ou de corriger les
+sources en croisant les doigts. Accompagné de 4 L de café.<br>
+Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
+travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
+chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
+de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
+<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
+<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
+groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
+facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
+une <code>scene</code> à l’autre bout du storyboard.</p>
+<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
+<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
+grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
+d’éléments vous avez à recompiler, plus vite ça ira.</p>
+<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
+<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
+pour les clients, vous pouvez vous faire des petits storyboards que vous
+réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
+faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
+<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
+<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
+<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
+<span class="hljs-comment">// Aller chercher le storyboard</span>
+<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-keyword">let</span> controllerSettings =
+storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
+<span class="hljs-comment">// Présenter</span>
+<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
+<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
+<span class="hljs-comment">// Aller chercher le sotyboard</span>
+<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
+bundle:<span class="hljs-literal">nil</span>];
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
+instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
+<span class="hljs-comment">// Présenter</span>
+[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
+<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
+fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
+<ul>
+<li>créez un nouveau storyboard pour votre <em>secteur</em>
+(File→New→File→[OS]→User Interface),</li>
+<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
+(sinon le compilateur n’aime pas),</li>
+<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
+<code>Utilies&gt;Identity Inspector</code>,</li>
+<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
+<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
+<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
+votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
+<em>storyboardID</em> de la <code>scene</code>,</li>
+<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
+<em>Storyboard Reference</em> voulus.</li>
+</ul>
+<p>Plus long à lire qu’à faire !</p>
+]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
 <a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>
 (rendu peu profond),
 qui permet de rendre un composant avec un seul niveau de profondeur de rendu.</p>
@@ -2527,124 +2692,4 @@ blog de <a href="https://blog.jessfraz.com/post/docker-containers-on-the-desktop
 Frazelle</a>.</p>
 <p>Dans le prochain article, je vous parlerai de docker-compose, un outil qui
 permet de lancer des applications multi-conteneurs facilement.</p>
-]]></description><link>http://putaindecode.io/fr/articles/docker/dockerfile/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/docker/dockerfile/</guid><pubDate>Thu, 02 Jul 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[SemVer, c'est quoi ?]]></title><description><![CDATA[<p><em>Ce post a été largement inspiré de la mauvaise expérience que j’ai pu avoir
-avec l’évolution de <a href="http://backbonejs.org/">Backbone.js</a> qui, ne respectant pas SemVer, m’a posé des
-problèmes lors de mise à jour de versions. Les node_modules (dépendances de
-dépendances) sont aussi en question.</em></p>
-<p>Depuis quelques temps, vous devez entendre le terme <strong>SemVer</strong> par-ci par-là
-mais peut-être que vous ne savez pas ce que c’est ou que vous ne savez pas
-comment l’appliquer. Et je vous comprends, j’ai mis un peu de temps à maitriser
-le sujet.</p>
-<p>Pour faire simple, <strong>SemVer</strong> (voulant dire <em>Semantic Versioning</em>) est une
-gestion sémantique des versions. En d’autres termes, une façon de numéroter les
-versions de manière logique, cohérente, parlante, ayant du sens. Ce n’est
-cependant pas forcément une norme, vous n’êtes pas obligé(e) de la respecter
-mais ce serait vraiment, vraiment dommage car il tend justement à l’être.</p>
-<p>Mais tout d’abord, posons les bases, qu’est-ce qu’une version ?</p>
-<p>Une version s’applique à un produit, une application, une bibliothèque, un OS,
-tout ce qui a une progression en informatique. Cela permet de définir
-l’avancement du produit. La majorité du temps (sauf pour quelques hérétiques),
-cela s’écrit de cette façon : <code>X.Y.Z</code> où <code>X</code>, <code>Y</code> et <code>Z</code> sont des entiers (pas
-forcément des chiffres d’ailleurs, cela peut être supérieur à 9) soit <code>1.0.10</code>
-par exemple. Il est possible que vous voyiez cette forme <code>vX.Y.Z</code> comme <code>v1.0.10</code>
-mais en toute franchise, je ne l’apprécie pas. J’aime que mon tag équivaille à
-ma version en elle-même. Purement personnel.</p>
-<p>Maintenant que nous savons ce qu’est une version, voyons voir ce qu’est
-réellement <strong>SemVer</strong>.</p>
-<p><strong>SemVer</strong> est un moyen cohérent, pertinent de nommer ses versions afin de
-savoir rapidement quelles modifications ont été apportées à votre projet.</p>
-<p>Voyons voir ce que dit la documentation officielle de
-<a href="http://semver.org/lang/fr/">SemVer</a></p>
-<blockquote>
-<p>Étant donné un numéro de version MAJEUR.MINEUR.CORRECTIF, il faut incrémenter :</p>
-</blockquote>
-<blockquote>
-<p>le numéro de version MAJEUR quand il y a des changements
-rétro-incompatibles,<br>
-le numéro de version MINEUR quand il y a des changements rétro-compatibles,<br>
-le numéro de version de CORRECTIF quand il y a des corrections d’anomalies
-rétro-compatibles</p>
-</blockquote>
-<blockquote>
-<p>Des libellés supplémentaires peuvent être ajoutés pour les versions de
-pré-livraison et pour des méta-données de construction sous forme d’extension du
-format MAJEURE.MINEURE.CORRECTIF.</p>
-</blockquote>
-<p>On comprend effectivement l’idée de <strong>SemVer</strong> (et la suite du site explique
-comment l’appliquer) mais je trouve que l’on peut mieux expliquer.</p>
-<p>Pour comprendre <strong>SemVer</strong>, il faut se mettre dans la peau de l’utilisateur qui
-va se servir de votre production.</p>
-<p>En effet, <strong>SemVer</strong> est un contrat que vous signez avec vos utilisateurs, une
-forme de respect qui leur permet d’adapter leur code ou non en fonction des
-versions que vous proposez.</p>
-<p>Si je devais définir à quelqu’un ce qu’est <strong>SemVer</strong>, je lui dirais ceci :</p>
-<blockquote>
-<p>SemVer s’écrit de cette façon : <code>X.Y.Z</code> où <code>X</code> est “majeur”, <code>Y</code> est “mineur”,
-<code>Z</code> est “patch”.</p>
-</blockquote>
-<blockquote>
-<p>Qu’est-ce que cela veut dire. Cela veut dire que si vous avez corrigé un bug
-dans votre lib et que cela n’affecte en rien le code écrit par votre
-utilisateur, alors incrémentez <code>Z</code> (+0.0.1).</p>
-</blockquote>
-<blockquote>
-<p>Si vous avez fait des ajouts dans votre app qui peuvent être intéressants pour
-l’utilisateur et mérite une certaine attention afin d’améliorer le code qui
-utilise votre lib, alors incrémentez <code>Y</code> (+0.1.0).</p>
-</blockquote>
-<blockquote>
-<p>Si en revanche, vous avez cassé ne serait-ce qu’une partie de l’API (“breaking
-changes”), que vous avez <em>juste</em> changé des noms de méthodes / fonctions déjà
-existantes (et donc sûrement utilisées par quelqu’un d’autre), que finalement
-cela nécessite <strong>forcément</strong> une modification de la part de l’utilisateur sous
-peine que sa propre app ne fonctionne plus, alors incrémentez <code>X</code> (+1.0.0).</p>
-</blockquote>
-<p>C’est vraiment une question de respect envers qui vous proposez votre lib. Par
-<strong>SemVer</strong>, je vous informe des potentielles modifications ou lectures de
-documentation que vous devez faire. Il ne faut vraiment pas voir ça comme une
-évolution de votre propre code.</p>
-<p>Par exemple, vous avez refactorisé tout votre code mais l’API n’a pas changé.
-Alors <code>Z</code> suffit. Et si vous avez ajoutez des méthodes, c’est plutôt <code>Y</code>.
-Pourtant il y a eu une quantité phénoménale de code modifié. Des lignes et des
-lignes. Est-ce pour autant que vous devez incrémentez <code>X</code> ? Non. Surtout lorsque
-les tests automatisés n’ont pas été modifiés et passent toujours.</p>
-<p>En revanche, vous ne faites qu’une petite modification de nom de méthode qui ne
-vous semble pas appropriée, ça ne vous prend qu’une ligne de modification, vous
-pourriez croire que c’est uniquement <code>Z</code> à changer ? Non plus. Là, vous modifiez
-le contrat que l’utilisateur a acquiescé en utilisant votre lib ; vous avez
-alors la responsabilité de lui indiquer que son code doit absolument changer
-sinon celui-ci ne marchera plus correctement.</p>
-<p>En bref, ne voyez pas l’évolution de votre projet avec <strong>SemVer</strong> mais le
-contrat que vous signez implicitement avec vos utilisateurs.</p>
-<p>Oh et oui, surtout, surtout, ce n’est pas parce que vous êtes arrivé(e) à <code>9</code>
-dans <code>Y</code> ou <code>Z</code> que le nombre le précédant doit augmenter. Par exemple <em>mineur</em>
-sur <code>1.9.0</code> ? Alors <code>1.10.0</code> et non <code>2.0.0</code>.</p>
-<p>J’espère qu’avec ceci, vous vous sentirez plus à l’aise.</p>
-<h2 id="tips-npm"><a class="markdownIt-Anchor" href="#tips-npm">#</a> Tips npm</h2>
-<p>Avec npm, il est possible de mettre à jour rapidement son <code>package.json</code> et tag
-git en utilisant la commande <code>$ npm version</code>. Comme ceci :</p>
-<pre><code class="language-console">$ npm version (major|<span class="hljs-string">minor</span>|<span class="hljs-string">patch)</span></code></pre>
-<p>Cela vous incrémentera le <code>package.json</code>  et vous fera un beau commit + tag dans
-git tel que :</p>
-<pre><code class="language-console">* b474d9c (HEAD -&gt; master, tag: <span class="hljs-number">1.5</span><span class="hljs-number">.3</span>, origin/master) <span class="hljs-number">1.5</span><span class="hljs-number">.3</span>`.</code></pre>
-<p>Et pour éviter d’avoir le “v” dans les tags git qui est par défaut dans npm,
-faites :</p>
-<pre><code class="language-console">$ npm config <span class="hljs-keyword">set</span> <span class="hljs-keyword">tag</span>-<span class="hljs-keyword">version</span>-prefix <span class="hljs-string">""</span></code></pre>
-<h2 id="changelog"><a class="markdownIt-Anchor" href="#changelog">#</a> Changelog</h2>
-<p><strong>SemVer</strong> va de pair avec les <a href="http://keepachangelog.com/">changelog</a>. Mettre à
-jour le changelog vous permet d’indiquer très rapidement ce qui a été modifié
-sans que l’utilisateur ait forcément à regarder votre code. Il est surtout très
-important lors d’ajouts de fonctionnalités ou de modifications (majeures et
-mineures) afin de voir directement les méthodes / fonctions affectées mais aussi
-dans le cas d’un patch de voir le gain obtenu de cette nouvelle mise à jour. À
-ajouter directement dans le <code>README.md</code> à la fin ou carrément dans un fichier ou
-des fichiers dédiés à ça.
-Voici un <a href="https://github.com/cssnext/cssnext/blob/master/CHANGELOG.md">exemple</a>.</p>
-<hr>
-<p>Stay safe, use <strong>SemVer</strong>.</p>
-<p>Ressources :</p>
-<ul>
-<li><a href="http://semver.org/">site officiel</a></li>
-<li><a href="http://semver-ftw.org/">semver-ftw</a></li>
-</ul>
-]]></description><link>http://putaindecode.io/fr/articles/semver/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/semver/</guid><pubDate>Tue, 16 Jun 2015 00:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>http://putaindecode.io/fr/articles/docker/dockerfile/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/docker/dockerfile/</guid><pubDate>Thu, 02 Jul 2015 00:00:00 GMT</pubDate></item></channel></rss>
