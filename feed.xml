@@ -1,115 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 06:18:31 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
-simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
-<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
-<p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
-soit des double quotes. Malheureusement ces délimiteurs posent quelques
-problème lorsque justement la chaine contient un single quote ou une
-double quote.</p>
-<p>Ainsi les templates strings utilisent le caractère “backtick” ou accent grave
-simple pour délimiter les chaînes de caractères.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'Je suis une "chaines de caractères"'</span>
-
-<span class="hljs-comment">// Maintenant en ES6</span>
-<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`Je suis une "template string"`</span></code></pre>
-<p>Jusque là, rien de bien novateur mais voyons un exemple que l’on rencontre
-tout le temps : l’interpolation d’expression dans les chaînes de texte.</p>
-<h2 id="interpolation-d-expression"><a class="markdownIt-Anchor" href="#interpolation-d-expression">#</a> Interpolation d’expression</h2>
-<p>On peut maintenant directement utiliser les variables dans une template string
-si on les insert dans un placeholder qui s’écrit <code>${variable}</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
-<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
-<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
-
-<span class="hljs-comment">// Maintenant en ES6</span>
-<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
-<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
-<p>Il est également possible de faire des traitements dans un placeholder et
-d’appeler des fonctions</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
-  <span class="hljs-keyword">return</span> num * num;
-}
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
-<p>Ce qui rend l’utilisation des template strings extrêmement intéressante.</p>
-<h2 id="les-template-strings-multi-lignes"><a class="markdownIt-Anchor" href="#les-template-strings-multi-lignes">#</a> Les template strings multi-lignes</h2>
-<p>Une autre avancée des template strings est le support multi-ligne, en effet en
-ES5 il n’existe aucune solution esthétique (et pratique) pour générer des
-chaines multi-ligne.
-Ce problème disparait avec les template strings.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
-<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
-                 bar \
-                 baz"</span>;
-
-<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
-multiline2 += <span class="hljs-string">"bar"</span>;
-multiline2 += <span class="hljs-string">"baz"</span>;
-
-<span class="hljs-comment">// Aujourd'hui en ES6</span>
-<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
-                   bar
-                   baz`</span>;</code></pre>
-<p><em>Attention</em> cependant, les espaces sont conservés avec les templates strings,
-ce qui peut surprendre si vous devez tester des strings multi-lignes.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
-bar`</span>;
-
-<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
-             bar`</span>;
-
-str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
-<h2 id="les-template-strings-taggu-s"><a class="markdownIt-Anchor" href="#les-template-strings-taggu-s">#</a> Les template strings taggués</h2>
-<p>On entre dans les fonctions moins connues et peu utilisées des template strings.
-Les tags sont des fonctions que l’on place juste avant une template string et
-qui permettent de modifier le contenu de la dite chaîne de caractères.</p>
-<p>Ce tag aura pour paramètres un tableau de “literals” (les chaines de caractères),
-et ensuite tous les paramètres correspondront aux valeurs interpolées qui auront
-déjà évaluées, mais que l’on pourra quand même modifier.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
-  
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
-      <span class="hljs-keyword">return</span> c.toUpperCase();
-    });
-  }
-  
-  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
-    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
-    result += replaceVowels(strings[i]);
-    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
-      result += replaceVowels(nextValue)
-    } <span class="hljs-keyword">else</span> {
-      result += nextValue;
-    }
-  }
-  <span class="hljs-keyword">return</span> result;
-}
-
-
-capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
-<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
-<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
-<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
-capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
-<p>Voici un exemple intéressant d’utilisation des template strings taggués qui
-présente un système <a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">de localization de chaînes de caractères</a>.</p>
-<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>Et pour finir, une nouvelle fonction a été ajouté au prototype de <code>String</code> qui
-permet d’afficher le contenu d’un template string brut. C’est à dire que la
-fonction permettra de voir les caractères d’échappements qui sont
-automatiquement gérés avec une template string.</p>
-<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>Les template strings sont bien utiles au quotidien, l’ajout de l’interpolation
-simplifie grandement la vie et permettent d’oublier les erreurs d’échappements.</p>
-<p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
-ainsi que babel et traceur, donc usez et abusez des template strings…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Invalid Date</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 06:20:48 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
 Elles n’apportent rien de plus en terme de fonctionnalité. Toutefois, l’objectif
 de cette évolution est de rendre le code plus lisible et plus facilement
 accessible.</p>
@@ -228,7 +117,196 @@ intéressante sur le principe de la composition plutôt que de l’héritage.</p
 <a href="https://babeljs.io/">babel</a> pour utiliser les classes.</p>
 <p>Une dernière petite chose, en utilisant les classes on active automatiquement le
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">mode strict</a>, il n’est donc pas nécessaire de le rajouter manuellement.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
+simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
+<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
+<p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
+soit des double quotes. Malheureusement ces délimiteurs posent quelques
+problème lorsque justement la chaine contient un single quote ou une
+double quote.</p>
+<p>Ainsi les templates strings utilisent le caractère “backtick” ou accent grave
+simple pour délimiter les chaînes de caractères.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
+<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'Je suis une "chaines de caractères"'</span>
+
+<span class="hljs-comment">// Maintenant en ES6</span>
+<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`Je suis une "template string"`</span></code></pre>
+<p>Jusque là, rien de bien novateur mais voyons un exemple que l’on rencontre
+tout le temps : l’interpolation d’expression dans les chaînes de texte.</p>
+<h2 id="interpolation-d-expression"><a class="markdownIt-Anchor" href="#interpolation-d-expression">#</a> Interpolation d’expression</h2>
+<p>On peut maintenant directement utiliser les variables dans une template string
+si on les insert dans un placeholder qui s’écrit <code>${variable}</code>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
+<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
+<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
+
+<span class="hljs-comment">// Maintenant en ES6</span>
+<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
+<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
+<p>Il est également possible de faire des traitements dans un placeholder et
+d’appeler des fonctions</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
+  <span class="hljs-keyword">return</span> num * num;
+}
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
+<p>Ce qui rend l’utilisation des template strings extrêmement intéressante.</p>
+<h2 id="les-template-strings-multi-lignes"><a class="markdownIt-Anchor" href="#les-template-strings-multi-lignes">#</a> Les template strings multi-lignes</h2>
+<p>Une autre avancée des template strings est le support multi-ligne, en effet en
+ES5 il n’existe aucune solution esthétique (et pratique) pour générer des
+chaines multi-ligne.
+Ce problème disparait avec les template strings.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
+<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
+                 bar \
+                 baz"</span>;
+
+<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
+multiline2 += <span class="hljs-string">"bar"</span>;
+multiline2 += <span class="hljs-string">"baz"</span>;
+
+<span class="hljs-comment">// Aujourd'hui en ES6</span>
+<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
+                   bar
+                   baz`</span>;</code></pre>
+<p><em>Attention</em> cependant, les espaces sont conservés avec les templates strings,
+ce qui peut surprendre si vous devez tester des strings multi-lignes.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
+bar`</span>;
+
+<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
+             bar`</span>;
+
+str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
+<h2 id="les-template-strings-taggu-s"><a class="markdownIt-Anchor" href="#les-template-strings-taggu-s">#</a> Les template strings taggués</h2>
+<p>On entre dans les fonctions moins connues et peu utilisées des template strings.
+Les tags sont des fonctions que l’on place juste avant une template string et
+qui permettent de modifier le contenu de la dite chaîne de caractères.</p>
+<p>Ce tag aura pour paramètres un tableau de “literals” (les chaines de caractères),
+et ensuite tous les paramètres correspondront aux valeurs interpolées qui auront
+déjà évaluées, mais que l’on pourra quand même modifier.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
+    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
+      <span class="hljs-keyword">return</span> c.toUpperCase();
+    });
+  }
+
+  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
+    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
+    result += replaceVowels(strings[i]);
+    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
+      result += replaceVowels(nextValue)
+    } <span class="hljs-keyword">else</span> {
+      result += nextValue;
+    }
+  }
+  <span class="hljs-keyword">return</span> result;
+}
+
+
+capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
+<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
+<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
+<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
+capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
+<p>Voici un exemple intéressant d’utilisation des template strings taggués qui
+présente un système <a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">de localization de chaînes de caractères</a>.</p>
+<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
+<p>Et pour finir, une nouvelle fonction a été ajouté au prototype de <code>String</code> qui
+permet d’afficher le contenu d’un template string brut. C’est à dire que la
+fonction permettra de voir les caractères d’échappements qui sont
+automatiquement gérés avec une template string.</p>
+<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>Les template strings sont bien utiles au quotidien, l’ajout de l’interpolation
+simplifie grandement la vie et permettent d’oublier les erreurs d’échappements.</p>
+<p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
+ainsi que babel et traceur, donc usez et abusez des template strings…</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -307,85 +385,7 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
-
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
-
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
