@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:07:10 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 07 Dec 2015 08:13:39 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les templates strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des template strings qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaines de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -110,20 +110,20 @@ simplifie grandement la vie et permettent d’oublier les erreurs d’échappeme
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des template strings…</p>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promises]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
-Javascript, les promises ! Visible depuis longtemps dans l’écosystème Javascript
+JavaScript, les promises ! Visible depuis longtemps dans l’écosystème JavaScript
 grâce a diverses librairies, on peut maintenant utiliser directement la
-spécification officiel.</p>
+spécification officielle.</p>
 <h2 id="c-est-quoi-une-promise"><a class="markdownIt-Anchor" href="#c-est-quoi-une-promise">#</a> C’est quoi une promise ?</h2>
 <p>Une promise peut être vue comme la promesse d’une valeur non-disponible
 immédiatement. Comme toute promesse, elle peut être tenue, la valeur est arrivée
 et on peut s’en servir, ou ne pas l’être, dans ce cas une erreur arrive et on
 peut réagir en conséquence.</p>
-<p>Ce mécanisme permet de remplacer les callback d’une manière plus élégante. Au
-revoir, la suite de callback qui rend votre code illisible ! Vous ne me croyez
+<p>Ce mécanisme permet de remplacer les callbacks d’une manière plus élégante. Au
+revoir, la suite de callbacks qui rend votre code illisible ! Vous ne me croyez
 pas ? Voici un exemple pour vous le prouvez :</p>
-<pre><code class="language-javascript"><span class="hljs-comment">// En utilisant les callback</span>
+<pre><code class="language-javascript"><span class="hljs-comment">// En utilisant les callbacks</span>
 <span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
-<span class="hljs-comment">// plus ou moins complexe (requête HTTP, appelle à une base de données</span>
+<span class="hljs-comment">// plus ou moins complexes (requête HTTP, appel à une base de données</span>
 <span class="hljs-comment">// ou encore lecture de fichier)</span>
 <span class="hljs-keyword">const</span> functionWithCallback1 = callback =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
@@ -164,10 +164,7 @@ functionWithCallback1((result1, err) =&gt; {
   })
 })
 
-<span class="hljs-comment">// En utilisant les promises</span>
-<span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
-<span class="hljs-comment">// plus ou moins complexe (requête HTTP, appelle à une base de données</span>
-<span class="hljs-comment">// ou encore lecture de fichier)</span>
+<span class="hljs-comment">// Et maintenant, en utilisant les promises</span>
 <span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
 <span class="hljs-keyword">const</span> functionWithPromise2 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
 <span class="hljs-keyword">const</span> functionWithPromise3 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
@@ -185,20 +182,20 @@ functionWithPromise1()
   .catch(err =&gt; {
     <span class="hljs-keyword">throw</span> err
   })</code></pre>
-<p>Comme vous pouvez le voir l’exemple avec le promise est tout de même plus
+<p>Comme vous pouvez le voir, l’exemple avec les promises est tout de même plus
 lisible !</p>
 <h2 id="trop-bien-comment-je-les-utilise"><a class="markdownIt-Anchor" href="#trop-bien-comment-je-les-utilise">#</a> Trop bien ! Comment je les utilise ?</h2>
 <p>Une promise peut avoir plusieurs états au cours de son existence :</p>
 <ul>
-<li>En cours : la valeur qu’elle contient n’est pas encore arrivée</li>
-<li>Résolue : la valeur est arrivée, on peut l’utiliser</li>
-<li>Rejetée : une erreur est survenue, on peut y réagir</li>
+<li>en cours : la valeur qu’elle contient n’est pas encore arrivée</li>
+<li>résolue : la valeur est arrivée, on peut l’utiliser</li>
+<li>rejetée : une erreur est survenue, on peut y réagir</li>
 </ul>
 <p>Une promise possède 2 fonctions : <code>then</code> et <code>catch</code>, vous pouvez utiliser <code>then</code>
-pour récupérer le resultat ou l’erreur d’une promise et <code>catch</code> pour récuperer
-l’erreur d’une ou plusieurs promise.</p>
-<p>Voyons comment utiliser les promise à l’aide de la future implémentation de
-fetch.</p>
+pour récupérer le resultat ou l’erreur d’une promise et <code>catch</code> pour récupérer
+l’erreur d’une ou plusieurs promises.</p>
+<p>Voyons comment utiliser les promises à l’aide de la future implémentation de
+<code>fetch</code>.</p>
 <pre><code class="language-javascript"><span class="hljs-comment">// À ce moment, la promise est en attente</span>
 <span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
 
@@ -211,7 +208,7 @@ fetch.</p>
   <span class="hljs-keyword">return</span> fetchResult.text()
 })
 
-<span class="hljs-comment">// Quand le parsing est terminé je peux recuperer son contenu</span>
+<span class="hljs-comment">// Quand le parsing est terminé, je peux recuperer son contenu</span>
 parsePromise.then(textResult =&gt; {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
 })
@@ -226,7 +223,7 @@ parsePromise.catch(parseError =&gt; {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
 })
 
-<span class="hljs-comment">// Peut aussi être écrit</span>
+<span class="hljs-comment">// Cela peut aussi être écrit</span>
 fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
   .then(fetchResult =&gt; fetchResult.text())
   .then(textResult =&gt; {
@@ -248,7 +245,7 @@ fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
   }, parseError =&gt; {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
   })</code></pre>
-<h2 id="mais-comment-je-cr-e-mes-propres-promise"><a class="markdownIt-Anchor" href="#mais-comment-je-cr-e-mes-propres-promise">#</a> Mais comment je crée mes propres promise ?</h2>
+<h2 id="mais-comment-je-cr-e-mes-propres-promises"><a class="markdownIt-Anchor" href="#mais-comment-je-cr-e-mes-propres-promises">#</a> Mais comment je crée mes propres promises ?</h2>
 <p>C’est bien beau d’utiliser les promises, mais c’est encore mieux de savoir créer
 les vôtres ! Je vous rassure, c’est très simple.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> functionThatReturnAPromise = () =&gt; {
@@ -270,8 +267,8 @@ functionThatReturnAPromise()
   .then(res =&gt; <span class="hljs-built_in">console</span>.log(res)) <span class="hljs-comment">// log : 'success'</span>
   .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error)) <span class="hljs-comment">// log : 'failed'</span></code></pre>
 <h2 id="et-demain"><a class="markdownIt-Anchor" href="#et-demain">#</a> Et demain ?</h2>
-<p>Une fonctionnalité encore plus pratique que les promises arrivent en Javascript,
-les mots-clés async et await ! Ces mots-clés vous permettront d’avoir un code
+<p>Une fonctionnalité encore plus pratique que les promises arrive en JavaScript,
+les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un code
 encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne pas
 ES2015 :)</p>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
