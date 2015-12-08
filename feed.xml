@@ -1,50 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 06:06:14 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 06:18:45 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
 propriété depuis une variable, la clé porte le même nom que la variable.</p>
-<pre><code><span class="hljs-variable"><span class="hljs-keyword">var</span> firstname</span> = <span class="hljs-string">"Robert"</span>;
-<span class="hljs-variable"><span class="hljs-keyword">var</span> lastname</span> = <span class="hljs-string">"Laiponje"</span>;
+<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
 
 <span class="hljs-keyword">return</span> {
   firstname: firstname,
-  lastname: lastname
+  lastname: lastname,
 }</code></pre>
 <p>Avec ES2015, on va pouvoir l’écrire comme ça :</p>
-<pre><code><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span><span class="hljs-comment">;</span>
-<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span><span class="hljs-comment">;</span>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
 
 <span class="hljs-keyword">return</span> {
   firstname,
-  lastname
+  lastname,
 }
-// { firstname: <span class="hljs-string">"Robert"</span>, lastname: <span class="hljs-string">"Laiponje"</span> }</code></pre>
+<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
 <p>De la même manière, on pourra déclarer des méthodes en se passant du mot clé
 <code>function</code>. Idem pour les <em>getter</em> / <em>setter</em>.</p>
-<pre><code><span class="hljs-keyword">const</span> obj = {
-  <span class="hljs-function"><span class="hljs-keyword">get</span> <span class="hljs-title">email</span>(<span class="hljs-params"></span>) </span>{
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
+  get email() {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
   },
-  <span class="hljs-function"><span class="hljs-keyword">set</span> <span class="hljs-title">email</span>(<span class="hljs-params">email</span>) </span>{
-    <span class="hljs-keyword">this</span>.email = email;
+  set email(email) {
+    <span class="hljs-keyword">this</span>.email = email
   },
   validateEmail(email) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
-  }</code></pre>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+  },
+}</code></pre>
 <h2 id="nom-de-propri-t-s-calcul-es"><a class="markdownIt-Anchor" href="#nom-de-propri-t-s-calcul-es">#</a> Nom de propriétés calculées</h2>
 <p>La dernière nouveauté concernant les <em>literal objects</em> va nous permettre
 de créer des noms de propriétés depuis une expression, directement à la
 création de l’objet. Auparavant, il fallait procéder en 2 temps, création
 puis affectation.</p>
-<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span></span> <span class="hljs-keyword">action</span>(<span class="hljs-keyword">type</span>, <span class="hljs-type">data</span>) {
-  var  payload = {}
-  payload[<span class="hljs-keyword">type</span>] = <span class="hljs-type">data</span>;
-  <span class="hljs-keyword">return</span> payload;
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">var</span> payload = {}
+  payload[type] = data
+  <span class="hljs-keyword">return</span> payload
 }</code></pre>
 <p>En ES2015, cela donnerait :</p>
-<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span></span> <span class="hljs-keyword">action</span>(<span class="hljs-keyword">type</span>, <span class="hljs-type">data</span>) {
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
   <span class="hljs-keyword">return</span> {
-    [<span class="hljs-keyword">type</span>]: payload
+    [type]: payload
   }
 }</code></pre>
 <p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
