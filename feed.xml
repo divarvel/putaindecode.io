@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 07:43:29 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 08:17:56 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
@@ -51,7 +51,109 @@ puis affectation.</p>
 <p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
 aussi déclarer plusieurs fois une même propriété, la dernière déclaration
 écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
+the <em>template strings</em>.</p>
+<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
+<p>To define a string in JavaScript, we have single quotes or double quotes.
+No one is really better than the other since you need to escape the quotes you
+are using in the string itself.</p>
+<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
+<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
+<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
+<p>Now you can directly use expression in a <em>template string</em> if you use the new
+place holder syntax.: <code>${ expression }</code>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
+<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
+<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
+<p>Here we are just using a variable, but we can use any expression:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
+  <span class="hljs-keyword">return</span> num * num;
+}
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
+<p>This is what make <em>template strings</em> awesome.</p>
+<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
+<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
+                 bar \
+                 baz"</span>;
+
+<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
+multiline2 += <span class="hljs-string">"bar"</span>;
+multiline2 += <span class="hljs-string">"baz"</span>;
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
+                   bar
+                   baz`</span>;</code></pre>
+<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
+bar`</span>;
+
+<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
+             bar`</span>;
+
+str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
+<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
+<p>Let’s dive into another interesting feature of <em>template strings</em>.
+Tags are functions that will use just before the <em>template string</em> and they
+allow us to enhance the string result.</p>
+<p>A tag take an array of “literals” (strings), and then all interpolated
+(evaluated) expressions that we can still modify.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
+    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
+      <span class="hljs-keyword">return</span> c.toUpperCase();
+    });
+  }
+
+  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
+    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
+    result += replaceVowels(strings[i]);
+    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
+      result += replaceVowels(nextValue)
+    } <span class="hljs-keyword">else</span> {
+      result += nextValue;
+    }
+  }
+  <span class="hljs-keyword">return</span> result;
+}
+
+
+capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
+<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
+<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
+<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
+capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
+<p>Here is an interesting example of tagged <em>template strings</em> to handle
+<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
+<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
+<p>A new function has been added to <code>String</code> prototype that allows us display raw
+content so you can see unescaped characters:</p>
+<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>When you will start to use <em>template strings</em>, you are likely going to like
+them. They are clearly really useful in a daily basis.</p>
+<p>Almost all
+<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
+today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
+hesitate to use <em>template strings</em>.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaînes de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -162,109 +264,7 @@ automatiquement gérés avec une <em>template string</em>.</p>
 simplifie grandement la vie et permet d’oublier les erreurs d’échappement.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des <em>template strings</em>…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
-the <em>template strings</em>.</p>
-<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
-<p>To define a string in JavaScript, we have single quotes or double quotes.
-No one is really better than the other since you need to escape the quotes you
-are using in the string itself.</p>
-<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
-<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
-<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
-<p>Now you can directly use expression in a <em>template string</em> if you use the new
-place holder syntax.: <code>${ expression }</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
-<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
-<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
-<p>Here we are just using a variable, but we can use any expression:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
-  <span class="hljs-keyword">return</span> num * num;
-}
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
-<p>This is what make <em>template strings</em> awesome.</p>
-<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
-<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
-                 bar \
-                 baz"</span>;
-
-<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
-multiline2 += <span class="hljs-string">"bar"</span>;
-multiline2 += <span class="hljs-string">"baz"</span>;
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
-                   bar
-                   baz`</span>;</code></pre>
-<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
-bar`</span>;
-
-<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
-             bar`</span>;
-
-str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
-<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
-<p>Let’s dive into another interesting feature of <em>template strings</em>.
-Tags are functions that will use just before the <em>template string</em> and they
-allow us to enhance the string result.</p>
-<p>A tag take an array of “literals” (strings), and then all interpolated
-(evaluated) expressions that we can still modify.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
-      <span class="hljs-keyword">return</span> c.toUpperCase();
-    });
-  }
-
-  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
-    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
-    result += replaceVowels(strings[i]);
-    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
-      result += replaceVowels(nextValue)
-    } <span class="hljs-keyword">else</span> {
-      result += nextValue;
-    }
-  }
-  <span class="hljs-keyword">return</span> result;
-}
-
-
-capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
-<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
-<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
-<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
-capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
-<p>Here is an interesting example of tagged <em>template strings</em> to handle
-<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
-<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>A new function has been added to <code>String</code> prototype that allows us display raw
-content so you can see unescaped characters:</p>
-<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>When you will start to use <em>template strings</em>, you are likely going to like
-them. They are clearly really useful in a daily basis.</p>
-<p>Almost all
-<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
-today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
-hesitate to use <em>template strings</em>.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promises]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promises]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
 JavaScript, les promises ! Visible depuis longtemps dans l’écosystème JavaScript
 grâce a diverses librairies, on peut maintenant utiliser directement la
 spécification officielle.</p>
@@ -839,7 +839,85 @@ l’était bien entendu
 <p>Une dernière petite chose, en utilisant les classes on active automatiquement le
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">mode strict</a>,
 il n’est donc pas nécessaire de le rajouter manuellement.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -918,85 +996,86 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: default values for arguments]]></title><description><![CDATA[<p>Tired of typing <code>if (typeof x === 'undefined') x = defaultValue</code>? Again, ES6
+will brings us a elegant solution.</p>
+<h1 id="default-values"><a class="markdownIt-Anchor" href="#default-values">#</a> Default values</h1>
+<p>The <code>=</code> operator can now help to define a default value to a parameter.</p>
+<h2 id="function-parameters"><a class="markdownIt-Anchor" href="#function-parameters">#</a> Function parameters</h2>
+<p>You can now specify a default value for a parameter of a function.
+This value will be used if the parameter is not defined, or explicitly set to
+<em>undefined</em>.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">incr</span> (<span class="hljs-params">value, step = 1</span>) </span>{
+  <span class="hljs-keyword">return</span> value + step
+}
 
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+incr(<span class="hljs-number">41</span>) <span class="hljs-comment">// 42</span>
+incr(<span class="hljs-number">41</span>, <span class="hljs-literal">undefined</span>) <span class="hljs-comment">// 42</span>
+incr(<span class="hljs-number">33</span>, <span class="hljs-number">9</span>) <span class="hljs-comment">// 42</span></code></pre>
+<h3 id="dynamic-default-values"><a class="markdownIt-Anchor" href="#dynamic-default-values">#</a> Dynamic default values</h3>
+<p>We can specify an expression as a default value.
+This expression will be evalued <strong>during the function call</strong>, not during the
+function declaration.</p>
+<pre><code class="language-js"><span class="hljs-keyword">let</span> defaultWho = <span class="hljs-string">'world!'</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hello</span> (<span class="hljs-params">who = defaultWho.toUpperCase(</span>)) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello '</span> + who
+}
 
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+hello() <span class="hljs-comment">// 'Hello WORLD!'</span>
+defaultWho = <span class="hljs-string">'Anyone?'</span>
+hello() <span class="hljs-comment">// 'Hello ANYONE?'</span></code></pre>
+<h3 id="reusing-previous-parameters"><a class="markdownIt-Anchor" href="#reusing-previous-parameters">#</a> Reusing previous parameters</h3>
+<p>In the default value expression, you can reuse <strong>previous</strong> function parameters:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = 1, y = x + 1</span>) </span>{
+  <span class="hljs-keyword">return</span> x + y
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span> (<span class="hljs-params">x = y + 1, y = 1</span>) </span>{
+  <span class="hljs-keyword">return</span> x + y
+}
+
+foo() <span class="hljs-comment">// 1 + (1 + 1) → 3</span>
+bar() <span class="hljs-comment">// (undefined + 1) + 1 → NaN</span></code></pre>
+<h3 id="particular-case-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#particular-case-tdz-temporal-dead-zone">#</a> Particular case: TDZ (Temporal Dead Zone)</h3>
+<p>A temporal dead zone is an area of your program where a variable exists, but is
+not available yet while it didn’t get its value.</p>
+<p>The following example is obviously invalid:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// throws ReferenceError?</span>
+}</code></pre>
+<p>In fact, during the call of the function, <code>x</code> has not been defined yet,
+so it cannot be used as a default value.
+This example should trigger an
+<a href="http://dmitrysoshnikov.com/ecmascript/es6-notes-default-values-of-parameters/#tdz-temporal-dead-zone-for-parameters">error</a></p>
+<p>However, scope rules will make this example invalid:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// 'x' used here is the parameter itself</span>
+}</code></pre>
+<p>After the evaluation of the default values, we are in the scope of the function
+and in this scope, <code>x</code> corresponds to the parameter (not defined yet) and not
+the value defined above.</p>
+<p><strong>ProTip: do not reuse a variable name 3 times</strong>
+(that might helps to read and understand your code).</p>
+<h2 id="destructuring"><a class="markdownIt-Anchor" href="#destructuring">#</a> Destructuring</h2>
+<p>Like for the function arguments, assignments using
+<a href="/en/articles/js/es2015/destructuring/">destructuring</a>
+can have a default value.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {z: <span class="hljs-number">42</span>} 
+<span class="hljs-keyword">const</span> { x = <span class="hljs-number">1</span>, y = x + <span class="hljs-number">1</span>, z, w } = obj
+w <span class="hljs-comment">// undefined</span>
+x <span class="hljs-comment">// 1</span>
+y <span class="hljs-comment">// 2</span>
+z <span class="hljs-comment">// 42</span></code></pre>
+<p>As a reminder, the assignation in the previous example would have been written
+this way using ES5:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> x = (obj.x === <span class="hljs-literal">undefined</span>) ? <span class="hljs-number">1</span> : obj.x 
+<span class="hljs-keyword">var</span> y = (obj.y === <span class="hljs-literal">undefined</span>) ? x + <span class="hljs-number">1</span> : obj.y 
+<span class="hljs-keyword">var</span> z = obj.z
+<span class="hljs-keyword">var</span> w = obj.w</code></pre>
+<h1 id="enjoy"><a class="markdownIt-Anchor" href="#enjoy">#</a> Enjoy!</h1>
+<p>There is no more reasons <em>a priori</em> to see an <code>undefined</code> in an ES6 codebase.</p>
+<p>About the compatibility (at the time of the writing): only Firefox ≥ 43
+support this feature (and just for function…).
+So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
@@ -1078,86 +1157,7 @@ votre code une fois passé à ES6.</p>
 implémente les valeurs par défaut, et encore seulement pour les paramètres de
 fonctions.
 Il faudra donc utiliser <a href="http://babeljs.io">Babel</a> ou Traceur pour en profiter.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : default values for arguments]]></title><description><![CDATA[<p>Tired of typing <code>if (typeof x === 'undefined') x = defaultValue</code>? Again, ES6
-will brings us a elegant solution.</p>
-<h1 id="default-values"><a class="markdownIt-Anchor" href="#default-values">#</a> Default values</h1>
-<p>The <code>=</code> operator can now help to define a default value to a parameter.</p>
-<h2 id="function-parameters"><a class="markdownIt-Anchor" href="#function-parameters">#</a> Function parameters</h2>
-<p>You can now specify a default value for a parameter of a function.
-This value will be used if the parameter is not defined, or explicitly set to
-<em>undefined</em>.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">incr</span> (<span class="hljs-params">value, step = 1</span>) </span>{
-  <span class="hljs-keyword">return</span> value + step
-}
-
-incr(<span class="hljs-number">41</span>) <span class="hljs-comment">// 42</span>
-incr(<span class="hljs-number">41</span>, <span class="hljs-literal">undefined</span>) <span class="hljs-comment">// 42</span>
-incr(<span class="hljs-number">33</span>, <span class="hljs-number">9</span>) <span class="hljs-comment">// 42</span></code></pre>
-<h3 id="dynamic-default-values"><a class="markdownIt-Anchor" href="#dynamic-default-values">#</a> Dynamic default values</h3>
-<p>We can specify an expression as a default value.
-This expression will be evalued <strong>during the function call</strong>, not during the
-function declaration.</p>
-<pre><code class="language-js"><span class="hljs-keyword">let</span> defaultWho = <span class="hljs-string">'world!'</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hello</span> (<span class="hljs-params">who = defaultWho.toUpperCase(</span>)) </span>{
-  <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello '</span> + who
-}
-
-hello() <span class="hljs-comment">// 'Hello WORLD!'</span>
-defaultWho = <span class="hljs-string">'Anyone?'</span>
-hello() <span class="hljs-comment">// 'Hello ANYONE?'</span></code></pre>
-<h3 id="reusing-previous-parameters"><a class="markdownIt-Anchor" href="#reusing-previous-parameters">#</a> Reusing previous parameters</h3>
-<p>In the default value expression, you can reuse <strong>previous</strong> function parameters:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = 1, y = x + 1</span>) </span>{
-  <span class="hljs-keyword">return</span> x + y
-}
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span> (<span class="hljs-params">x = y + 1, y = 1</span>) </span>{
-  <span class="hljs-keyword">return</span> x + y
-}
-
-foo() <span class="hljs-comment">// 1 + (1 + 1) → 3</span>
-bar() <span class="hljs-comment">// (undefined + 1) + 1 → NaN</span></code></pre>
-<h3 id="particular-case-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#particular-case-tdz-temporal-dead-zone">#</a> Particular case : TDZ (Temporal Dead Zone)</h3>
-<p>A <em>temporal dead zone</em> is a area of your program where a variable exist, but is
-not available yet while it didn’t get its value.</p>
-<p>The following example is obviously invalid :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// throws ReferenceError?</span>
-}</code></pre>
-<p>In fact, during the call of the function, <code>x</code> has not been defined yet,
-so cannot be used as a default value.
-This example should trigger an
-<a href="http://dmitrysoshnikov.com/ecmascript/es6-notes-default-values-of-parameters/#tdz-temporal-dead-zone-for-parameters">error</a></p>
-<p>However, scope rules will make this example invalid :</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// 'x' used here is the parameter itself</span>
-}</code></pre>
-<p>After the evaluation of the default values, we are in the scope of the function
-and in this scope, <code>x</code> corresponds to the parameter (not defined yet) and not
-the value defined above.</p>
-<p><strong>ProTip: do not reuse a variable name 3 times</strong>
-(that might helps to read and understand your code).</p>
-<h2 id="destructuring"><a class="markdownIt-Anchor" href="#destructuring">#</a> Destructuring</h2>
-<p>Like for the function arguments, assignments using
-<a href="/fr/articles/js/es2015/destructuring/">destructuring</a>
-can have a default value.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {z: <span class="hljs-number">42</span>} 
-<span class="hljs-keyword">const</span> { x = <span class="hljs-number">1</span>, y = x + <span class="hljs-number">1</span>, z, w } = obj
-w <span class="hljs-comment">// undefined</span>
-x <span class="hljs-comment">// 1</span>
-y <span class="hljs-comment">// 2</span>
-z <span class="hljs-comment">// 42</span></code></pre>
-<p>As a reminder, the assignation in the previous example would have been written
-this way using ES5 :</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> x = (obj.x === <span class="hljs-literal">undefined</span>) ? <span class="hljs-number">1</span> : obj.x 
-<span class="hljs-keyword">var</span> y = (obj.y === <span class="hljs-literal">undefined</span>) ? x + <span class="hljs-number">1</span> : obj.y 
-<span class="hljs-keyword">var</span> z = obj.z
-<span class="hljs-keyword">var</span> w = obj.w</code></pre>
-<h1 id="enjoy"><a class="markdownIt-Anchor" href="#enjoy">#</a> Enjoy!</h1>
-<p>There is no more reasons <em>a priori</em> to see an <code>undefined</code> in a ES6 codebase.</p>
-<p>About the compatibility (at the time of the writing): only Firefox ≥ 43
-support this feature (and just for function…).
-So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Le destructuring consiste à assigner des variables provenant d’un objet ou
 tableau en reposant sur leur structure.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Partons d'un objet `myObject`</span>
@@ -1532,81 +1532,7 @@ exist yet.</p>
 variable, switch to <code>let</code> (that might happen 1% of the time)</li>
 <li>If you are in the worst use-case of the world, use <code>var</code> (you can do the math)</li>
 </ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
-<strong>storyboards</strong>.</p>
-<blockquote>
-<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
-C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
-entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
-de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
-mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
-graphiquement et simplement le workflow de l’application.</p>
-</blockquote>
-<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
-<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
-c’est génial. Mais alors pourquoi les diviser ?</p>
-<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
-<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
-conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
-même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
-est de prendre celui de quelqu’un et refaire les changements ou de corriger les
-sources en croisant les doigts. Accompagné de 4 L de café.<br>
-Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
-travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
-chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
-de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
-<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
-<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
-groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
-facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
-une <code>scene</code> à l’autre bout du storyboard.</p>
-<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
-<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
-grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
-d’éléments vous avez à recompiler, plus vite ça ira.</p>
-<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
-<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
-pour les clients, vous pouvez vous faire des petits storyboards que vous
-réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
-faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
-<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
-<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
-<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
-<span class="hljs-comment">// Aller chercher le storyboard</span>
-<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-keyword">let</span> controllerSettings =
-storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
-<span class="hljs-comment">// Présenter</span>
-<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
-<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
-<span class="hljs-comment">// Aller chercher le sotyboard</span>
-<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
-bundle:<span class="hljs-literal">nil</span>];
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
-instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
-<span class="hljs-comment">// Présenter</span>
-[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
-<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
-fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
-<ul>
-<li>créez un nouveau storyboard pour votre <em>secteur</em>
-(File→New→File→[OS]→User Interface),</li>
-<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
-(sinon le compilateur n’aime pas),</li>
-<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
-<code>Utilies&gt;Identity Inspector</code>,</li>
-<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
-<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
-<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
-votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
-<em>storyboardID</em> de la <code>scene</code>,</li>
-<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
-<em>Storyboard Reference</em> voulus.</li>
-</ul>
-<p>Plus long à lire qu’à faire !</p>
-]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
 <a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
 which</p>
 <blockquote>
@@ -1780,187 +1706,7 @@ on Algolia blog, that explains why they choose and create tools for this approac
 </ul>
 <p>With all those examples, we hope you will stop being afraid to test your code
 and will not hesitate to cover all your React components with tests 😍.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/react/unit-testing/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/react/unit-testing/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
-<a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>
-(rendu peu profond),
-qui permet de rendre un composant avec un seul niveau de profondeur de rendu.</p>
-<p>Cela permet du coup de vérifier ce que le rendu retourne sans avoir à se
-soucier du comportement des composants enfants, qui ne sont pas instanciés ni
-rendus. Cela ne nécessite pas de DOM.</p>
-<p>Intéressant, n’est-ce pas ? Et d’ailleurs, le <em>shallow rendering</em> est
-actuellement
-<a href="https://discuss.reactjs.org/t/whats-the-prefered-way-to-test-react-js-components/26">la méthode recommandée pour tester vos composants React</a>.</p>
-<p>Comme vous pourrez le voir dans un article listé à la fin de celui-ci,
-le code permettant de tester des composants avec cette technique n’est pas
-forcément très concis, contrairement à ce qu’on pourrait attendre.</p>
-<p>Heureusement, <a href="https://github.com/vvo">quelqu’un</a> a codé un truc plutôt cool :
-<a href="https://github.com/algolia/react-element-to-jsx-string">react-element-to-jsx-string</a>.
-Comme le nom l’indique, cette librairie permet de rendre un composant React en
-tant que chaîne JSX.</p>
-<p>C’est maintenant les choses deviennent intéressantes :
-avec ces concepts en tête (le shallow render et le rendu de composant en strings
-JSX), on peut facilement ajouter de simple tests unitaires sur ses composants.</p>
-<p><em>Il y a d’autres techniques pour tester des composants React, et la plupart
-implique le DOM. Vous devrez donc éxecuter vos tests dans un navigateur (ou
-en utilisant jsdom) : vos tests seront plus lents que la technique qui va suivre
-(qui pour le coup est plus du vrai test unitaire, dans le sens où vous utilisez
-moins de code et ne nécessitez pas un gros environnement).</em></p>
-<h2 id="tester-facilement-des-composants-react-sans-dom"><a class="markdownIt-Anchor" href="#tester-facilement-des-composants-react-sans-dom">#</a> Tester facilement des composants React (sans DOM)</h2>
-<p>On va partir avec ce simple composant :</p>
-<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/index.js</span>
-
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-<span class="hljs-keyword">import</span> { PropTypes } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-
-const Component = ({
-  img,
-  title,
-  Loader,
-  Title,
-}) =&gt; (
-  &lt;div&gt;
-    {
-      (!img || !img.src) &amp;&amp; Loader &amp;&amp;
-      &lt;Loader /&gt;
-    }
-    {
-      img &amp;&amp; img.src &amp;&amp;
-      &lt;img src={ img.src } alt={ img.alt }/&gt;
-    }
-    {
-      title &amp;&amp; Title &amp;&amp;
-      &lt;Title text={ title } /&gt;
-    }
-  &lt;/div&gt;
-)
-
-Component.propTypes = {
-  img: PropTypes.object,
-  title: PropTypes.string,
-  Loader: PropTypes.func.isRequired,
-  Title: PropTypes.func.isRequired,
-}
-
-Component.displayName = <span class="hljs-string">"Picture"</span>
-
-export default Component</code></pre>
-<p>Ce composant affiche une image avec un composant pour le titre.
-Si les données de l’image ne sont pas prêtes, on peut afficher un composant pour
-indiquer le chargement.</p>
-<p>Écrivons maintenant un petit test. Pour notre exemple, on va utiliser
-<a href="https://medium.com/javascript-scene/why-i-use-tape-instead-of-mocha-so-should-you-6aa105d8eaf4">tape</a>
-couplé avec <a href="https://github.com/atabel/tape-jsx-equals">tape-jsx-equals</a>,
-mais vous n’aurez pas de mal à trouver un paquet à
-<a href="https://www.npmjs.com/search?q=expect+jsx">votre sauce sur npm</a>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/__tests__/index.js</span>
-
-<span class="hljs-keyword">import</span> tape <span class="hljs-keyword">from</span> <span class="hljs-string">"tape"</span>
-<span class="hljs-keyword">import</span> addAssertions <span class="hljs-keyword">from</span> <span class="hljs-string">"extend-tape"</span>
-<span class="hljs-keyword">import</span> jsxEquals <span class="hljs-keyword">from</span> <span class="hljs-string">"tape-jsx-equals"</span>
-const test = addAssertions(tape, { jsxEquals })
-
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-<span class="hljs-keyword">import</span> { createRenderer } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-addons-test-utils"</span>
-
-<span class="hljs-keyword">import</span> Picture <span class="hljs-keyword">from</span> <span class="hljs-string">".."</span>
-
-// fixtures (empty and stateless react components)
-const Loader = () =&gt; {}
-const Title = () =&gt; {}
-
-test(<span class="hljs-string">"PageContainer is properly rendered"</span>, (t) =&gt; {
-  const renderer = createRenderer()
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;Loader /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"can render a Loader component if no image data are passed"</span>
-  )
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-      img={ {
-        src: <span class="hljs-string">"SRC"</span>,
-        alt: <span class="hljs-string">"ALT"</span>,
-      } }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"should render an image if data are passed"</span>
-  )
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-      img={ {
-        src: <span class="hljs-string">"SRC"</span>,
-        alt: <span class="hljs-string">"ALT"</span>,
-      } }
-      title={ <span class="hljs-string">"TITLE"</span> }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
-      &lt;Title text=<span class="hljs-string">"TITLE"</span> /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"can render a Title if data are passed"</span>
-  )
-
-  t.end()
-})</code></pre>
-<p>Ces tests sont une couverture minimale pour vous assurer que vous ne cassez rien
-lorsque vous travaillez sur votre composant.</p>
-<p>Comme vous pouvez le constater, les tests sont assez simples à écrire et vont
-droit au but.
-<strong>Ce qui est intéressant ici, c’est que nous ne comparons pas à l’aide de
-simples chaînes. Nous utilisons directement des composants React.</strong></p>
-<p>Vous pouvez tranquillement exécuter l’exemple complet et le récupérer depuis le
-repository :</p>
-<p><a href="https://github.com/MoOx/react-component-unit-testing-example">github.com/MoOx/react-component-unit-testing-example</a></p>
-<p>Cet exemple contient les commandes et dépendances
-(définies dans le <code>package.json</code>)
-dont vous aurez besoin.</p>
-<h1 id="et-comment-tester-les-v-nements-comme-onclick"><a class="markdownIt-Anchor" href="#et-comment-tester-les-v-nements-comme-onclick">#</a> Et comment tester les évènements comme <code>onClick</code> ?</h1>
-<p>Vous n’avez pas à reproduire le clic complètement.</p>
-<p><strong>Vos tests n’ont pas besoin de vérifier que la prop <code>onClick</code> va bien être
-exécutée lorsque vous cliquerez sur un élément du DOM.</strong>
-<em>React couvre probablement cela dans sa suite de tests.</em></p>
-<p>Ce que vous avez besoin de tester, c’est que la valeur que vous passez au
-<code>onClick</code> fait bien ce que vous voulez.
-En gros, si vous avez un bout de code qui ressemble à
-<code>onClick={ yourCallback }</code>, vous n’avez tout simplement qu’à appeler directement
-<code>yourCallback()</code> dans vos tests juste avant votre comparaison.
-C’est bien assez !</p>
-<p>Si vous voulez aller un peu plus loin, vous pouvez continuer par lire :</p>
-<ul>
-<li><a href="http://simonsmith.io/unit-testing-react-components-without-a-dom/"><em>Unit testing React components without a DOM</em></a>,
-par Simon Smith, qui couvre le même sujet, sans la simplicité de la comparaison
-JSX,</li>
-<li><a href="https://blog.algolia.com/how-we-unit-test-react-components-using-expect-jsx/"><em>How we unit test React components using expect-jsx</em></a>
-sur le blog d’Algolia, qui explique pourquoi ils ont choisi et créé les outils
-pour cette approche.</li>
-</ul>
-<p>Avec ces exemples, nous espérons vraiment que vous n’aurez plus peur de tester
-votre code et que vous n’hésiterez plus à couvrir tous vos composants React de
-tests 😍.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Un favicon vite fait bien fait]]></title><description><![CDATA[<p>Oublions un instant CSS et JavaScript pour parler d’un sujet vraiment
+]]></description><link>http://putaindecode.io/en/articles/js/react/unit-testing/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/react/unit-testing/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Un favicon vite fait bien fait]]></title><description><![CDATA[<p>Oublions un instant CSS et JavaScript pour parler d’un sujet vraiment
 important : le favicon.</p>
 <p>Alors d’accord, le favicon n’est que le petit détail qu’on expédie en fin de
 projet. Mais oubliez-le et votre client comprendra tout de suite qu’il manque
@@ -2109,234 +1855,477 @@ n’est pas la seule initiative. Hayden Bleasel développe
 <a href="https://github.com/google/web-starter-kit/issues/599">intégré au Web Starter Kit de Google</a>.</p>
 <p>Et maintenant, c’est à vous : que pensez-vous de la formule “génération de
 Gulp/Grunt/autre” ? Quelles sont les technos que vous aimeriez trouver ?</p>
-]]></description><link>http://putaindecode.io/fr/articles/favicon/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/favicon/</guid><pubDate>Tue, 17 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Gérer son thème WordPress avec Webpack]]></title><description><![CDATA[<h1 id="pourquoi-webpack-pour-g-rer-son-th-me-wordpress"><a class="markdownIt-Anchor" href="#pourquoi-webpack-pour-g-rer-son-th-me-wordpress">#</a> Pourquoi Webpack pour gérer son thème WordPress ?</h1>
-<p>La réponse est la même qu’à la simple question
-<a href="/fr/articles/js/webpack/">“pourquoi Webpack ?”</a>.
-L’intérêt principal est d’obtenir des rapports d’erreurs liés à
-la gestion des assets (images, fonts, etc).</p>
-<p>Qu’y a-t-il de si particulier à savoir pour utiliser Webpack pour gérer un thème
-WordPress ? Pas grand chose, mais voici de quoi vous faire gagner (peut-être)
-un peu de temps.</p>
-<p>Il y a certainement plusieurs façons de gérer son thème WordPress
-avec Webpack. Celle que je vous propose va se limiter à des choses
-simples en concentrant le code dans le répertoire du thème pour plus de
-modularité.</p>
-<p>Pour commencer, deux choses importantes à savoir :</p>
+]]></description><link>http://putaindecode.io/fr/articles/favicon/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/favicon/</guid><pubDate>Tue, 17 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Créer un site web gratuitement avec GitHub Pages]]></title><description><![CDATA[<p>Pour une fois, on ne va pas trop parler de code dans cet article, mais
+simplement de comment créer en quelques minutes un site web basique et
+l’héberger gratuitement sur la plateforme <a href="http://github.com">github.com</a>.</p>
+<p>Transférez cet article à toute personne qui souhaiterait avoir un site web mais
+qui pense encore que c’est trop compliqué :)</p>
+<p>Dans un premier temps, vous devez simplement avoir quelques connaissances de
+base :</p>
 <ul>
-<li>Ne mettez pas de CSS dans le fameux <code>style.css</code> à la racine de votre thème,
-laissez juste le cartouche en commentaire (sans lequel WordPress ne détectera
-pas votre thème…) ;</li>
-<li>créez un dossier <code>src</code> dans votre thème, où nous
-mettrons nos “sources”, la partie du thème “compilé” sera dans un dossier
-<code>dist</code> et n’aura donc pas besoin d’être versionnée.</li>
+<li><strong>HTML</strong> : une bonne <a href="https://developer.mozilla.org/fr/docs/Web/Guide/HTML/Introduction">introduction</a></li>
+<li><strong>GitHub</strong> : créez un compte gratuit ici : <a href="http://github.com">github.com</a></li>
 </ul>
-<p>La seule petite chose à laquelle il faut faire attention finalement, c’est de
-bien configurer le <code>publicPath</code> de Webpack afin que les fichiers qu’il génère
-soient bien dans le bon chemin, et que les ressources liées (dans les fichiers CSS
-par exemple) comportent les bons chemins relatifs (à la racine du site).</p>
-<p>Avec l’arborescence suivante, nous n’aurons pas de difficulté à faire une
-configuration portable :</p>
-<pre><code>-<span class="ruby"> htdocs
-</span>  -<span class="ruby"> wp-content
-</span>    -<span class="ruby"> themes
-</span>      -<span class="ruby"> putaindetheme
-</span>        -<span class="ruby"> node_modules
-</span>        -<span class="ruby"> src
-</span>          -<span class="ruby"> index.js
-</span>          -<span class="ruby"> index.css
-</span>          -<span class="ruby"> images/*
-</span>          -<span class="ruby"> fonts/*
-</span>        -<span class="ruby"> style.css
-</span>        -<span class="ruby"> webpack.config.babel.json
-</span>        -<span class="ruby"> package.json
-</span>-<span class="ruby"> package.json</span></code></pre>
-<p>En plus de cela, nous pouvons ajouter une sorte de raccourci via un
-<code>package.json</code> supplémentaire à la racine de notre projet :</p>
-<pre><code class="language-json">{
-  "<span class="hljs-attribute">private</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
-  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">start</span>": <span class="hljs-value"><span class="hljs-string">"cd htdocs/wp-content/themes/putaindetheme &amp;&amp; npm start"</span></span>,
-    "<span class="hljs-attribute">build</span>": <span class="hljs-value"><span class="hljs-string">"cd htdocs/wp-content/themes/putaindetheme &amp;&amp; npm run build"</span>
-  </span>}
-</span>}</code></pre>
-<p>Ce petit raccourci nous évitera de devoir nous taper en CLI tout le chemin du
-thème et nous pourrions même, pourquoi pas, rajouter un
-<code>&quot;prestart&quot;: &quot;open http://yourlocalhost.tld&quot;</code> afin d’ouvrir automatiquement
-le projet dans le navigateur lorsque nous démarrerons notre développement via
-<code>$ npm start</code>.</p>
-<p>Voyons rapidement donc le <code>package.json</code> du thème ainsi que la config Webpack.</p>
-<p><code>package.json</code></p>
-<pre><code class="language-json">{
-  "<span class="hljs-attribute">private</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
-  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">start</span>": <span class="hljs-value"><span class="hljs-string">"webpack --config=webpack.config.babel.js --watch"</span></span>,
-    "<span class="hljs-attribute">build</span>": <span class="hljs-value"><span class="hljs-string">"webpack --config=webpack.config.babel.js -p"</span>
-  </span>}</span>,
-  "<span class="hljs-attribute">devDependencies</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">babel</span>": <span class="hljs-value"><span class="hljs-string">"^5.8.12"</span></span>,
-    "<span class="hljs-attribute">babel-core</span>": <span class="hljs-value"><span class="hljs-string">"^5.8.12"</span></span>,
-    "<span class="hljs-attribute">babel-loader</span>": <span class="hljs-value"><span class="hljs-string">"^5.3.2"</span></span>,
-    "<span class="hljs-attribute">css-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.15.6"</span></span>,
-    "<span class="hljs-attribute">eslint</span>": <span class="hljs-value"><span class="hljs-string">"^0.24.1"</span></span>,
-    "<span class="hljs-attribute">eslint-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.14.2"</span></span>,
-    "<span class="hljs-attribute">extract-text-webpack-plugin</span>": <span class="hljs-value"><span class="hljs-string">"^0.8.2"</span></span>,
-    "<span class="hljs-attribute">file-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.8.4"</span></span>,
-    "<span class="hljs-attribute">json-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.5.2"</span></span>,
-    "<span class="hljs-attribute">postcss-cssnext</span>": <span class="hljs-value"><span class="hljs-string">"^2.1.0"</span></span>,
-    "<span class="hljs-attribute">postcss-import</span>": <span class="hljs-value"><span class="hljs-string">"^7.0.0"</span></span>,
-    "<span class="hljs-attribute">postcss-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.6.0"</span></span>,
-    "<span class="hljs-attribute">postcss-url</span>": <span class="hljs-value"><span class="hljs-string">"^5.0.2"</span></span>,
-    "<span class="hljs-attribute">style-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.12.3"</span></span>,
-    "<span class="hljs-attribute">webpack</span>": <span class="hljs-value"><span class="hljs-string">"^1.10.5"</span>
-  </span>}</span>,
-  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">normalize.css</span>": <span class="hljs-value"><span class="hljs-string">"^3.0.3"</span>
-  </span>}
-</span>}</code></pre>
-<p>Quelques petites notes sur ce contenu :</p>
+<p>Nous allons utiliser <a href="http://github.com">github.com</a> pour héberger notre
+<strong>site web statique</strong> dans un <em>repository</em> (un dossier). Ce service
+incontournable permet de stocker le code du site, de le
+<a href="https://fr.wikipedia.org/wiki/Logiciel_de_gestion_de_versions">versionner</a>, et
+de le publier gratuitement sur Internet dans des conditions optimales
+(CDN, anti-DDoS…)</p>
+<p><strong>Attention</strong> : tous les fichiers hébergés sur votre compte GitHub gratuit sont
+publics, à moins de souscrire à un compte privé payant, donc n’y stockez rien
+de sensible/secret.</p>
+<h2 id="qu-est-ce-qu-un-site-web-statique"><a class="markdownIt-Anchor" href="#qu-est-ce-qu-un-site-web-statique">#</a> Qu’est-ce qu’un site web statique ?</h2>
+<p>Pour la plupart des sites, les solutions de blog (CMS de type WordPress et
+autres) sont largement surdimensionnées. Elles requièrent un hébergement
+particulier (PHP ou autre), des connaissances techniques pour l’installation,
+et surtout une maintenance à moyen/long-terme à cause des mises à jour
+de sécurité surprises et autres correctifs de bugs à appliquer.</p>
+<p>Or, il est possible de créer des sites webs modernes et performants qui n’ont
+pas besoin de code côté serveur (donc pas de PHP), et peuvent donc être hébergés
+n’importe où, et à moindre coût. Le code du site sera uniquement composé de
+HTML, CSS et JavaScript, et s’exécutera directement dans le navigateur du
+visiteur, ce qui présente de nombreux avantages :</p>
 <ul>
-<li><code>private</code> sert à éviter la publication de votre “paquet” sur npm, ainsi qu’à
-devoir remplir certains champs tels que <code>name</code> et compagnie ;</li>
-<li>nous mettrons dans <code>devDependencies</code> les dépendances pour le développement et
-dans <code>dependencies</code> les dépendances qui seront dans le build final. Ici, j’ai
-simplement mis <code>normalize.css</code> pour exemple, mais vous pourriez très bien avoir
-aussi jQuery (:trollface:) ou React ;</li>
-<li>les scripts utilisent <code>webpack.config.babel.js</code> afin de pouvoir définir la
-configuration en es6/7 via <em>babel</em>.</li>
+<li>simple et efficace</li>
+<li>pas de maintenance</li>
+<li>pas de risque de hacking</li>
+<li>performances optimales</li>
+<li>liberté totale</li>
 </ul>
-<p>Voyons maintenant la config <code>webpack.config.babel.js</code> :</p>
-<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> le code ci-dessous est mal rendu</span>
-<span class="hljs-comment">// Une issue est ouverte à ce propos</span>
-<span class="hljs-comment">// https://github.com/isagalaev/highlight.js/issues/958</span>
-
-<span class="hljs-keyword">import</span> <span class="hljs-string">"babel/polyfill"</span>
-<span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">"path"</span>
-<span class="hljs-keyword">import</span> ExtractTextPlugin <span class="hljs-keyword">from</span> <span class="hljs-string">"extract-text-webpack-plugin"</span>
-<span class="hljs-keyword">import</span> postcssImport <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-import"</span>
-<span class="hljs-keyword">import</span> postcssUrl <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-url"</span>
-<span class="hljs-keyword">import</span> postcssCssnext <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-cssnext"</span>
-
-const production = process.argv.includes(`-p`)
-
-const theme = path.basename(__dirname)
-const src = path.join(__dirname, `src`)
-
-export default {
-  entry: {
-    index: [`${ src }/index.js<span class="hljs-string">`],
-  },
-
-  output: {
-    path: path.join(__dirname, `</span>dist<span class="hljs-string">`),
-    filename: `</span>[name].js<span class="hljs-string">`,
-    publicPath: `</span>wp-content/themes/${ theme }/dist/<span class="hljs-string">`,
-  },
-  resolve: {
-    extensions: [
-      `</span><span class="hljs-string">`,
-      `</span>.js<span class="hljs-string">`,
-      `</span>.json<span class="hljs-string">`,
-    ],
-  },
-
-  module: {
-    loaders: [
-      {
-        test: /\.json$/,
-        loader: `</span>json-loader<span class="hljs-string">`,
-      },
-      {
-        test: /\.js$/,
-        loaders: [
-          `</span>babel-loader<span class="hljs-string">`,
-          `</span>eslint-loader<span class="hljs-string">`,
-        ],
-        include: src,
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          `</span>style-loader<span class="hljs-string">`,
-          [
-            `</span>css-loader<span class="hljs-string">`,
-            `</span>postcss-loader<span class="hljs-string">`,
-          ].join(`</span>!<span class="hljs-string">`)
-        ),
-      },
-      {
-        test: /\.(ico|jpe?g|png|gif)$/,
-        loader: `</span>file-loader?name=[path][name].[ext]&amp;context=${ src }/<span class="hljs-string">`,
-      },
-    ],
-  },
-
-  plugins: [
-    new ExtractTextPlugin(`</span>[name].css<span class="hljs-string">`, {disable: !production}),
-  ],
-
-  postcss: function() {
-    // https://github.com/postcss/postcss-loader/issues/31
-    const webpack = this
-
-    return [
-      postcssImport({
-        onImport: (files) =&gt; files.forEach(webpack.addDependency),
-      }),
-      postcssUrl(),
-      postcssCssnext({
-        browsers: `</span>last <span class="hljs-number">2</span> versions<span class="hljs-string">`,
-      }),
-    ]
-  },
-}</span></code></pre>
-<p><em>Bien entendu, libre à vous d’adapter les loaders Webpack à utiliser, ainsi que
-la configuration PostCSS par exemple.</em> Faites un tour sur notre article de
-<a href="/fr/articles/js/webpack/premier-exemple/">premier exemple de configuration Webpack</a> afin
-d’y voir plus clair.</p>
-<p>Il nous reste maintenant à ajouter dans notre thème WordPress les
-références à nos points d’entrées CSS et JavaScript que sont <code>index.css</code> et
-<code>index.js</code>.</p>
-<p>Pour faire simplement, dans votre fichier <code>functions.php</code> (oui, le fichier qui a un nom
-qui n’indique pas du tout ce pour quoi tout le monde se sert du fichier, c’est à
-dire la configuration du thème au runtime…), on va ajouter une petite constante
-qui servira à adapter votre thème en fonction de l’environnement :</p>
-<pre><code class="language-php"><span class="hljs-comment">// ENV est à définir dans votre configuration Apache par exemple.</span>
-<span class="hljs-comment">// Si vous ne voulez pas y toucher, vous pouvez plutôt définir d'une autre façon</span>
-<span class="hljs-comment">// en testant le SERVER_NAME par exemple</span>
-define(<span class="hljs-string">'ENV'</span>, getenv(<span class="hljs-string">'ENV'</span>));
-
-<span class="hljs-comment">// en local, on pourrait définir ENV à "development"</span></code></pre>
-<p><em>Nous pourrions dans ce fichier utiliser l’API de Wordpress pour enregister nos
-<code>index.css</code> et <code>index.js</code> via les méthodes <code>wp_(de)register_</code>, mais nous
-resterons simples pour l’exemple.</em></p>
-<p>Vu qu’on utilise le <code>style-loader</code> de Webpack en développement, on ne va ajouter
-notre feuille de style qu’en production (dans le <code>&lt;head&gt;</code>).</p>
-<pre><code class="language-php"><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">if</span> (ENV != <span class="hljs-string">"development"</span>): <span class="hljs-preprocessor">?&gt;</span>
-  &lt;link rel=<span class="hljs-string">"stylesheet"</span> href=<span class="hljs-string">"&lt;?php echo get_bloginfo('template_directory') ?&gt;/dist/index.css"</span> /&gt;
-<span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">endif</span>; <span class="hljs-preprocessor">?&gt;</span></code></pre>
-<p>Pensez aussi à supprimer la référence à <code>style.css</code> dans <code>header.php</code>.</p>
-<p>Dans la même idée mais en plus simple, on va ajouter dans notre <code>footer.php</code>.</p>
-<pre><code class="language-php">&lt;script src=<span class="hljs-string">"&lt;?php echo get_bloginfo('template_directory') ?&gt;/dist/index.js"</span>&gt;&lt;/script&gt;</code></pre>
-<p>Rien de bien compliqué finalement.</p>
-<p><em>Attention si votre thème hérite d’un autre,
-<code>get_bloginfo('template_directory')</code> ne pointera pas vers votre thème mais le
-thème parent. Il vous faudra donc ajuster le code 😑.</em></p>
+<p>De plus, en 2015, n’importe quel service en ligne digne de ce nom propose une
+<a href="https://www.mashape.com">API</a> qui permet d’intégrer directement sur votre site
+des fonctionnalités tierces, sans avoir besoin de code côté serveur, donc cette
+approche pure <strong>client-side</strong> n’a <strong>pas de limites</strong>.</p>
+<p>Dans ce premier article nous allons voir comment créer un site web basique à
+base de HTML/CSS, mais nous verrons par la suite comment utiliser un
+<a href="http://staticgen.com">générateur de site web statique</a> pour créer des sites
+webs plus avancés.</p>
+<h2 id="cr-er-le-repository-github"><a class="markdownIt-Anchor" href="#cr-er-le-repository-github">#</a> Créer le repository GitHub</h2>
+<p>Créez votre compte GitHub, puis un nouveau <em>repository</em> pour votre site web :
+<a href="https://github.com/new">https://github.com/new</a> (exemple : supersite)</p>
+<p>Le repository sera créé à cette adresse :
+<a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a></p>
+<h2 id="cr-er-un-site-web-avec-github-page-generator"><a class="markdownIt-Anchor" href="#cr-er-un-site-web-avec-github-page-generator">#</a> Créer un site web avec <em>GitHub page generator</em></h2>
+<p>Grâce aux templates par défaut, créez votre site <em>single-page</em> en 3 clics.</p>
+<p>Allez sur la page du projet :  <a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a></p>
+<ul>
+<li>Puis <strong>Repository settings</strong> (icône en bas à droite)</li>
+<li><strong>Automatic page generator</strong> puis <strong>Launch</strong></li>
+<li>Éditez le texte du site</li>
+<li>Sélectionnez votre template préféré puis <strong>Publish Page</strong></li>
+</ul>
+<p>Attendez quelques secondes et allez sur : <a href="http://USERNAME.github.io/supersite">http://USERNAME.github.io/supersite</a> pour découvrir le résultat final.</p>
+<p><strong>✔</strong> Site web en ligne et dispo pour le monde entier :)</p>
+<h2 id="modifier-le-site-en-ligne"><a class="markdownIt-Anchor" href="#modifier-le-site-en-ligne">#</a> Modifier le site en ligne</h2>
+<p>Allez sur la page du projet, <a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a>.</p>
+<p>C’est ici que l’on retrouve tout le code et les fichiers du site.</p>
+<p>Cliquez sur le fichier à modifier, typiquement <code>index.html</code> qui est la page
+d’accueil, cliquez sur l’icône “crayon” en haut à droite pour éditer le fichier
+et appliquez vos changements.</p>
+<p>Une fois les changements effectués, complétez le formulaire “Commit changes”
+en-dessous, avec un titre explicite permettant d’identifier votre modification.</p>
+<p>Exemple : “Ajout des infos de contact”.</p>
+<p>Cliquez sur <strong>Commit changes</strong>, attendez quelques secondes et allez sur
+<a href="http://USERNAME.github.io/supersite">http://USERNAME.github.io/supersite</a>
+pour admirer les changements.</p>
+<p><strong>✔</strong> Site web mis à jour :)</p>
+<h2 id="diter-le-site-sur-son-ordinateur"><a class="markdownIt-Anchor" href="#diter-le-site-sur-son-ordinateur">#</a> Éditer le site sur son ordinateur</h2>
+<p>Pour pouvoir éditer plus facilement le site, ajouter/modifier des fichiers…
+vous pouvez le récupérer sur votre machine, et vous pourrez alors utiliser
+votre <a href="http://atom.io">éditeur de texte préféré</a> pour le modifier.</p>
+<p>Installez et configurez l’application GitHub : <a href="http://mac.github.com">mac.github.com</a>
+ou <a href="http://windows.github.com">windows.github.com</a></p>
+<ul>
+<li><strong>Clone</strong> : va rapatrier les fichiers de votre site sur votre ordinateur</li>
+<li><strong>Éditez</strong> les fichiers directement</li>
+<li><strong>Testez</strong> si le site fonctionne comme prévu</li>
+<li>Puis choisissez <strong>Commit</strong> pour enregistrer vos modifications</li>
+<li>Et enfin <strong>Sync</strong> pour renvoyer vos fichiers sur GitHub et mettre à jour
+le site pour le reste du monde.</li>
+</ul>
+<p><strong>✔</strong> Site web mis à jour :)</p>
+<h2 id="tester-le-site-sur-votre-machine"><a class="markdownIt-Anchor" href="#tester-le-site-sur-votre-machine">#</a> Tester le site sur votre machine</h2>
+<p>Vous pouvez ouvrir le fichier <code>index.html</code> dans un navigateur pour voir le
+résultat.</p>
+<p><strong>Note :</strong> Si vous avez ajouté Google Maps ou une API JavaScript, vous devrez
+lancer un serveur web pour pouvoir voir le résultat. Par exemple, lancez
+<code>python -m SimpleHTTPServer</code> dans votre terminal depuis le dossier du site
+(où se trouve <code>index.html</code>) puis ouvrez <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> dans votre navigateur.
+(Ceci est dû à une <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Same_origin_policy_for_JavaScript">restriction de sécurité</a>)</p>
+<h2 id="installer-un-superbe-template"><a class="markdownIt-Anchor" href="#installer-un-superbe-template">#</a> Installer un superbe template</h2>
+<p>Si vous voulez des templates différents de ceux proposés par GitHub,
+vous devez simplement remplacer les fichiers présents dans le dossier
+du projet.</p>
+<p>Choisissez par exemple un des templates gratuits de haute qualité
+disponibles sur <a href="http://html5up.net">html5up.net</a> ou sur
+<a href="http://pixelarity.com">pixelarity.com</a> (payant).</p>
+<p>Téléchargez les sources et placez les fichiers dans votre projet.</p>
+<p>Éditez les fichiers, testez, puis commit &amp; sync, et voilà :)</p>
+<h2 id="et-apr-s"><a class="markdownIt-Anchor" href="#et-apr-s">#</a> Et après ?</h2>
+<ul>
+<li>Apprenez la syntaxe Markdown : <a href="https://en.support.wordpress.com/markdown-quick-reference/">réference</a></li>
+<li>Apprenez Git : <a href="https://try.github.io">try.github.io</a></li>
+<li>Apprenez JavaScript : <a href="http://jsbooks.revolunet.com">jsbooks.revolunet.com</a>
+et <a href="https://ericelliottjs.com/product/programming-javascript-applications-paper-ebook-bundle/">le livre d’Eric Elliott</a></li>
+<li>Lisez tous les articles de <a href="/">Putain de code !</a></li>
+</ul>
 <hr>
-<p>Pour le test vous pouvez mettre dans les CSS et JS :</p>
-<p><code>index.css</code></p>
-<pre><code class="language-css"><span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">"normalize.css"</span></span>;
-<span class="hljs-tag">body</span> <span class="hljs-rules">{
-  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> red</span></span>;
-}</span></code></pre>
-<p>Notez ici que par la façon dont nous avons défini Webpack ci-dessus, vous
-devriez placer et référencer vos assets (images &amp; co), depuis <code>src</code>. Exemple :</p>
-<pre><code class="language-css"><span class="hljs-tag">html</span> <span class="hljs-rules">{
-  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-function">url</span>(./images/background.jpg)
-  <span class="hljs-comment">/* =&gt; wp-content/themes/putaindetheme/src/images/background.jpg */</span>
-</span></span></span>}</code></pre>
-<p>Ensuite, dans <code>index.js</code>, je vous laisse vous débrouiller :)</p>
-<pre><code class="language-js"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Hey !"</span>)</code></pre>
-<p>Libre à vous maintenant d’ajouter vos dépendances favorites et de remplir vos
-<code>index.css</code> et <code>index.js</code> avec une gestion d’erreurs autre que des requêtes HTTP
-en 404 !</p>
-]]></description><link>http://putaindecode.io/fr/articles/wordpress/webpack/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/wordpress/webpack/</guid><pubDate>Tue, 20 Oct 2015 00:00:00 GMT</pubDate></item></channel></rss>
+<h2 id="faq"><a class="markdownIt-Anchor" href="#faq">#</a> FAQ</h2>
+<h3 id="comment-installer-un-nom-de-domaine"><a class="markdownIt-Anchor" href="#comment-installer-un-nom-de-domaine">#</a> Comment installer un nom de domaine ?</h3>
+<ul>
+<li>Achetez un nom de domaine sur <a href="http://gandi.net">gandi.net</a> ou
+un autre fournisseur sérieux (surtout pas chez pas 1&amp;1, lws ou
+autre discounter douteux)</li>
+<li>Éditez la “Zone DNS” du domaine et suivez les
+<a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">instructions GitHub pour DNS</a></li>
+<li>ajoutez un fichier <code>CNAME</code> dans votre projet, contenant la ligne
+<code>www.myproject.com</code>.</li>
+</ul>
+<p>Les changements DNS peuvent mettre jusqu’à 24h pour se propager
+donc essayez <a href="http://www.myproject.com">www.myproject.com</a> un peu plus tard.</p>
+<p>Ces pages d’aide sur GitHub pourront vous être utiles : <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/">Custom domain</a>, <a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">DNS setup</a>.</p>
+<h3 id="comment-ajouter-une-page"><a class="markdownIt-Anchor" href="#comment-ajouter-une-page">#</a> Comment ajouter une page ?</h3>
+<p>Pour créer simplement des pages supplémentaires, ajoutez un
+nouveau fichier HTML, par exemple <code>produits.html</code>, dans le projet et
+faites un lien vers cette page depuis l’index, par exemple
+<code>&lt;a href=&quot;produits.html&quot;&gt;Consulter les produits&lt;/a&gt;</code>.</p>
+<h3 id="comment-analyser-le-trafic-de-mon-site"><a class="markdownIt-Anchor" href="#comment-analyser-le-trafic-de-mon-site">#</a> Comment analyser le trafic de mon site ?</h3>
+<p>Si vous voulez tracker vos visiteurs, savoir d’où ils viennent, ce qu’ils
+font et où ils vont, créez un compte sur
+<a href="http://www.google.com/analytics">Google Analytics</a> et ajoutez le code de
+tracking sur vos pages HTML.</p>
+<h3 id="comment-ajouter-une-carte"><a class="markdownIt-Anchor" href="#comment-ajouter-une-carte">#</a> Comment ajouter une carte ?</h3>
+<p>Suivez les <a href="http://leafletjs.com/examples/quick-start.html">instructions Leaflet</a>, la cartographie open-source et gratuite qui bénéficie d’une communauté active.</p>
+<p>Si vous avez juste besoin d’une carte sous forme d’image fixe, générez le code HTML ici :
+<a href="http://staticmapmaker.com">staticmapmaker.com</a> et copiez le code dans votre page.</p>
+<h3 id="comment-ajouter-un-syst-me-de-commentaires"><a class="markdownIt-Anchor" href="#comment-ajouter-un-syst-me-de-commentaires">#</a> Comment ajouter un système de commentaires ?</h3>
+<p>Créez un compte sur <a href="http://disqus.com">disqus.com</a> et ajoutez le code JavaScript sur
+votre page.</p>
+<h3 id="comment-ajouter-un-formulaire-de-contact"><a class="markdownIt-Anchor" href="#comment-ajouter-un-formulaire-de-contact">#</a> Comment ajouter un formulaire de contact ?</h3>
+<p>Créez un compte sur <a href="http://typeform.com">typeform.com</a>, créez votre formulaire et
+ajoutez le code JavaScript “embed” sur votre page.</p>
+<p>Vous pouvez aussi créer un compte sur <a href="http://mailchimp.com">mailchimp.com</a>, créer un
+formulaire et l’ajouter sur votre page grâce au code “embed”.</p>
+<h3 id="comment-recevoir-des-paiements"><a class="markdownIt-Anchor" href="#comment-recevoir-des-paiements">#</a> Comment recevoir des paiements ?</h3>
+<p>Créez un compte sur <a href="http://stripe.com">stripe.com</a> et ajoutez le code JavaScript sur
+votre page.</p>
+<h3 id="qu-est-ce-que-gh-pages"><a class="markdownIt-Anchor" href="#qu-est-ce-que-gh-pages">#</a> Qu’est-ce que gh-pages ?</h3>
+<p><code>gh-pages</code> est une branche spéciale de votre code sur GitHub (une version du
+code) qui publie et héberge <em>automagiquement</em> votre site.</p>
+<h3 id="comment-tre-pr-sent-sur-google"><a class="markdownIt-Anchor" href="#comment-tre-pr-sent-sur-google">#</a> Comment être prêsent sur Google ?</h3>
+<p>Créez du contenu de <strong>qualité</strong>, ciblé, <strong>unique</strong> sur Internet et <strong>utile</strong> à
+vos visiteurs. Créez du lien avec des sites et communautés sur le même thème.</p>
+<p>Naturellement, d’autres sites parleront alors du vôtre, vous enverront des
+visiteurs et vous feront monter progressivement dans les résultats au fil des mois.</p>
+<hr>
+<p>Voilà pour ce premier pas vers le développement web !</p>
+<p>Les commentaires ci-dessous sont là pour recevoir vos remarques et questions :)</p>
+]]></description><link>http://putaindecode.io/fr/articles/github/pages/site-web-gratuit/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/github/pages/site-web-gratuit/</guid><pubDate>Fri, 31 Jul 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Les Dockerfiles]]></title><description><![CDATA[<p>Dans <a href="/fr/articles/docker/">l’article précédent</a>, je vous ai
+présenté le fonctionnement de base de Docker. Mais cela vous limitait à
+l’usage des images que vous pouviez trouver sur le <a href="https://registry.hub.docker.com/">Docker
+Hub</a>. Afin de vraiment pouvoir utiliser
+Docker au maximum, il serait appréciable de pouvoir créer des images adaptées à
+nos projets et c’est là l’utilité des Dockerfiles.</p>
+<h1 id="les-dockerfiles"><a class="markdownIt-Anchor" href="#les-dockerfiles">#</a> Les Dockerfiles</h1>
+<p>Les Dockerfiles sont des fichiers qui permettent de construire une image Docker
+adaptée à nos besoins, étape par étape. Rentrons dans le vif du sujet en créant
+une image permettant de lancer un projet JavaScript.</p>
+<p>Pour commencer, créez un nouveau fichier <code>Dockerfile</code> à la racine de votre
+projet.</p>
+<p>La première chose à faire dans un Dockerfile est de définir de quelle image
+vous héritez. Pour cet exemple, je vous propose d’utiliser une image de Debian
+comme base (ce qui est une bonne pratique, car cette image
+est plutôt légère en comparaison avec celle d’Ubuntu par exemple).</p>
+<pre><code><span class="hljs-tag">FROM</span> <span class="hljs-tag">debian</span><span class="hljs-pseudo">:jessie</span></code></pre>
+<p><code>FROM</code> permet de définir notre image de base, vous pouvez l’utiliser uniquement
+une fois dans un Dockerfile.</p>
+<p>Comme nous voulons créer une image pour une application JavaScript full-stack,
+nous devons commencer par installer Node.js. Pour ce faire, on va télécharger
+l’archive Node.js directement depuis le site officiel à l’aide de curl que nous
+allons aussi devoir installer.</p>
+<pre><code><span class="hljs-constant">RUN</span> apt-get update \
+&amp;&amp; apt-get install -y curl \
+&amp;&amp; rm -rf /var/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">apt</span>/<span class="hljs-title">lists</span>/*</span>
+
+<span class="hljs-constant">RUN</span> curl -<span class="hljs-constant">LO</span> <span class="hljs-string">"https://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz"</span> \
+&amp;&amp; tar -xzf node-v0.<span class="hljs-number">12.5</span>-linux-x64.tar.gz -<span class="hljs-constant">C</span> /usr/local --strip-components=<span class="hljs-number">1</span> \
+&amp;&amp; rm node-v0.<span class="hljs-number">12.5</span>-linux-x64.tar.gz</code></pre>
+<p><code>RUN</code> permet d’exécuter une commande à l’intérieur de votre image comme si vous
+étiez devant un shell unix.</p>
+<p>La première commande nous permet d’installer curl et de nettoyer ensuite le
+gestionnaire de paquets afin que notre image soit un peu plus légère.</p>
+<p>Avec la deuxième commande, nous téléchargeons le binaire de Node.js que nous
+installons ensuite à ça place, et on n’oublie pas de supprimer l’archive
+ensuite.</p>
+<p>Vous pouvez vous demander pourquoi j’exécute plusieurs commandes sur une même
+instruction <code>RUN</code> ? Eh bien, cela permet simplement de limiter le nombre
+d’instructions dans votre Dockerfile ce qui rendra votre image finale plus
+légère.</p>
+<p>Maintenant, nous allons ajouter les sources de notre projet dans l’image et
+télécharger nos dépendances.</p>
+<pre><code><span class="hljs-built_in">ADD</span> <span class="bash">package.json /app/
+</span>
+<span class="hljs-built_in">WORKDIR</span> <span class="bash">/app
+</span>
+<span class="hljs-built_in">RUN</span> <span class="bash">npm install
+</span>
+<span class="hljs-built_in">ADD</span> <span class="bash">. /app/</span></code></pre>
+<p><code>ADD</code> permet d’ajouter des fichiers locaux ou distants à l’intérieur de votre
+image, il est le plus souvent utilisé pour importer les sources de votre projet
+ou des fichiers de configuration.</p>
+<p><code>WORKDIR</code> permet de changer le répertoire courant de votre image, toutes les
+commandes qui suivront seront exécutées à partir de ce répertoire.</p>
+<p>Avec la dernière instruction, nous ajoutons les sources de notre projet à
+l’intérieur de l’image, mais vous allez vous demander pourquoi nous ne l’avons
+pas fait en même temps que l’ajout des fichiers de dépendances. Eh bien, cela
+nous permet d’économiser beaucoup de temps !</p>
+<p>Quand Docker crée une nouvelle image à partir d’un Dockerfile, il exécute chaque
+instruction dans un conteneur, et le résultat de cette instruction est
+sauvegardé sous forme de couche. Au final, une image est un assemblage de
+plusieurs couches (une par instruction). Et donc, quand vous reconstruisez une
+image pour la seconde fois, les instructions qui n’impliquent pas de changements
+ne sont pas réexécutées, car la couche est récupérée depuis l’image précédente. Par
+contre, si l’instruction implique un changement quelconque, elle est réexécutée
+ainsi que toutes les instructions suivantes.</p>
+<p>Dans notre cas, les sources auront tendance à beaucoup changer, et donc ne pas
+retélécharger les dépendances à chaque changement dans le code est un réel gain
+de temps !</p>
+<p>Maintenant, nous allons indiquer quel port et dossier nous souhaitons partager
+avec l’extérieur du conteneur.</p>
+<pre><code><span class="hljs-built_in">EXPOSE</span> <span class="hljs-number">3000</span>
+
+<span class="hljs-built_in">VOLUME</span> <span class="bash">/app/<span class="hljs-built_in">log</span></span></code></pre>
+<p><code>EXPOSE</code> et <code>VOLUME</code> permettent respectivement d’indiquer quel port et quel
+dossier nous souhaitons partager.</p>
+<p>Et pour finir, nous pouvons indiquer quelle instruction doit s’exécuter au
+lancement de votre conteneur grâce à l’instruction <code>CMD</code>.</p>
+<pre><code>CMD <span class="hljs-keyword">node</span><span class="hljs-identifier"> </span><span class="hljs-title">server</span>.js</code></pre>
+<p>Voici un résumé de notre Dockerfile :</p>
+<pre><code><span class="hljs-comment"># Image de base</span>
+<span class="hljs-built_in">FROM</span> debian:jessie
+
+<span class="hljs-comment"># Installation de curl avec apt-get</span>
+<span class="hljs-built_in">RUN</span> <span class="bash">apt-get update \
+&amp;&amp; apt-get install -y curl \
+&amp;&amp; rm -rf /var/lib/apt/lists/*
+</span>
+<span class="hljs-comment"># Installation de Node.js à partir du site officiel</span>
+<span class="hljs-built_in">RUN</span> <span class="bash">curl -LO <span class="hljs-string">"https://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz"</span> \
+&amp;&amp; tar -xzf node-v0.<span class="hljs-number">12.5</span>-linux-x64.tar.gz -C /usr/<span class="hljs-built_in">local</span> --strip-components=<span class="hljs-number">1</span> \
+&amp;&amp; rm node-v0.<span class="hljs-number">12.5</span>-linux-x64.tar.gz
+</span>
+<span class="hljs-comment"># Ajout du fichier de dépendances package.json</span>
+<span class="hljs-built_in">ADD</span> <span class="bash">package.json /app/
+</span>
+<span class="hljs-comment"># Changement du repertoire courant</span>
+<span class="hljs-built_in">WORKDIR</span> <span class="bash">/app
+</span>
+<span class="hljs-comment"># Installation des dépendances</span>
+<span class="hljs-built_in">RUN</span> <span class="bash">npm install
+</span>
+<span class="hljs-comment"># Ajout des sources</span>
+<span class="hljs-built_in">ADD</span> <span class="bash">. /app/
+</span>
+<span class="hljs-comment"># On expose le port 3000</span>
+<span class="hljs-built_in">EXPOSE</span> <span class="hljs-number">3000</span>
+
+<span class="hljs-comment"># On partage un dossier de log</span>
+<span class="hljs-built_in">VOLUME</span> <span class="bash">/app/<span class="hljs-built_in">log</span>
+</span>
+<span class="hljs-comment"># On lance le serveur quand on démarre le conteneur</span>
+<span class="hljs-built_in">CMD</span> <span class="bash">node server.js</span></code></pre>
+<p>Avant de transformer ce Dockerfile en une image, vous devez créer un fichier de
+plus, le <code>.dockerignore</code>, ce fichier permet comme un <code>.gitignore</code> de ne pas
+inclure certain fichiers dans votre image Docker, et c’est très important afin
+d’éviter d’inclure les dépendances de votre projet dans votre image
+(<code>node_modules</code> dans notre cas) qui sont propres à votre
+système, mais pas au système du conteneur. Voici à quoi votre <code>.dockerignore</code>
+doit ressembler :</p>
+<pre><code><span class="hljs-tag">node_modules</span>
+<span class="hljs-class">.git</span></code></pre>
+<p>Pour transformer ce Dockerfile en une image Docker, vous devez utiliser cette
+commande :</p>
+<pre><code class="language-console">$ docker build -t fullstack-js .
+Sending build context to Docker daemon 4.381 MB
+Sending build context to Docker daemon
+Step 0 : FROM debian:jessie
+ -<span class="ruby">--&gt; bf84c1d84a8f
+</span>Step 1 : RUN apt-get update &amp;&amp; apt-get install -y curl &amp;&amp; rm -rf /var/lib/apt/lists/*
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> <span class="hljs-number">93258459</span>a279
+</span>...
+ -<span class="ruby">--&gt; <span class="hljs-number">4</span>fffcf3749a2
+</span>Removing intermediate container 93258459a279
+Step 2 : RUN curl -LO "https://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz" &amp;&amp; tar -xzf node-v0.12.5-linux-x64.tar.gz -C /usr/local --strip-components=1 &amp;&amp; rm node-v0.12.5-linux-x64.tar.gz
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> a3a17d584bae
+</span>...
+ -<span class="ruby">--&gt; <span class="hljs-number">4</span>eaa62ace8de
+</span>Removing intermediate container a3a17d584bae
+Step 3 : ADD *.json /app/
+ -<span class="ruby">--&gt; <span class="hljs-number">1</span>e8ffd7e10a8
+</span>Removing intermediate container 5db20e8b8ed2
+Step 4 : WORKDIR /app
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> <span class="hljs-number">7</span>b84b06642b1
+</span> -<span class="ruby">--&gt; <span class="hljs-number">9</span>c0e2287c34d
+</span>Removing intermediate container 7b84b06642b1
+Step 5 : RUN npm install
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> <span class="hljs-number">0523</span>df6e9aac
+</span>...
+ -<span class="ruby">--&gt; <span class="hljs-number">6</span>d7327ebee3<span class="hljs-number">0</span>
+</span>Removing intermediate container 0523df6e9aac
+Step 6 : ADD . /app
+ -<span class="ruby">--&gt; <span class="hljs-number">13</span>bdbe70c6fa
+</span>Removing intermediate container 3c83d82c1d53
+Step 7 : EXPOSE 3000
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> <span class="hljs-number">51</span>e252173b12
+</span> -<span class="ruby">--&gt; <span class="hljs-number">6</span>c62eb1197e2
+</span>Removing intermediate container 51e252173b12
+Step 8 : VOLUME /app/log
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> <span class="hljs-number">4</span>af0bb73307b
+</span> -<span class="ruby">--&gt; <span class="hljs-number">15</span>b6190de473
+</span>Removing intermediate container 4af0bb73307b
+Step 9 : CMD node server.js
+ -<span class="ruby">--&gt; <span class="hljs-constant">Running</span> <span class="hljs-keyword">in</span> <span class="hljs-number">9522</span>c6b9bf95
+</span> -<span class="ruby">--&gt; aaf20fb25dac
+</span>Removing intermediate container 9522c6b9bf95
+Successfully built aaf20fb25dac</code></pre>
+<p>L’option <code>-t</code> permet de nommer votre image docker, ce qui vous servira lorsque
+vous voudrez lancer votre conteneur. Et le <code>.</code> est le repertoire où se trouve
+le Dockerfile, dans notre cas le dossier courant.</p>
+<p>Maintenant, vous pouvez lancer votre conteneur de cette manière :</p>
+<pre><code class="language-console">$ docker <span class="hljs-keyword">run</span> -<span class="hljs-keyword">d</span> -p 3000:3000 -v $(<span class="hljs-keyword">pwd</span>)/<span class="hljs-keyword">log</span>:/<span class="hljs-keyword">app</span>/<span class="hljs-keyword">log</span> fullstack-js</code></pre>
+<p>Cette commande permet de lancer notre image en partageant le port et un dossier
+avec votre ordinateur, si vous voulez plus de détails sur le fonctionnement du
+client Docker, je vous invite à lire mon <a href="/fr/articles/docker/">article
+précédent</a>.</p>
+<hr>
+<p>Dans cet article, vous avez pu voir comment créer votre propre Dockerfile,
+maintenant vous pouvez créer des images Docker parfaitement adaptées à votre
+projet, et même plus. En cherchant sur Internet, vous pourrez trouver des images
+Docker pour tout et n’importe quoi, comme des images pour lancer Chrome dans un
+conteneur par exemple. Pour en savoir plus, je vous redirige vers le
+blog de <a href="https://blog.jessfraz.com/post/docker-containers-on-the-desktop/">Jessie
+Frazelle</a>.</p>
+<p>Dans le prochain article, je vous parlerai de docker-compose, un outil qui
+permet de lancer des applications multi-conteneurs facilement.</p>
+]]></description><link>http://putaindecode.io/fr/articles/docker/dockerfile/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/docker/dockerfile/</guid><pubDate>Thu, 02 Jul 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[SemVer, c'est quoi ?]]></title><description><![CDATA[<p><em>Ce post a été largement inspiré de la mauvaise expérience que j’ai pu avoir
+avec l’évolution de <a href="http://backbonejs.org/">Backbone.js</a> qui, ne respectant pas SemVer, m’a posé des
+problèmes lors de mise à jour de versions. Les node_modules (dépendances de
+dépendances) sont aussi en question.</em></p>
+<p>Depuis quelques temps, vous devez entendre le terme <strong>SemVer</strong> par-ci par-là
+mais peut-être que vous ne savez pas ce que c’est ou que vous ne savez pas
+comment l’appliquer. Et je vous comprends, j’ai mis un peu de temps à maitriser
+le sujet.</p>
+<p>Pour faire simple, <strong>SemVer</strong> (voulant dire <em>Semantic Versioning</em>) est une
+gestion sémantique des versions. En d’autres termes, une façon de numéroter les
+versions de manière logique, cohérente, parlante, ayant du sens. Ce n’est
+cependant pas forcément une norme, vous n’êtes pas obligé(e) de la respecter
+mais ce serait vraiment, vraiment dommage car il tend justement à l’être.</p>
+<p>Mais tout d’abord, posons les bases, qu’est-ce qu’une version ?</p>
+<p>Une version s’applique à un produit, une application, une bibliothèque, un OS,
+tout ce qui a une progression en informatique. Cela permet de définir
+l’avancement du produit. La majorité du temps (sauf pour quelques hérétiques),
+cela s’écrit de cette façon : <code>X.Y.Z</code> où <code>X</code>, <code>Y</code> et <code>Z</code> sont des entiers (pas
+forcément des chiffres d’ailleurs, cela peut être supérieur à 9) soit <code>1.0.10</code>
+par exemple. Il est possible que vous voyiez cette forme <code>vX.Y.Z</code> comme <code>v1.0.10</code>
+mais en toute franchise, je ne l’apprécie pas. J’aime que mon tag équivaille à
+ma version en elle-même. Purement personnel.</p>
+<p>Maintenant que nous savons ce qu’est une version, voyons voir ce qu’est
+réellement <strong>SemVer</strong>.</p>
+<p><strong>SemVer</strong> est un moyen cohérent, pertinent de nommer ses versions afin de
+savoir rapidement quelles modifications ont été apportées à votre projet.</p>
+<p>Voyons voir ce que dit la documentation officielle de
+<a href="http://semver.org/lang/fr/">SemVer</a></p>
+<blockquote>
+<p>Étant donné un numéro de version MAJEUR.MINEUR.CORRECTIF, il faut incrémenter :</p>
+</blockquote>
+<blockquote>
+<p>le numéro de version MAJEUR quand il y a des changements
+rétro-incompatibles,<br>
+le numéro de version MINEUR quand il y a des changements rétro-compatibles,<br>
+le numéro de version de CORRECTIF quand il y a des corrections d’anomalies
+rétro-compatibles</p>
+</blockquote>
+<blockquote>
+<p>Des libellés supplémentaires peuvent être ajoutés pour les versions de
+pré-livraison et pour des méta-données de construction sous forme d’extension du
+format MAJEURE.MINEURE.CORRECTIF.</p>
+</blockquote>
+<p>On comprend effectivement l’idée de <strong>SemVer</strong> (et la suite du site explique
+comment l’appliquer) mais je trouve que l’on peut mieux expliquer.</p>
+<p>Pour comprendre <strong>SemVer</strong>, il faut se mettre dans la peau de l’utilisateur qui
+va se servir de votre production.</p>
+<p>En effet, <strong>SemVer</strong> est un contrat que vous signez avec vos utilisateurs, une
+forme de respect qui leur permet d’adapter leur code ou non en fonction des
+versions que vous proposez.</p>
+<p>Si je devais définir à quelqu’un ce qu’est <strong>SemVer</strong>, je lui dirais ceci :</p>
+<blockquote>
+<p>SemVer s’écrit de cette façon : <code>X.Y.Z</code> où <code>X</code> est “majeur”, <code>Y</code> est “mineur”,
+<code>Z</code> est “patch”.</p>
+</blockquote>
+<blockquote>
+<p>Qu’est-ce que cela veut dire. Cela veut dire que si vous avez corrigé un bug
+dans votre lib et que cela n’affecte en rien le code écrit par votre
+utilisateur, alors incrémentez <code>Z</code> (+0.0.1).</p>
+</blockquote>
+<blockquote>
+<p>Si vous avez fait des ajouts dans votre app qui peuvent être intéressants pour
+l’utilisateur et mérite une certaine attention afin d’améliorer le code qui
+utilise votre lib, alors incrémentez <code>Y</code> (+0.1.0).</p>
+</blockquote>
+<blockquote>
+<p>Si en revanche, vous avez cassé ne serait-ce qu’une partie de l’API (“breaking
+changes”), que vous avez <em>juste</em> changé des noms de méthodes / fonctions déjà
+existantes (et donc sûrement utilisées par quelqu’un d’autre), que finalement
+cela nécessite <strong>forcément</strong> une modification de la part de l’utilisateur sous
+peine que sa propre app ne fonctionne plus, alors incrémentez <code>X</code> (+1.0.0).</p>
+</blockquote>
+<p>C’est vraiment une question de respect envers qui vous proposez votre lib. Par
+<strong>SemVer</strong>, je vous informe des potentielles modifications ou lectures de
+documentation que vous devez faire. Il ne faut vraiment pas voir ça comme une
+évolution de votre propre code.</p>
+<p>Par exemple, vous avez refactorisé tout votre code mais l’API n’a pas changé.
+Alors <code>Z</code> suffit. Et si vous avez ajoutez des méthodes, c’est plutôt <code>Y</code>.
+Pourtant il y a eu une quantité phénoménale de code modifié. Des lignes et des
+lignes. Est-ce pour autant que vous devez incrémentez <code>X</code> ? Non. Surtout lorsque
+les tests automatisés n’ont pas été modifiés et passent toujours.</p>
+<p>En revanche, vous ne faites qu’une petite modification de nom de méthode qui ne
+vous semble pas appropriée, ça ne vous prend qu’une ligne de modification, vous
+pourriez croire que c’est uniquement <code>Z</code> à changer ? Non plus. Là, vous modifiez
+le contrat que l’utilisateur a acquiescé en utilisant votre lib ; vous avez
+alors la responsabilité de lui indiquer que son code doit absolument changer
+sinon celui-ci ne marchera plus correctement.</p>
+<p>En bref, ne voyez pas l’évolution de votre projet avec <strong>SemVer</strong> mais le
+contrat que vous signez implicitement avec vos utilisateurs.</p>
+<p>Oh et oui, surtout, surtout, ce n’est pas parce que vous êtes arrivé(e) à <code>9</code>
+dans <code>Y</code> ou <code>Z</code> que le nombre le précédant doit augmenter. Par exemple <em>mineur</em>
+sur <code>1.9.0</code> ? Alors <code>1.10.0</code> et non <code>2.0.0</code>.</p>
+<p>J’espère qu’avec ceci, vous vous sentirez plus à l’aise.</p>
+<h2 id="tips-npm"><a class="markdownIt-Anchor" href="#tips-npm">#</a> Tips npm</h2>
+<p>Avec npm, il est possible de mettre à jour rapidement son <code>package.json</code> et tag
+git en utilisant la commande <code>$ npm version</code>. Comme ceci :</p>
+<pre><code class="language-console">$ npm version (major|<span class="hljs-string">minor</span>|<span class="hljs-string">patch)</span></code></pre>
+<p>Cela vous incrémentera le <code>package.json</code>  et vous fera un beau commit + tag dans
+git tel que :</p>
+<pre><code class="language-console">* b474d9c (HEAD -&gt; master, tag: <span class="hljs-number">1.5</span><span class="hljs-number">.3</span>, origin/master) <span class="hljs-number">1.5</span><span class="hljs-number">.3</span>`.</code></pre>
+<p>Et pour éviter d’avoir le “v” dans les tags git qui est par défaut dans npm,
+faites :</p>
+<pre><code class="language-console">$ npm config <span class="hljs-keyword">set</span> <span class="hljs-keyword">tag</span>-<span class="hljs-keyword">version</span>-prefix <span class="hljs-string">""</span></code></pre>
+<h2 id="changelog"><a class="markdownIt-Anchor" href="#changelog">#</a> Changelog</h2>
+<p><strong>SemVer</strong> va de pair avec les <a href="http://keepachangelog.com/">changelog</a>. Mettre à
+jour le changelog vous permet d’indiquer très rapidement ce qui a été modifié
+sans que l’utilisateur ait forcément à regarder votre code. Il est surtout très
+important lors d’ajouts de fonctionnalités ou de modifications (majeures et
+mineures) afin de voir directement les méthodes / fonctions affectées mais aussi
+dans le cas d’un patch de voir le gain obtenu de cette nouvelle mise à jour. À
+ajouter directement dans le <code>README.md</code> à la fin ou carrément dans un fichier ou
+des fichiers dédiés à ça.
+Voici un <a href="https://github.com/cssnext/cssnext/blob/master/CHANGELOG.md">exemple</a>.</p>
+<hr>
+<p>Stay safe, use <strong>SemVer</strong>.</p>
+<p>Ressources :</p>
+<ul>
+<li><a href="http://semver.org/">site officiel</a></li>
+<li><a href="http://semver-ftw.org/">semver-ftw</a></li>
+</ul>
+]]></description><link>http://putaindecode.io/fr/articles/semver/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/semver/</guid><pubDate>Tue, 16 Jun 2015 00:00:00 GMT</pubDate></item></channel></rss>
