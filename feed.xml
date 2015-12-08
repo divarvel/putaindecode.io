@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 07:23:13 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 07:43:29 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
@@ -440,7 +440,174 @@ functionThatReturnAPromise(success)
 les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un code
 encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne pas
 ES2015 :)</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
+promises.
+The concept of promises exists is not new in the JavaScript world, but now
+we got an official feature!</p>
+<h2 id="what-s-a-promise"><a class="markdownIt-Anchor" href="#what-s-a-promise">#</a> What’s a promise?</h2>
+<p>It’s a promise of an incoming value, not available yet. It’s a promise so it can
+be fulfilled or not (rejected). If fulfilled, it will give us the the value we
+were waiting for. If rejected, we will get the error so we can handle it.</p>
+<p>This mechanism allows to avoid the callback hell :</p>
+<pre><code class="language-js"><span class="hljs-comment">// With callbacks.</span>
+<span class="hljs-comment">// Let's say that all those function are doing async tasks (like http or</span>
+<span class="hljs-comment">// database request, fs read...)</span>
+<span class="hljs-keyword">const</span> functionWithCallback1 = (callback) =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback5 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback6 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+
+functionWithCallback1((result1, err) =&gt; {
+  <span class="hljs-keyword">if</span> (err) {
+    <span class="hljs-keyword">throw</span> err
+  }
+  functionWithCallback2(result1, (result2, err) =&gt; {
+    <span class="hljs-keyword">if</span> (err) {
+      <span class="hljs-keyword">throw</span> err
+    }
+    functionWithCallback3(result2, (result3, err) =&gt; {
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">throw</span> err
+      }
+      functionWithCallback4(result3, (result4, err) =&gt; {
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">throw</span> err
+        }
+        functionWithCallback5(result4, (result5, err) =&gt; {
+          <span class="hljs-keyword">if</span> (err) {
+            <span class="hljs-keyword">throw</span> err
+          }
+          functionWithCallback6(result5, (result6, err) =&gt; {
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">throw</span> err
+            }
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with callbacks: <span class="hljs-subst">${result6}</span>`</span>)
+          })
+        })
+      })
+    })
+  })
+})
+
+<span class="hljs-comment">// Now the same thing with promises</span>
+<span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
+<span class="hljs-keyword">const</span> functionWithPromise2 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise3 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise4 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise5 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise6 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+
+functionWithPromise1()
+  .then(functionWithPromise2)
+  .then(functionWithPromise3)
+  .then(functionWithPromise4)
+  .then(functionWithPromise5)
+  .then(functionWithPromise6)
+  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with promises: <span class="hljs-subst">${result}</span>`</span>))
+  .catch(err =&gt; {
+    <span class="hljs-keyword">throw</span> err
+  })</code></pre>
+<p>As you can see, example with promises is clear and more concise.</p>
+<h2 id="that-s-cool-how-can-i-use-promises"><a class="markdownIt-Anchor" href="#that-s-cool-how-can-i-use-promises">#</a> That’s cool. How can I use promises?</h2>
+<p>A promise can have different status:</p>
+<ul>
+<li>in progress: value is not ready yet</li>
+<li>resolved: value is here, we can use it</li>
+<li>rejected: an error has been thrown, we should handle it.</li>
+</ul>
+<p>A promise have 2 functions: <code>then</code> and <code>catch</code>.
+You can use <code>then</code> to wait for the result (or handle an error), and <code>catch</code> to
+catch all possibles errors of one promise or more.</p>
+<p>Let’s see how to use promises with an example of the incoming standardized
+<a href="https://fetch.spec.whatwg.org"><code>fetch</code></a> method.</p>
+<pre><code class="language-js"><span class="hljs-comment">// At this moment, promise is in progress</span>
+<span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+
+<span class="hljs-comment">// When promise is resolved, you go a value you can work with</span>
+<span class="hljs-keyword">const</span> parsePromise = fetchPromise.then(fetchResult =&gt; {
+  <span class="hljs-comment">// I can return a new result that can be used as a new promise</span>
+  <span class="hljs-comment">// Here we call .text() which parse the content of the request and return</span>
+  <span class="hljs-comment">// promise</span>
+  <span class="hljs-keyword">return</span> fetchResult.text()
+})
+
+<span class="hljs-comment">// When parsing is done, we can work with the content</span>
+parsePromise.then(textResult =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
+})
+
+<span class="hljs-comment">// If the request encounter an issue, promise might be rejected with an error</span>
+fetchPromise.catch(fetchError =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
+})
+
+<span class="hljs-comment">// If there is an issue during the parsing, we can handle it too</span>
+parsePromise.catch(parseError =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
+})
+
+<span class="hljs-comment">// The same can be written like this</span>
+fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+  .then((fetchResult) =&gt; fetchResult.text())
+  .then((textResult) =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
+  })
+  .catch((error) =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request or the parsing`</span>, fetchError)
+  })
+
+<span class="hljs-comment">// Or like this</span>
+fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+  .then(
+    (fetchResult) =&gt; {
+      <span class="hljs-keyword">return</span> fetchResult.text()
+    },
+    (fetchError) =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
+    })
+  .then(
+    (textResult) =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
+    },
+    (parseError) =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
+    }
+  )</code></pre>
+<h2 id="how-do-i-create-my-own-promises"><a class="markdownIt-Anchor" href="#how-do-i-create-my-own-promises">#</a> How do I create my own promises?</h2>
+<p>Using a promise is nice, but creating yours is even better. Let’s be clear: it’s
+easy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> functionThatReturnAPromise = (success) =&gt; {
+  <span class="hljs-comment">// We will need to use Promise class to use one.</span>
+  <span class="hljs-comment">// constructor takes 2 arguments:</span>
+  <span class="hljs-comment">// - resolve, a callback to pass the value you want to send</span>
+  <span class="hljs-comment">// - reject, a callback to throw an error</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
+    <span class="hljs-keyword">if</span> (success) {
+      resolve(<span class="hljs-string">'success'</span>)
+    }
+    <span class="hljs-keyword">else</span> {
+      reject(<span class="hljs-string">'failed'</span>)
+    }
+  })
+}
+
+<span class="hljs-comment">// You can use this promise like this</span>
+functionThatReturnAPromise(success)
+  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res))
+  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error))
+
+<span class="hljs-comment">// In our case, the previous example can be also written</span>
+functionThatReturnAPromise(success)
+  .then(
+    (res) =&gt; <span class="hljs-built_in">console</span>.log(res),
+    (error) =&gt; <span class="hljs-built_in">console</span>.log(error)
+  )</code></pre>
+<h2 id="what-s-next"><a class="markdownIt-Anchor" href="#what-s-next">#</a> What’s next?</h2>
+<p>A new way to write asynchronous will land in JavaScript with <code>async</code> and <code>await</code>
+keywords, but we will need to way another ES year (or two) for it !</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
 They don’t really bring anything.
 That said, this can helps to improve code readability and make the code more
 accessible.</p>
@@ -672,85 +839,7 @@ l’était bien entendu
 <p>Une dernière petite chose, en utilisant les classes on active automatiquement le
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">mode strict</a>,
 il n’est donc pas nécessaire de le rajouter manuellement.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
-
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
-
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -829,7 +918,85 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
@@ -1255,81 +1422,7 @@ où votre variable n’existe pas. Ce moment, c’est la TDZ.</p>
 <li>Si vous avez trouvé le pire cas d’utilisation du monde, changez pour un <code>var</code>
 (je vous laisse faire le calcul)</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
-<strong>storyboards</strong>.</p>
-<blockquote>
-<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
-C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
-entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
-de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
-mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
-graphiquement et simplement le workflow de l’application.</p>
-</blockquote>
-<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
-<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
-c’est génial. Mais alors pourquoi les diviser ?</p>
-<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
-<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
-conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
-même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
-est de prendre celui de quelqu’un et refaire les changements ou de corriger les
-sources en croisant les doigts. Accompagné de 4 L de café.<br>
-Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
-travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
-chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
-de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
-<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
-<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
-groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
-facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
-une <code>scene</code> à l’autre bout du storyboard.</p>
-<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
-<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
-grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
-d’éléments vous avez à recompiler, plus vite ça ira.</p>
-<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
-<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
-pour les clients, vous pouvez vous faire des petits storyboards que vous
-réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
-faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
-<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
-<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
-<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
-<span class="hljs-comment">// Aller chercher le storyboard</span>
-<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-keyword">let</span> controllerSettings =
-storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
-<span class="hljs-comment">// Présenter</span>
-<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
-<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
-<span class="hljs-comment">// Aller chercher le sotyboard</span>
-<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
-bundle:<span class="hljs-literal">nil</span>];
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
-instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
-<span class="hljs-comment">// Présenter</span>
-[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
-<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
-fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
-<ul>
-<li>créez un nouveau storyboard pour votre <em>secteur</em>
-(File→New→File→[OS]→User Interface),</li>
-<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
-(sinon le compilateur n’aime pas),</li>
-<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
-<code>Utilies&gt;Identity Inspector</code>,</li>
-<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
-<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
-<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
-votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
-<em>storyboardID</em> de la <code>scene</code>,</li>
-<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
-<em>Storyboard Reference</em> voulus.</li>
-</ul>
-<p>Plus long à lire qu’à faire !</p>
-]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
 to <code>let</code> and <code>const</code>, but also keeps <code>var</code> in the language specification.</p>
 <p>The first thing you need to do: forget everything you know about <code>var</code>.</p>
 <h1 id="declarations"><a class="markdownIt-Anchor" href="#declarations">#</a> Declarations</h1>
@@ -1439,7 +1532,255 @@ exist yet.</p>
 variable, switch to <code>let</code> (that might happen 1% of the time)</li>
 <li>If you are in the worst use-case of the world, use <code>var</code> (you can do the math)</li>
 </ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
+<strong>storyboards</strong>.</p>
+<blockquote>
+<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
+C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
+entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
+de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
+mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
+graphiquement et simplement le workflow de l’application.</p>
+</blockquote>
+<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
+<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
+c’est génial. Mais alors pourquoi les diviser ?</p>
+<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
+<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
+conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
+même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
+est de prendre celui de quelqu’un et refaire les changements ou de corriger les
+sources en croisant les doigts. Accompagné de 4 L de café.<br>
+Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
+travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
+chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
+de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
+<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
+<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
+groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
+facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
+une <code>scene</code> à l’autre bout du storyboard.</p>
+<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
+<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
+grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
+d’éléments vous avez à recompiler, plus vite ça ira.</p>
+<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
+<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
+pour les clients, vous pouvez vous faire des petits storyboards que vous
+réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
+faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
+<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
+<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
+<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
+<span class="hljs-comment">// Aller chercher le storyboard</span>
+<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-keyword">let</span> controllerSettings =
+storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
+<span class="hljs-comment">// Présenter</span>
+<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
+<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
+<span class="hljs-comment">// Aller chercher le sotyboard</span>
+<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
+bundle:<span class="hljs-literal">nil</span>];
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
+instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
+<span class="hljs-comment">// Présenter</span>
+[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
+<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
+fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
+<ul>
+<li>créez un nouveau storyboard pour votre <em>secteur</em>
+(File→New→File→[OS]→User Interface),</li>
+<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
+(sinon le compilateur n’aime pas),</li>
+<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
+<code>Utilies&gt;Identity Inspector</code>,</li>
+<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
+<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
+<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
+votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
+<em>storyboardID</em> de la <code>scene</code>,</li>
+<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
+<em>Storyboard Reference</em> voulus.</li>
+</ul>
+<p>Plus long à lire qu’à faire !</p>
+]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
+<a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
+which</p>
+<blockquote>
+<p>lets you render a component “one level deep” and assert facts about
+what its render method returns, without worrying about the behavior of child
+components, which are not instantiated or rendered.
+This does not require a DOM.</p>
+</blockquote>
+<p>Sounds good, right? And guess what, shallow rendering is currently the
+<a href="https://discuss.reactjs.org/t/whats-the-prefered-way-to-test-react-js-components/26">preferred way to test your React components</a>.</p>
+<p>As you can see in the post mentioned at the end of this one, the
+actual code to test some components might seem a bit longer that what you could
+expect.</p>
+<p>Hopefully, <a href="https://github.com/vvo">someone</a> created something pretty cool:
+<a href="https://github.com/algolia/react-element-to-jsx-string">react-element-to-jsx-string</a>.
+As the name of the package says, this library helps to render a react component
+into a JSX string.</p>
+<p>Now things start to become interesting:
+with those two things in mind (shallow render and react components as JSX strings),
+we can easily add some basic unit tests to some components.</p>
+<p><em>There are others techniques to test React components, and most of those
+involve the DOM. This means you will need to run your tests in the browser (or
+using jsdom): your tests will be slower than the following method
+(which is more real unit testing since you execute less code and do not require
+a huge environment).</em></p>
+<h2 id="easy-unit-testing-react-components-without-a-dom"><a class="markdownIt-Anchor" href="#easy-unit-testing-react-components-without-a-dom">#</a> Easy unit testing React components (without a DOM)</h2>
+<p>Let’s do this with the following (dumb) component:</p>
+<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/index.js</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { PropTypes } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+
+const Component = ({
+  img,
+  title,
+  Loader,
+  Title,
+}) =&gt; (
+  &lt;div&gt;
+    {
+      (!img || !img.src) &amp;&amp; Loader &amp;&amp;
+      &lt;Loader /&gt;
+    }
+    {
+      img &amp;&amp; img.src &amp;&amp;
+      &lt;img src={ img.src } alt={ img.alt }/&gt;
+    }
+    {
+      title &amp;&amp; Title &amp;&amp;
+      &lt;Title text={ title } /&gt;
+    }
+  &lt;/div&gt;
+)
+
+Component.propTypes = {
+  img: PropTypes.object,
+  title: PropTypes.string,
+  Loader: PropTypes.func.isRequired,
+  Title: PropTypes.func.isRequired,
+}
+
+Component.displayName = <span class="hljs-string">"Picture"</span>
+
+export default Component</code></pre>
+<p>This component displays an image with a title component.
+If the image data are not ready yet, it can display a loader component.</p>
+<p>Now let’s write some simple test for it. For the example we will use
+<a href="https://medium.com/javascript-scene/why-i-use-tape-instead-of-mocha-so-should-you-6aa105d8eaf4">tape</a>
+with the help of <a href="https://github.com/atabel/tape-jsx-equals">tape-jsx-equals</a>,
+but you will find
+<a href="https://www.npmjs.com/search?q=expect+jsx">all kind of flavors on npm</a>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/__tests__/index.js</span>
+
+<span class="hljs-keyword">import</span> tape <span class="hljs-keyword">from</span> <span class="hljs-string">"tape"</span>
+<span class="hljs-keyword">import</span> addAssertions <span class="hljs-keyword">from</span> <span class="hljs-string">"extend-tape"</span>
+<span class="hljs-keyword">import</span> jsxEquals <span class="hljs-keyword">from</span> <span class="hljs-string">"tape-jsx-equals"</span>
+const test = addAssertions(tape, { jsxEquals })
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { createRenderer } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-addons-test-utils"</span>
+
+<span class="hljs-keyword">import</span> Picture <span class="hljs-keyword">from</span> <span class="hljs-string">".."</span>
+
+// fixtures (empty and stateless react components)
+const Loader = () =&gt; {}
+const Title = () =&gt; {}
+
+test(<span class="hljs-string">"PageContainer is properly rendered"</span>, (t) =&gt; {
+  const renderer = createRenderer()
+
+  renderer.render(
+    &lt;Picture
+      Loader={ Loader }
+      Title={ Title }
+    /&gt;
+  )
+  t.jsxEquals(
+    renderer.getRenderOutput(),
+    &lt;div&gt;
+      &lt;Loader /&gt;
+    &lt;/div&gt;,
+    <span class="hljs-string">"can render a Loader component if no image data are passed"</span>
+  )
+
+  renderer.render(
+    &lt;Picture
+      Loader={ Loader }
+      Title={ Title }
+      img={ {
+        src: <span class="hljs-string">"SRC"</span>,
+        alt: <span class="hljs-string">"ALT"</span>,
+      } }
+    /&gt;
+  )
+  t.jsxEquals(
+    renderer.getRenderOutput(),
+    &lt;div&gt;
+      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
+    &lt;/div&gt;,
+    <span class="hljs-string">"should render an image if data are passed"</span>
+  )
+
+  renderer.render(
+    &lt;Picture
+      Loader={ Loader }
+      Title={ Title }
+      img={ {
+        src: <span class="hljs-string">"SRC"</span>,
+        alt: <span class="hljs-string">"ALT"</span>,
+      } }
+      title={ <span class="hljs-string">"TITLE"</span> }
+    /&gt;
+  )
+  t.jsxEquals(
+    renderer.getRenderOutput(),
+    &lt;div&gt;
+      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
+      &lt;Title text=<span class="hljs-string">"TITLE"</span> /&gt;
+    &lt;/div&gt;,
+    <span class="hljs-string">"can render a Title if data are passed"</span>
+  )
+
+  t.end()
+})</code></pre>
+<p>These tests are the minimum coverage to ensure you don’t break anything when you work
+on your component.</p>
+<p>As you can see, tests here are pretty easy to write &amp; straightforward.<br>
+<strong>The interesting part is that you don’t compare using strings.
+You can use real React components.</strong></p>
+<p>You can easily run this full example by getting it from this repository:</p>
+<p><a href="https://github.com/MoOx/react-component-unit-testing-example">github.com/MoOx/react-component-unit-testing-example</a></p>
+<p>This example contains all the commands and dependencies
+(defined in the <code>package.json</code>)
+that you might need.</p>
+<h1 id="what-about-testing-events-like-onclick"><a class="markdownIt-Anchor" href="#what-about-testing-events-like-onclick">#</a> What about testing events like <code>onClick</code>?</h1>
+<p>You don’t need to reproduce the entire click.</p>
+<p><strong>Your tests don’t need to check that your <code>onClick</code> prop will be executed when
+you click on a DOM element.</strong>
+<em>React probably have tests to cover this.</em></p>
+<p>You only need to test that the <code>onClick</code> prop value will do what you want.
+So if you have something like <code>onClick={ yourCallback }</code>,
+just call directly <code>yourCallback()</code> in your test just before your comparison.
+That’s enough!</p>
+<p>If you want to go deeper, you might also read:</p>
+<ul>
+<li><a href="http://simonsmith.io/unit-testing-react-components-without-a-dom/"><em>Unit testing React components without a DOM</em></a>,
+by Simon Smith, that covers the same topic without the simplicity of the JSX
+comparisons,</li>
+<li><a href="https://blog.algolia.com/how-we-unit-test-react-components-using-expect-jsx/"><em>How we unit test React components using expect-jsx</em></a>
+on Algolia blog, that explains why they choose and create tools for this approach.</li>
+</ul>
+<p>With all those examples, we hope you will stop being afraid to test your code
+and will not hesitate to cover all your React components with tests 😍.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/react/unit-testing/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/react/unit-testing/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
 <a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>
 (rendu peu profond),
 qui permet de rendre un composant avec un seul niveau de profondeur de rendu.</p>
@@ -1619,181 +1960,7 @@ pour cette approche.</li>
 <p>Avec ces exemples, nous espérons vraiment que vous n’aurez plus peur de tester
 votre code et que vous n’hésiterez plus à couvrir tous vos composants React de
 tests 😍.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
-<a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
-which</p>
-<blockquote>
-<p>lets you render a component “one level deep” and assert facts about
-what its render method returns, without worrying about the behavior of child
-components, which are not instantiated or rendered.
-This does not require a DOM.</p>
-</blockquote>
-<p>Sounds good, right? And guess what, shallow rendering is currently the
-<a href="https://discuss.reactjs.org/t/whats-the-prefered-way-to-test-react-js-components/26">preferred way to test your React components</a>.</p>
-<p>As you can see in the post mentioned at the end of this one, the
-actual code to test some components might seem a bit longer that what you could
-expect.</p>
-<p>Hopefully, <a href="https://github.com/vvo">someone</a> created something pretty cool:
-<a href="https://github.com/algolia/react-element-to-jsx-string">react-element-to-jsx-string</a>.
-As the name of the package says, this library helps to render a react component
-into a JSX string.</p>
-<p>Now things start to become interesting:
-with those two things in mind (shallow render and react components as JSX strings),
-we can easily add some basic unit tests to some components.</p>
-<p><em>There are others techniques to test React components, and most of those
-involve the DOM. This means you will need to run your tests in the browser (or
-using jsdom): your tests will be slower than the following method
-(which is more real unit testing since you execute less code and do not require
-a huge environment).</em></p>
-<h2 id="easy-unit-testing-react-components-without-a-dom"><a class="markdownIt-Anchor" href="#easy-unit-testing-react-components-without-a-dom">#</a> Easy unit testing React components (without a DOM)</h2>
-<p>Let’s do this with the following (dumb) component:</p>
-<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/index.js</span>
-
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-<span class="hljs-keyword">import</span> { PropTypes } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-
-const Component = ({
-  img,
-  title,
-  Loader,
-  Title,
-}) =&gt; (
-  &lt;div&gt;
-    {
-      (!img || !img.src) &amp;&amp; Loader &amp;&amp;
-      &lt;Loader /&gt;
-    }
-    {
-      img &amp;&amp; img.src &amp;&amp;
-      &lt;img src={ img.src } alt={ img.alt }/&gt;
-    }
-    {
-      title &amp;&amp; Title &amp;&amp;
-      &lt;Title text={ title } /&gt;
-    }
-  &lt;/div&gt;
-)
-
-Component.propTypes = {
-  img: PropTypes.object,
-  title: PropTypes.string,
-  Loader: PropTypes.func.isRequired,
-  Title: PropTypes.func.isRequired,
-}
-
-Component.displayName = <span class="hljs-string">"Picture"</span>
-
-export default Component</code></pre>
-<p>This component displays an image with a title component.
-If the image data are not ready yet, it can display a loader component.</p>
-<p>Now let’s write some simple test for it. For the example we will use
-<a href="https://medium.com/javascript-scene/why-i-use-tape-instead-of-mocha-so-should-you-6aa105d8eaf4">tape</a>
-with the help of <a href="https://github.com/atabel/tape-jsx-equals">tape-jsx-equals</a>,
-but you will find
-<a href="https://www.npmjs.com/search?q=expect+jsx">all kind of flavors on npm</a>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/__tests__/index.js</span>
-
-<span class="hljs-keyword">import</span> tape <span class="hljs-keyword">from</span> <span class="hljs-string">"tape"</span>
-<span class="hljs-keyword">import</span> addAssertions <span class="hljs-keyword">from</span> <span class="hljs-string">"extend-tape"</span>
-<span class="hljs-keyword">import</span> jsxEquals <span class="hljs-keyword">from</span> <span class="hljs-string">"tape-jsx-equals"</span>
-const test = addAssertions(tape, { jsxEquals })
-
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-<span class="hljs-keyword">import</span> { createRenderer } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-addons-test-utils"</span>
-
-<span class="hljs-keyword">import</span> Picture <span class="hljs-keyword">from</span> <span class="hljs-string">".."</span>
-
-// fixtures (empty and stateless react components)
-const Loader = () =&gt; {}
-const Title = () =&gt; {}
-
-test(<span class="hljs-string">"PageContainer is properly rendered"</span>, (t) =&gt; {
-  const renderer = createRenderer()
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;Loader /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"can render a Loader component if no image data are passed"</span>
-  )
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-      img={ {
-        src: <span class="hljs-string">"SRC"</span>,
-        alt: <span class="hljs-string">"ALT"</span>,
-      } }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"should render an image if data are passed"</span>
-  )
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-      img={ {
-        src: <span class="hljs-string">"SRC"</span>,
-        alt: <span class="hljs-string">"ALT"</span>,
-      } }
-      title={ <span class="hljs-string">"TITLE"</span> }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
-      &lt;Title text=<span class="hljs-string">"TITLE"</span> /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"can render a Title if data are passed"</span>
-  )
-
-  t.end()
-})</code></pre>
-<p>These tests are the minimum coverage to ensure you don’t break anything when you work
-on your component.</p>
-<p>As you can see, tests here are pretty easy to write &amp; straightforward.<br>
-<strong>The interesting part is that you don’t compare using strings.
-You can use real React components.</strong></p>
-<p>You can easily run this full example by getting it from this repository:</p>
-<p><a href="https://github.com/MoOx/react-component-unit-testing-example">github.com/MoOx/react-component-unit-testing-example</a></p>
-<p>This example contains all the commands and dependencies
-(defined in the <code>package.json</code>)
-that you might need.</p>
-<h1 id="what-about-testing-events-like-onclick"><a class="markdownIt-Anchor" href="#what-about-testing-events-like-onclick">#</a> What about testing events like <code>onClick</code>?</h1>
-<p>You don’t need to reproduce the entire click.</p>
-<p><strong>Your tests don’t need to check that your <code>onClick</code> prop will be executed when
-you click on a DOM element.</strong>
-<em>React probably have tests to cover this.</em></p>
-<p>You only need to test that the <code>onClick</code> prop value will do what you want.
-So if you have something like <code>onClick={ yourCallback }</code>,
-just call directly <code>yourCallback()</code> in your test just before your comparison.
-That’s enough!</p>
-<p>If you want to go deeper, you might also read:</p>
-<ul>
-<li><a href="http://simonsmith.io/unit-testing-react-components-without-a-dom/"><em>Unit testing React components without a DOM</em></a>,
-by Simon Smith, that covers the same topic without the simplicity of the JSX
-comparisons,</li>
-<li><a href="https://blog.algolia.com/how-we-unit-test-react-components-using-expect-jsx/"><em>How we unit test React components using expect-jsx</em></a>
-on Algolia blog, that explains why they choose and create tools for this approach.</li>
-</ul>
-<p>With all those examples, we hope you will stop being afraid to test your code
-and will not hesitate to cover all your React components with tests 😍.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/react/unit-testing/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/react/unit-testing/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Un favicon vite fait bien fait]]></title><description><![CDATA[<p>Oublions un instant CSS et JavaScript pour parler d’un sujet vraiment
+]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Un favicon vite fait bien fait]]></title><description><![CDATA[<p>Oublions un instant CSS et JavaScript pour parler d’un sujet vraiment
 important : le favicon.</p>
 <p>Alors d’accord, le favicon n’est que le petit détail qu’on expédie en fin de
 projet. Mais oubliez-le et votre client comprendra tout de suite qu’il manque
@@ -2172,170 +2339,4 @@ devriez placer et référencer vos assets (images &amp; co), depuis <code>src</c
 <p>Libre à vous maintenant d’ajouter vos dépendances favorites et de remplir vos
 <code>index.css</code> et <code>index.js</code> avec une gestion d’erreurs autre que des requêtes HTTP
 en 404 !</p>
-]]></description><link>http://putaindecode.io/fr/articles/wordpress/webpack/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/wordpress/webpack/</guid><pubDate>Tue, 20 Oct 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Créer un site web gratuitement avec GitHub Pages]]></title><description><![CDATA[<p>Pour une fois, on ne va pas trop parler de code dans cet article, mais
-simplement de comment créer en quelques minutes un site web basique et
-l’héberger gratuitement sur la plateforme <a href="http://github.com">github.com</a>.</p>
-<p>Transférez cet article à toute personne qui souhaiterait avoir un site web mais
-qui pense encore que c’est trop compliqué :)</p>
-<p>Dans un premier temps, vous devez simplement avoir quelques connaissances de
-base :</p>
-<ul>
-<li><strong>HTML</strong> : une bonne <a href="https://developer.mozilla.org/fr/docs/Web/Guide/HTML/Introduction">introduction</a></li>
-<li><strong>GitHub</strong> : créez un compte gratuit ici : <a href="http://github.com">github.com</a></li>
-</ul>
-<p>Nous allons utiliser <a href="http://github.com">github.com</a> pour héberger notre
-<strong>site web statique</strong> dans un <em>repository</em> (un dossier). Ce service
-incontournable permet de stocker le code du site, de le
-<a href="https://fr.wikipedia.org/wiki/Logiciel_de_gestion_de_versions">versionner</a>, et
-de le publier gratuitement sur Internet dans des conditions optimales
-(CDN, anti-DDoS…)</p>
-<p><strong>Attention</strong> : tous les fichiers hébergés sur votre compte GitHub gratuit sont
-publics, à moins de souscrire à un compte privé payant, donc n’y stockez rien
-de sensible/secret.</p>
-<h2 id="qu-est-ce-qu-un-site-web-statique"><a class="markdownIt-Anchor" href="#qu-est-ce-qu-un-site-web-statique">#</a> Qu’est-ce qu’un site web statique ?</h2>
-<p>Pour la plupart des sites, les solutions de blog (CMS de type WordPress et
-autres) sont largement surdimensionnées. Elles requièrent un hébergement
-particulier (PHP ou autre), des connaissances techniques pour l’installation,
-et surtout une maintenance à moyen/long-terme à cause des mises à jour
-de sécurité surprises et autres correctifs de bugs à appliquer.</p>
-<p>Or, il est possible de créer des sites webs modernes et performants qui n’ont
-pas besoin de code côté serveur (donc pas de PHP), et peuvent donc être hébergés
-n’importe où, et à moindre coût. Le code du site sera uniquement composé de
-HTML, CSS et JavaScript, et s’exécutera directement dans le navigateur du
-visiteur, ce qui présente de nombreux avantages :</p>
-<ul>
-<li>simple et efficace</li>
-<li>pas de maintenance</li>
-<li>pas de risque de hacking</li>
-<li>performances optimales</li>
-<li>liberté totale</li>
-</ul>
-<p>De plus, en 2015, n’importe quel service en ligne digne de ce nom propose une
-<a href="https://www.mashape.com">API</a> qui permet d’intégrer directement sur votre site
-des fonctionnalités tierces, sans avoir besoin de code côté serveur, donc cette
-approche pure <strong>client-side</strong> n’a <strong>pas de limites</strong>.</p>
-<p>Dans ce premier article nous allons voir comment créer un site web basique à
-base de HTML/CSS, mais nous verrons par la suite comment utiliser un
-<a href="http://staticgen.com">générateur de site web statique</a> pour créer des sites
-webs plus avancés.</p>
-<h2 id="cr-er-le-repository-github"><a class="markdownIt-Anchor" href="#cr-er-le-repository-github">#</a> Créer le repository GitHub</h2>
-<p>Créez votre compte GitHub, puis un nouveau <em>repository</em> pour votre site web :
-<a href="https://github.com/new">https://github.com/new</a> (exemple : supersite)</p>
-<p>Le repository sera créé à cette adresse :
-<a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a></p>
-<h2 id="cr-er-un-site-web-avec-github-page-generator"><a class="markdownIt-Anchor" href="#cr-er-un-site-web-avec-github-page-generator">#</a> Créer un site web avec <em>GitHub page generator</em></h2>
-<p>Grâce aux templates par défaut, créez votre site <em>single-page</em> en 3 clics.</p>
-<p>Allez sur la page du projet :  <a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a></p>
-<ul>
-<li>Puis <strong>Repository settings</strong> (icône en bas à droite)</li>
-<li><strong>Automatic page generator</strong> puis <strong>Launch</strong></li>
-<li>Éditez le texte du site</li>
-<li>Sélectionnez votre template préféré puis <strong>Publish Page</strong></li>
-</ul>
-<p>Attendez quelques secondes et allez sur : <a href="http://USERNAME.github.io/supersite">http://USERNAME.github.io/supersite</a> pour découvrir le résultat final.</p>
-<p><strong>✔</strong> Site web en ligne et dispo pour le monde entier :)</p>
-<h2 id="modifier-le-site-en-ligne"><a class="markdownIt-Anchor" href="#modifier-le-site-en-ligne">#</a> Modifier le site en ligne</h2>
-<p>Allez sur la page du projet, <a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a>.</p>
-<p>C’est ici que l’on retrouve tout le code et les fichiers du site.</p>
-<p>Cliquez sur le fichier à modifier, typiquement <code>index.html</code> qui est la page
-d’accueil, cliquez sur l’icône “crayon” en haut à droite pour éditer le fichier
-et appliquez vos changements.</p>
-<p>Une fois les changements effectués, complétez le formulaire “Commit changes”
-en-dessous, avec un titre explicite permettant d’identifier votre modification.</p>
-<p>Exemple : “Ajout des infos de contact”.</p>
-<p>Cliquez sur <strong>Commit changes</strong>, attendez quelques secondes et allez sur
-<a href="http://USERNAME.github.io/supersite">http://USERNAME.github.io/supersite</a>
-pour admirer les changements.</p>
-<p><strong>✔</strong> Site web mis à jour :)</p>
-<h2 id="diter-le-site-sur-son-ordinateur"><a class="markdownIt-Anchor" href="#diter-le-site-sur-son-ordinateur">#</a> Éditer le site sur son ordinateur</h2>
-<p>Pour pouvoir éditer plus facilement le site, ajouter/modifier des fichiers…
-vous pouvez le récupérer sur votre machine, et vous pourrez alors utiliser
-votre <a href="http://atom.io">éditeur de texte préféré</a> pour le modifier.</p>
-<p>Installez et configurez l’application GitHub : <a href="http://mac.github.com">mac.github.com</a>
-ou <a href="http://windows.github.com">windows.github.com</a></p>
-<ul>
-<li><strong>Clone</strong> : va rapatrier les fichiers de votre site sur votre ordinateur</li>
-<li><strong>Éditez</strong> les fichiers directement</li>
-<li><strong>Testez</strong> si le site fonctionne comme prévu</li>
-<li>Puis choisissez <strong>Commit</strong> pour enregistrer vos modifications</li>
-<li>Et enfin <strong>Sync</strong> pour renvoyer vos fichiers sur GitHub et mettre à jour
-le site pour le reste du monde.</li>
-</ul>
-<p><strong>✔</strong> Site web mis à jour :)</p>
-<h2 id="tester-le-site-sur-votre-machine"><a class="markdownIt-Anchor" href="#tester-le-site-sur-votre-machine">#</a> Tester le site sur votre machine</h2>
-<p>Vous pouvez ouvrir le fichier <code>index.html</code> dans un navigateur pour voir le
-résultat.</p>
-<p><strong>Note :</strong> Si vous avez ajouté Google Maps ou une API JavaScript, vous devrez
-lancer un serveur web pour pouvoir voir le résultat. Par exemple, lancez
-<code>python -m SimpleHTTPServer</code> dans votre terminal depuis le dossier du site
-(où se trouve <code>index.html</code>) puis ouvrez <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> dans votre navigateur.
-(Ceci est dû à une <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Same_origin_policy_for_JavaScript">restriction de sécurité</a>)</p>
-<h2 id="installer-un-superbe-template"><a class="markdownIt-Anchor" href="#installer-un-superbe-template">#</a> Installer un superbe template</h2>
-<p>Si vous voulez des templates différents de ceux proposés par GitHub,
-vous devez simplement remplacer les fichiers présents dans le dossier
-du projet.</p>
-<p>Choisissez par exemple un des templates gratuits de haute qualité
-disponibles sur <a href="http://html5up.net">html5up.net</a> ou sur
-<a href="http://pixelarity.com">pixelarity.com</a> (payant).</p>
-<p>Téléchargez les sources et placez les fichiers dans votre projet.</p>
-<p>Éditez les fichiers, testez, puis commit &amp; sync, et voilà :)</p>
-<h2 id="et-apr-s"><a class="markdownIt-Anchor" href="#et-apr-s">#</a> Et après ?</h2>
-<ul>
-<li>Apprenez la syntaxe Markdown : <a href="https://en.support.wordpress.com/markdown-quick-reference/">réference</a></li>
-<li>Apprenez Git : <a href="https://try.github.io">try.github.io</a></li>
-<li>Apprenez JavaScript : <a href="http://jsbooks.revolunet.com">jsbooks.revolunet.com</a>
-et <a href="https://ericelliottjs.com/product/programming-javascript-applications-paper-ebook-bundle/">le livre d’Eric Elliott</a></li>
-<li>Lisez tous les articles de <a href="/">Putain de code !</a></li>
-</ul>
-<hr>
-<h2 id="faq"><a class="markdownIt-Anchor" href="#faq">#</a> FAQ</h2>
-<h3 id="comment-installer-un-nom-de-domaine"><a class="markdownIt-Anchor" href="#comment-installer-un-nom-de-domaine">#</a> Comment installer un nom de domaine ?</h3>
-<ul>
-<li>Achetez un nom de domaine sur <a href="http://gandi.net">gandi.net</a> ou
-un autre fournisseur sérieux (surtout pas chez pas 1&amp;1, lws ou
-autre discounter douteux)</li>
-<li>Éditez la “Zone DNS” du domaine et suivez les
-<a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">instructions GitHub pour DNS</a></li>
-<li>ajoutez un fichier <code>CNAME</code> dans votre projet, contenant la ligne
-<code>www.myproject.com</code>.</li>
-</ul>
-<p>Les changements DNS peuvent mettre jusqu’à 24h pour se propager
-donc essayez <a href="http://www.myproject.com">www.myproject.com</a> un peu plus tard.</p>
-<p>Ces pages d’aide sur GitHub pourront vous être utiles : <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/">Custom domain</a>, <a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">DNS setup</a>.</p>
-<h3 id="comment-ajouter-une-page"><a class="markdownIt-Anchor" href="#comment-ajouter-une-page">#</a> Comment ajouter une page ?</h3>
-<p>Pour créer simplement des pages supplémentaires, ajoutez un
-nouveau fichier HTML, par exemple <code>produits.html</code>, dans le projet et
-faites un lien vers cette page depuis l’index, par exemple
-<code>&lt;a href=&quot;produits.html&quot;&gt;Consulter les produits&lt;/a&gt;</code>.</p>
-<h3 id="comment-analyser-le-trafic-de-mon-site"><a class="markdownIt-Anchor" href="#comment-analyser-le-trafic-de-mon-site">#</a> Comment analyser le trafic de mon site ?</h3>
-<p>Si vous voulez tracker vos visiteurs, savoir d’où ils viennent, ce qu’ils
-font et où ils vont, créez un compte sur
-<a href="http://www.google.com/analytics">Google Analytics</a> et ajoutez le code de
-tracking sur vos pages HTML.</p>
-<h3 id="comment-ajouter-une-carte"><a class="markdownIt-Anchor" href="#comment-ajouter-une-carte">#</a> Comment ajouter une carte ?</h3>
-<p>Suivez les <a href="http://leafletjs.com/examples/quick-start.html">instructions Leaflet</a>, la cartographie open-source et gratuite qui bénéficie d’une communauté active.</p>
-<p>Si vous avez juste besoin d’une carte sous forme d’image fixe, générez le code HTML ici :
-<a href="http://staticmapmaker.com">staticmapmaker.com</a> et copiez le code dans votre page.</p>
-<h3 id="comment-ajouter-un-syst-me-de-commentaires"><a class="markdownIt-Anchor" href="#comment-ajouter-un-syst-me-de-commentaires">#</a> Comment ajouter un système de commentaires ?</h3>
-<p>Créez un compte sur <a href="http://disqus.com">disqus.com</a> et ajoutez le code JavaScript sur
-votre page.</p>
-<h3 id="comment-ajouter-un-formulaire-de-contact"><a class="markdownIt-Anchor" href="#comment-ajouter-un-formulaire-de-contact">#</a> Comment ajouter un formulaire de contact ?</h3>
-<p>Créez un compte sur <a href="http://typeform.com">typeform.com</a>, créez votre formulaire et
-ajoutez le code JavaScript “embed” sur votre page.</p>
-<p>Vous pouvez aussi créer un compte sur <a href="http://mailchimp.com">mailchimp.com</a>, créer un
-formulaire et l’ajouter sur votre page grâce au code “embed”.</p>
-<h3 id="comment-recevoir-des-paiements"><a class="markdownIt-Anchor" href="#comment-recevoir-des-paiements">#</a> Comment recevoir des paiements ?</h3>
-<p>Créez un compte sur <a href="http://stripe.com">stripe.com</a> et ajoutez le code JavaScript sur
-votre page.</p>
-<h3 id="qu-est-ce-que-gh-pages"><a class="markdownIt-Anchor" href="#qu-est-ce-que-gh-pages">#</a> Qu’est-ce que gh-pages ?</h3>
-<p><code>gh-pages</code> est une branche spéciale de votre code sur GitHub (une version du
-code) qui publie et héberge <em>automagiquement</em> votre site.</p>
-<h3 id="comment-tre-pr-sent-sur-google"><a class="markdownIt-Anchor" href="#comment-tre-pr-sent-sur-google">#</a> Comment être prêsent sur Google ?</h3>
-<p>Créez du contenu de <strong>qualité</strong>, ciblé, <strong>unique</strong> sur Internet et <strong>utile</strong> à
-vos visiteurs. Créez du lien avec des sites et communautés sur le même thème.</p>
-<p>Naturellement, d’autres sites parleront alors du vôtre, vous enverront des
-visiteurs et vous feront monter progressivement dans les résultats au fil des mois.</p>
-<hr>
-<p>Voilà pour ce premier pas vers le développement web !</p>
-<p>Les commentaires ci-dessous sont là pour recevoir vos remarques et questions :)</p>
-]]></description><link>http://putaindecode.io/fr/articles/github/pages/site-web-gratuit/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/github/pages/site-web-gratuit/</guid><pubDate>Fri, 31 Jul 2015 00:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>http://putaindecode.io/fr/articles/wordpress/webpack/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/wordpress/webpack/</guid><pubDate>Tue, 20 Oct 2015 00:00:00 GMT</pubDate></item></channel></rss>
