@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 06:18:45 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 06:54:02 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
@@ -174,11 +174,11 @@ peut réagir en conséquence.</p>
 <p>Ce mécanisme permet de remplacer les callbacks d’une manière plus élégante. Au
 revoir, la suite de callbacks qui rend votre code illisible ! Vous ne me croyez
 pas ? Voici un exemple pour vous le prouver :</p>
-<pre><code class="language-javascript"><span class="hljs-comment">// En utilisant les callbacks</span>
+<pre><code class="language-js"><span class="hljs-comment">// En utilisant les callbacks</span>
 <span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
 <span class="hljs-comment">// plus ou moins complexes (requête HTTP, appel à une base de données</span>
 <span class="hljs-comment">// ou encore lecture de fichier)</span>
-<span class="hljs-keyword">const</span> functionWithCallback1 = callback =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback1 = (callback) =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
@@ -219,11 +219,11 @@ functionWithCallback1((result1, err) =&gt; {
 
 <span class="hljs-comment">// Et maintenant, en utilisant les promises</span>
 <span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
-<span class="hljs-keyword">const</span> functionWithPromise2 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise3 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise4 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise5 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise6 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise2 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise3 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise4 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise5 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise6 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
 
 functionWithPromise1()
   .then(functionWithPromise2)
@@ -248,8 +248,8 @@ lisible !</p>
 pour récupérer le resultat ou l’erreur d’une promise et <code>catch</code> pour récupérer
 l’erreur d’une ou plusieurs promises.</p>
 <p>Voyons comment utiliser les promises à l’aide de la future implémentation de
-<code>fetch</code>.</p>
-<pre><code class="language-javascript"><span class="hljs-comment">// À ce moment, la promise est en attente</span>
+<a href="https://fetch.spec.whatwg.org"><code>fetch</code></a>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// À ce moment, la promise est en attente</span>
 <span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
 
 <span class="hljs-comment">// Quand la requête est terminée la promise est résolue avec le résultat de</span>
@@ -268,12 +268,12 @@ parsePromise.then(textResult =&gt; {
 
 <span class="hljs-comment">// Si la requête a un problème, la promise est rejetée avec une erreur</span>
 fetchPromise.catch(fetchError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête : <span class="hljs-subst">${fetchError}</span>`</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant la requête"</span>, fetchError)
 })
 
 <span class="hljs-comment">// S'il y a une erreur pendant le parsing, je peux la récupérer</span>
 parsePromise.catch(parseError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant le parsing"</span>, parseError)
 })
 
 <span class="hljs-comment">// Cela peut aussi être écrit</span>
@@ -283,25 +283,31 @@ fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
   })
   .catch(error =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête ou le parsing : <span class="hljs-subst">${error}</span>`</span>)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant la requête ou le parsing"</span>, fetchError)
   })
 
 <span class="hljs-comment">// Ou encore</span>
 fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-  .then(fetchResult =&gt; {
-    <span class="hljs-keyword">return</span> fetchResult.text()
-  }, fetchError =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête : <span class="hljs-subst">${fetchError}</span>`</span>)
-  })
-  .then(textResult =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
-  }, parseError =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
-  })</code></pre>
+  .then(
+    fetchResult =&gt; {
+      <span class="hljs-keyword">return</span> fetchResult.text()
+    },
+    fetchError =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant la requête"</span>, fetchError)
+    }
+  )
+  .then(
+    textResult =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
+    },
+    parseError =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant le parsing"</span>, parseError)
+    }
+  )</code></pre>
 <h2 id="mais-comment-je-cr-e-mes-propres-promises"><a class="markdownIt-Anchor" href="#mais-comment-je-cr-e-mes-propres-promises">#</a> Mais comment je crée mes propres promises ?</h2>
 <p>C’est bien beau d’utiliser les promises, mais c’est encore mieux de savoir créer
 les vôtres ! Je vous rassure, c’est très simple.</p>
-<pre><code class="language-javascript"><span class="hljs-keyword">const</span> functionThatReturnAPromise = () =&gt; {
+<pre><code class="language-js"><span class="hljs-keyword">const</span> functionThatReturnAPromise = (success) =&gt; {
   <span class="hljs-comment">// On utilise la classe Promise pour en créer une, le constructeur prend 2</span>
   <span class="hljs-comment">// fonctions en paramètre :</span>
   <span class="hljs-comment">// - resolve que l'on pourra appeler avec le résultat de notre fonction</span>
@@ -309,16 +315,24 @@ les vôtres ! Je vous rassure, c’est très simple.</p>
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
     <span class="hljs-keyword">if</span> (success) {
       resolve(<span class="hljs-string">'success'</span>)
-    } <span class="hljs-keyword">else</span> {
+    }
+    <span class="hljs-keyword">else</span> {
       reject(<span class="hljs-string">'failed'</span>)
     }
   })
 }
 
 <span class="hljs-comment">// Vous pouvez maintenant utiliser votre fonction comme vu précédemment</span>
-functionThatReturnAPromise()
-  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res)) <span class="hljs-comment">// log : 'success'</span>
-  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error)) <span class="hljs-comment">// log : 'failed'</span></code></pre>
+functionThatReturnAPromise(success)
+  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res))
+  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error))
+
+<span class="hljs-comment">// équivalent dans notre cas à</span>
+functionThatReturnAPromise(success)
+  .then(
+    (res) =&gt; <span class="hljs-built_in">console</span>.log(res),
+    (error) =&gt; <span class="hljs-built_in">console</span>.log(error)
+  )</code></pre>
 <h2 id="et-demain"><a class="markdownIt-Anchor" href="#et-demain">#</a> Et demain ?</h2>
 <p>Une fonctionnalité encore plus pratique que les promises arrive en JavaScript,
 les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un code
