@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Dec 2015 08:41:41 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Wed, 09 Dec 2015 07:58:07 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
@@ -51,7 +51,161 @@ puis affectation.</p>
 <p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
 aussi déclarer plusieurs fois une même propriété, la dernière déclaration
 écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
+creating new object.</p>
+<h2 id="shorter-property-name"><a class="markdownIt-Anchor" href="#shorter-property-name">#</a> Shorter property name</h2>
+<p>When you create an object, you might create a variable and then reuse it to
+define a property of an object that have the same name.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
+
+<span class="hljs-keyword">return</span> {
+  firstname: firstname,
+  lastname: lastname,
+}</code></pre>
+<p>Thanks to ES6, you can directly write:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
+
+<span class="hljs-keyword">return</span> {
+  firstname,
+  lastname,
+}
+<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
+<p>In the same spirit, you will be able to declare methods without the <code>function</code>
+keyword (this also apply for <em>getter</em> and <em>setter</em>).</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
+  get email() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
+  },
+  set email(email) {
+    <span class="hljs-keyword">this</span>.email = email
+  },
+  validateEmail(email) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+  },
+}</code></pre>
+<h2 id="dynamic-property-name"><a class="markdownIt-Anchor" href="#dynamic-property-name">#</a> Dynamic property name</h2>
+<p>One last thing for <em>objects literal</em> will allow you to create dynamic property
+name using an expression, directly when you create an object.
+With ES5 you have to do that in two steps:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">var</span> payload = {}
+  payload[type] = data
+  <span class="hljs-keyword">return</span> payload
+}</code></pre>
+<p>Now with ES6, you can do:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    [type]: data
+  }
+}</code></pre>
+<p><strong>Note:</strong> with dynamic properties, declaring multiples properties with the same
+name is accepted and do not throw an error. Keep in mind that only the last
+value will be kept.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
+the <em>template strings</em>.</p>
+<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
+<p>To define a string in JavaScript, we have single quotes or double quotes.
+No one is really better than the other since you need to escape the quotes you
+are using in the string itself.</p>
+<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
+<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
+<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
+<p>Now you can directly use expression in a <em>template string</em> if you use the new
+place holder syntax.: <code>${ expression }</code>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
+<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
+<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
+<p>Here we are just using a variable, but we can use any expression:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
+  <span class="hljs-keyword">return</span> num * num;
+}
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
+<p>This is what make <em>template strings</em> awesome.</p>
+<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
+<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
+                 bar \
+                 baz"</span>;
+
+<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
+multiline2 += <span class="hljs-string">"bar"</span>;
+multiline2 += <span class="hljs-string">"baz"</span>;
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
+                   bar
+                   baz`</span>;</code></pre>
+<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
+bar`</span>;
+
+<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
+             bar`</span>;
+
+str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
+<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
+<p>Let’s dive into another interesting feature of <em>template strings</em>.
+Tags are functions that will use just before the <em>template string</em> and they
+allow us to enhance the string result.</p>
+<p>A tag take an array of “literals” (strings), and then all interpolated
+(evaluated) expressions that we can still modify.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
+    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
+      <span class="hljs-keyword">return</span> c.toUpperCase();
+    });
+  }
+
+  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
+    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
+    result += replaceVowels(strings[i]);
+    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
+      result += replaceVowels(nextValue)
+    } <span class="hljs-keyword">else</span> {
+      result += nextValue;
+    }
+  }
+  <span class="hljs-keyword">return</span> result;
+}
+
+
+capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
+<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
+<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
+<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
+capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
+<p>Here is an interesting example of tagged <em>template strings</em> to handle
+<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
+<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
+<p>A new function has been added to <code>String</code> prototype that allows us display raw
+content so you can see unescaped characters:</p>
+<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>When you will start to use <em>template strings</em>, you are likely going to like
+them. They are clearly really useful in a daily basis.</p>
+<p>Almost all
+<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
+today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
+hesitate to use <em>template strings</em>.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaînes de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -162,109 +316,7 @@ automatiquement gérés avec une <em>template string</em>.</p>
 simplifie grandement la vie et permet d’oublier les erreurs d’échappement.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des <em>template strings</em>…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
-the <em>template strings</em>.</p>
-<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
-<p>To define a string in JavaScript, we have single quotes or double quotes.
-No one is really better than the other since you need to escape the quotes you
-are using in the string itself.</p>
-<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
-<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
-<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
-<p>Now you can directly use expression in a <em>template string</em> if you use the new
-place holder syntax.: <code>${ expression }</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
-<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
-<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
-<p>Here we are just using a variable, but we can use any expression:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
-  <span class="hljs-keyword">return</span> num * num;
-}
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
-<p>This is what make <em>template strings</em> awesome.</p>
-<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
-<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
-                 bar \
-                 baz"</span>;
-
-<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
-multiline2 += <span class="hljs-string">"bar"</span>;
-multiline2 += <span class="hljs-string">"baz"</span>;
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
-                   bar
-                   baz`</span>;</code></pre>
-<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
-bar`</span>;
-
-<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
-             bar`</span>;
-
-str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
-<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
-<p>Let’s dive into another interesting feature of <em>template strings</em>.
-Tags are functions that will use just before the <em>template string</em> and they
-allow us to enhance the string result.</p>
-<p>A tag take an array of “literals” (strings), and then all interpolated
-(evaluated) expressions that we can still modify.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
-      <span class="hljs-keyword">return</span> c.toUpperCase();
-    });
-  }
-
-  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
-    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
-    result += replaceVowels(strings[i]);
-    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
-      result += replaceVowels(nextValue)
-    } <span class="hljs-keyword">else</span> {
-      result += nextValue;
-    }
-  }
-  <span class="hljs-keyword">return</span> result;
-}
-
-
-capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
-<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
-<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
-<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
-capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
-<p>Here is an interesting example of tagged <em>template strings</em> to handle
-<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
-<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>A new function has been added to <code>String</code> prototype that allows us display raw
-content so you can see unescaped characters:</p>
-<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>When you will start to use <em>template strings</em>, you are likely going to like
-them. They are clearly really useful in a daily basis.</p>
-<p>Almost all
-<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
-today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
-hesitate to use <em>template strings</em>.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
 promises.
 The concept of promises exists is not new in the JavaScript world, but now
 we got an official feature!</p>
@@ -607,119 +659,7 @@ functionThatReturnAPromise(success)
 les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un code
 encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne pas
 ES2015 :)</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
-They don’t really bring anything.
-That said, this can helps to improve code readability and make the code more
-accessible.</p>
-<h2 id="class-declaration"><a class="markdownIt-Anchor" href="#class-declaration">#</a> Class declaration</h2>
-<p>Forget functions and prototypes, semantic is taking the relay as you will see in
-the following example :</p>
-<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
-  constructor(firstname, lastname) {
-    <span class="hljs-keyword">this</span>.firstname = firstname;
-    <span class="hljs-keyword">this</span>.lastname = lastname;
-  }
-
-  sayName() {
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span> <span class="hljs-subst">${this.lastname}</span>`</span>
-  }
-}
-
-<span class="hljs-comment">// instanciation</span>
-<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
-
-<span class="hljs-comment">// call of the method sayName()</span>
-<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
-<p>As a reminder, here is one
-<a href="https://gist.github.com/magsout/a876b2fa8240a987e523">way to code</a>
-this class in <code>es5</code> :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">User</span>(<span class="hljs-params">firstname, lastname</span>) </span>{
-  <span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> User)) {
-    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">"Class constructors cannot be invoked without 'new'"</span>)
-  }
-  <span class="hljs-keyword">this</span>.firstname = firstname
-  <span class="hljs-keyword">this</span>.lastname = lastname
-}
-
-User.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstname + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.lastname
-}
-
-<span class="hljs-comment">// instanciation</span>
-<span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
-
-<span class="hljs-comment">// call of the method sayName()</span>
-<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
-<h2 id="classes-expressions"><a class="markdownIt-Anchor" href="#classes-expressions">#</a> Classes expressions</h2>
-<p>All methods should be written as simple function inside the class.
-You might denote the nice way to write getter and setter :</p>
-<pre><code class="language-JS"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
-  constructor(firstname, lastname, type) {
-    <span class="hljs-keyword">this</span>.firstname = firstname
-    <span class="hljs-keyword">this</span>.lastname = lastname
-    <span class="hljs-keyword">this</span>.type = type
-  }
-
-  <span class="hljs-comment">// method</span>
-  sayName() {
-   <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span>  <span class="hljs-subst">${this.lastname}</span>`</span>
-  }
-
-  <span class="hljs-comment">// getter</span>
-  get role() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type
-  }
-
-  <span class="hljs-comment">// setter</span>
-  set role(value) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type = value
-  }
-}
-
-<span class="hljs-comment">// the `new` is mandatory to instanciate a class</span>
-<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>, <span class="hljs-string">"Contributor"</span>)
-
-<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span>
-<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Contributor</span>
-user.role = <span class="hljs-string">"owner"</span>
-<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Owner</span></code></pre>
-<h2 id="inheritance"><a class="markdownIt-Anchor" href="#inheritance">#</a> Inheritance</h2>
-<p>In order to have a class that inherite from another, we have the <code>extends</code>
-keyword.</p>
-<p>Here is the an example :</p>
-<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">User</span> </span>{
-  constructor(firstname, lastname, numberCommit) {
-
-    <span class="hljs-comment">// keyword `super` is used to call the constructor of the parent class</span>
-    <span class="hljs-keyword">super</span>(firstname, lastname)
-    <span class="hljs-keyword">this</span>.numberCommit = numberCommit
-  }
-
-  sayNameWithCommit() {
-    <span class="hljs-comment">// we can can also use `super` to call a method of the parent class</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.sayName() + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.sayNumberCommit()
-  }
-
-  sayNumberCommit() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numberCommit
-  }
-}
-
-<span class="hljs-keyword">const</span> contributor = <span class="hljs-keyword">new</span> Contributor(<span class="hljs-string">'Jane'</span>, <span class="hljs-string">'Smith'</span>, <span class="hljs-number">10</span>)
-
-<span class="hljs-built_in">console</span>.log(contributor.sayName())
-<span class="hljs-built_in">console</span>.log(contributor.sayNumberCommit())</code></pre>
-<p><strong>Reminder: <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">prefer inheritance to composition</a>.</strong></p>
-<h2 id="that-s-it"><a class="markdownIt-Anchor" href="#that-s-it">#</a> That’s it</h2>
-<p>As you saw, all what you can do know was already possible
-<a href="https://gist.github.com/bloodyowl/7edc9c973d2236ed17e1">before</a>.</p>
-<p>We just have a more readable code that should be more easily maintainable.</p>
-<p>For now, you will need to use a transpiler like <a href="https://babeljs.io/">babel</a>
-to be able to use classes.</p>
-<p>One last thing: when you are in a class context,
-<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>
-is enabled automatically.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
 Elles n’apportent rien de plus en terme de fonctionnalité. Toutefois, l’objectif
 de cette évolution est de rendre le code plus lisible et plus facilement
 accessible.</p>
@@ -839,85 +779,119 @@ l’était bien entendu
 <p>Une dernière petite chose, en utilisant les classes on active automatiquement le
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">mode strict</a>,
 il n’est donc pas nécessaire de le rajouter manuellement.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
+They don’t really bring anything.
+That said, this can helps to improve code readability and make the code more
+accessible.</p>
+<h2 id="class-declaration"><a class="markdownIt-Anchor" href="#class-declaration">#</a> Class declaration</h2>
+<p>Forget functions and prototypes, semantic is taking the relay as you will see in
+the following example :</p>
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname) {
+    <span class="hljs-keyword">this</span>.firstname = firstname;
+    <span class="hljs-keyword">this</span>.lastname = lastname;
+  }
 
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+  sayName() {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span> <span class="hljs-subst">${this.lastname}</span>`</span>
+  }
+}
 
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
+
+<span class="hljs-comment">// call of the method sayName()</span>
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
+<p>As a reminder, here is one
+<a href="https://gist.github.com/magsout/a876b2fa8240a987e523">way to code</a>
+this class in <code>es5</code> :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">User</span>(<span class="hljs-params">firstname, lastname</span>) </span>{
+  <span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> User)) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">"Class constructors cannot be invoked without 'new'"</span>)
+  }
+  <span class="hljs-keyword">this</span>.firstname = firstname
+  <span class="hljs-keyword">this</span>.lastname = lastname
+}
+
+User.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstname + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.lastname
+}
+
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
+
+<span class="hljs-comment">// call of the method sayName()</span>
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
+<h2 id="classes-expressions"><a class="markdownIt-Anchor" href="#classes-expressions">#</a> Classes expressions</h2>
+<p>All methods should be written as simple function inside the class.
+You might denote the nice way to write getter and setter :</p>
+<pre><code class="language-JS"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname, type) {
+    <span class="hljs-keyword">this</span>.firstname = firstname
+    <span class="hljs-keyword">this</span>.lastname = lastname
+    <span class="hljs-keyword">this</span>.type = type
+  }
+
+  <span class="hljs-comment">// method</span>
+  sayName() {
+   <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span>  <span class="hljs-subst">${this.lastname}</span>`</span>
+  }
+
+  <span class="hljs-comment">// getter</span>
+  get role() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type
+  }
+
+  <span class="hljs-comment">// setter</span>
+  set role(value) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type = value
+  }
+}
+
+<span class="hljs-comment">// the `new` is mandatory to instanciate a class</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>, <span class="hljs-string">"Contributor"</span>)
+
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span>
+<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Contributor</span>
+user.role = <span class="hljs-string">"owner"</span>
+<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Owner</span></code></pre>
+<h2 id="inheritance"><a class="markdownIt-Anchor" href="#inheritance">#</a> Inheritance</h2>
+<p>In order to have a class that inherite from another, we have the <code>extends</code>
+keyword.</p>
+<p>Here is the an example :</p>
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname, numberCommit) {
+
+    <span class="hljs-comment">// keyword `super` is used to call the constructor of the parent class</span>
+    <span class="hljs-keyword">super</span>(firstname, lastname)
+    <span class="hljs-keyword">this</span>.numberCommit = numberCommit
+  }
+
+  sayNameWithCommit() {
+    <span class="hljs-comment">// we can can also use `super` to call a method of the parent class</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.sayName() + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.sayNumberCommit()
+  }
+
+  sayNumberCommit() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numberCommit
+  }
+}
+
+<span class="hljs-keyword">const</span> contributor = <span class="hljs-keyword">new</span> Contributor(<span class="hljs-string">'Jane'</span>, <span class="hljs-string">'Smith'</span>, <span class="hljs-number">10</span>)
+
+<span class="hljs-built_in">console</span>.log(contributor.sayName())
+<span class="hljs-built_in">console</span>.log(contributor.sayNumberCommit())</code></pre>
+<p><strong>Reminder: <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">prefer inheritance to composition</a>.</strong></p>
+<h2 id="that-s-it"><a class="markdownIt-Anchor" href="#that-s-it">#</a> That’s it</h2>
+<p>As you saw, all what you can do know was already possible
+<a href="https://gist.github.com/bloodyowl/7edc9c973d2236ed17e1">before</a>.</p>
+<p>We just have a more readable code that should be more easily maintainable.</p>
+<p>For now, you will need to use a transpiler like <a href="https://babeljs.io/">babel</a>
+to be able to use classes.</p>
+<p>One last thing: when you are in a class context,
+<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>
+is enabled automatically.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -996,7 +970,85 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
@@ -1304,7 +1356,191 @@ bar <span class="hljs-comment">// 1</span></code></pre>
 a value will try to be retrieved from an <code>undefined</code> property.
 To prevent this issue, you will need to define
 <a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
+to <code>let</code> and <code>const</code>, but also keeps <code>var</code> in the language specification.</p>
+<p>The first thing you need to do: forget everything you know about <code>var</code>.</p>
+<h1 id="declarations"><a class="markdownIt-Anchor" href="#declarations">#</a> Declarations</h1>
+<h2 id="const"><a class="markdownIt-Anchor" href="#const">#</a> const</h2>
+<p><code>const</code> allows you to declare a single assignment variable lexically bound.
+Sounds posh right? That just means that you can only assign once a value in a
+variable, scoped at the block level.</p>
+<p>If you have already read stuff about <code>const</code>, be careful: this is not a way to
+declare immutable variables. Only the assigned reference is immutable, not the
+value. This means that the content of an array or an object declared using
+<code>const</code> can evolve but the re-assignment of the reference is impossible.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"bar"</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">const</span> foo <span class="hljs-comment">// SyntaxError, variable needs to be assigned to something</span>
+    <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"qux"</span>
+    foo = <span class="hljs-string">"norf"</span> <span class="hljs-comment">// SyntaxError, variable cannot be re-assigned</span>
+    <span class="hljs-built_in">console</span>.log(foo)
+    <span class="hljs-comment">// "qux", variable belongs to the scope of the current block (the "if" one)</span>
+  }
+  <span class="hljs-built_in">console</span>.log(foo)
+  <span class="hljs-comment">// "bar", variable belongs to the scope of the "fn" function</span>
+}</code></pre>
+<p>Just a fancy trick using <code>const</code> with an iterator:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> el <span class="hljs-keyword">of</span> arr) {
+    <span class="hljs-built_in">console</span>.log(el)
+  }
+}</code></pre>
+<p>You might think a <code>let</code> should be used here but the declaration is evaluated
+on each iteration, so <code>const</code> fits better here.</p>
+<h2 id="let"><a class="markdownIt-Anchor" href="#let">#</a> let</h2>
+<p><code>let</code> allows you to do the same as <code>const</code> without the single assignment
+constraint. So you can understand here that the use-cases are the same as for
+its ancestor, <code>var</code>.
+By the way, you might have been told that <em><code>let</code> is the new <code>var</code></em>.
+It is partly true because it can do the same, but even better if we consider
+the ability of the variable to be scoped to the block level.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
+  <span class="hljs-keyword">var</span> foo2 = <span class="hljs-string">"bar"</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">let</span> foo <span class="hljs-comment">// that's ok (foo === undefined)</span>
+    <span class="hljs-keyword">var</span> foo2
+    <span class="hljs-comment">// Be careful, `var` statements are not scoped to the block level</span>
+    <span class="hljs-comment">// so previous foo2 is overwritten!</span>
+    foo = <span class="hljs-string">"qux"</span>
+    foo2 = <span class="hljs-string">"qux"</span>
+    <span class="hljs-built_in">console</span>.log(foo)
+    <span class="hljs-comment">// "qux", variable belongs to the scope of the current block (the "if" one)</span>
+    <span class="hljs-built_in">console</span>.log(foo2)
+    <span class="hljs-comment">// "qux"</span>
+  }
+  <span class="hljs-built_in">console</span>.log(foo)
+  <span class="hljs-comment">// "bar", variable belongs to the scope of its block (the "fn" function)</span>
+  <span class="hljs-built_in">console</span>.log(foo2)
+  <span class="hljs-comment">// "qux"</span>
+}</code></pre>
+<p>You can use <code>let</code> in loops, the variable used for the iteration will be scoped
+to the block of the loop, not the (parent) scope of the code that contains the
+loop. This resolves any issues that you may have had with <code>i</code> already defined in
+the upper scope!</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn2</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i=i; i&lt;<span class="hljs-number">10</span>; i++) {
+    <span class="hljs-built_in">console</span>.log(i)
+  }
+  <span class="hljs-built_in">console</span>.log(i)
+  <span class="hljs-comment">// 0</span>
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j=i; j&lt;<span class="hljs-number">10</span>; j++) {}
+  <span class="hljs-built_in">console</span>.log(j)
+  <span class="hljs-comment">// j is not defined</span>
+}
+fn2() <span class="hljs-comment">// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9</span></code></pre>
+<p>Note: the example with <code>const</code> used in the <code>for ... of</code> loop cannot be
+reproduced here.
+The classic <code>for</code> loop is imperative, and the declaration is only made once when
+the loop starts. <code>const</code> is not relevant in this case.</p>
+<h2 id="var"><a class="markdownIt-Anchor" href="#var">#</a> var</h2>
+<p>With <code>const</code> and <code>let</code>, there is no more space for <code>var</code> anymore.
+<a href="https://twitter.com/getify/status/658662478528643072">Maybe in a <code>try</code>/<code>catch</code>
+context</a>.</p>
+<h1 id="hoisting-and-tdz-temporal-dead-zone-issues"><a class="markdownIt-Anchor" href="#hoisting-and-tdz-temporal-dead-zone-issues">#</a> Hoisting and TDZ (Temporal Dead Zone) issues</h1>
+<p>As a reminder, JavaScript does have a hoisting mechanism. For example, you can
+write:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(foo) <span class="hljs-comment">// undefined (no ReferenceError)</span>
+  <span class="hljs-keyword">var</span> foo = <span class="hljs-string">"bar"</span>
+}</code></pre>
+<p>JavaScript engine will read all <code>var</code> declarations and virtually move those at
+the start of your function scope.</p>
+<p><code>let</code> and <code>const</code> do not benefit from variable hoisting, and therefore can
+create TDZ (Temporal Dead Zone) issues; these occur when a variable does not
+exist yet.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(foo)
+  <span class="hljs-comment">// ReferenceError, we are in the TDZ of "foo"</span>
+  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
+}</code></pre>
+<h1 id="outro"><a class="markdownIt-Anchor" href="#outro">#</a> Outro</h1>
+<p>So, let’s recap:</p>
+<ul>
+<li>Use <code>const</code> (might be relevant 99% of the time)</li>
+<li>If during you development you happen to have to change the value of this
+variable, switch to <code>let</code> (that might happen 1% of the time)</li>
+<li>If you are in the worst use-case of the world, use <code>var</code> (you can do the math)</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
+<strong>storyboards</strong>.</p>
+<blockquote>
+<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
+C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
+entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
+de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
+mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
+graphiquement et simplement le workflow de l’application.</p>
+</blockquote>
+<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
+<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
+c’est génial. Mais alors pourquoi les diviser ?</p>
+<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
+<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
+conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
+même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
+est de prendre celui de quelqu’un et refaire les changements ou de corriger les
+sources en croisant les doigts. Accompagné de 4 L de café.<br>
+Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
+travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
+chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
+de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
+<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
+<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
+groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
+facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
+une <code>scene</code> à l’autre bout du storyboard.</p>
+<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
+<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
+grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
+d’éléments vous avez à recompiler, plus vite ça ira.</p>
+<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
+<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
+pour les clients, vous pouvez vous faire des petits storyboards que vous
+réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
+faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
+<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
+<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
+<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
+<span class="hljs-comment">// Aller chercher le storyboard</span>
+<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-keyword">let</span> controllerSettings =
+storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
+<span class="hljs-comment">// Présenter</span>
+<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
+<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
+<span class="hljs-comment">// Aller chercher le sotyboard</span>
+<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
+bundle:<span class="hljs-literal">nil</span>];
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
+instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
+<span class="hljs-comment">// Présenter</span>
+[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
+<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
+fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
+<ul>
+<li>créez un nouveau storyboard pour votre <em>secteur</em>
+(File→New→File→[OS]→User Interface),</li>
+<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
+(sinon le compilateur n’aime pas),</li>
+<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
+<code>Utilies&gt;Identity Inspector</code>,</li>
+<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
+<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
+<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
+votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
+<em>storyboardID</em> de la <code>scene</code>,</li>
+<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
+<em>Storyboard Reference</em> voulus.</li>
+</ul>
+<p>Plus long à lire qu’à faire !</p>
+]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
 variables grâce à <code>let</code> et <code>const</code> mais garde aussi la déclaration par <code>var</code>
 dans la spécification du langage.</p>
 <p>Première étape, on oublie tout ce qu’on sait sur <code>var</code>.</p>
@@ -1422,191 +1658,7 @@ où votre variable n’existe pas. Ce moment, c’est la TDZ.</p>
 <li>Si vous avez trouvé le pire cas d’utilisation du monde, changez pour un <code>var</code>
 (je vous laisse faire le calcul)</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
-<strong>storyboards</strong>.</p>
-<blockquote>
-<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
-C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
-entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
-de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
-mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
-graphiquement et simplement le workflow de l’application.</p>
-</blockquote>
-<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
-<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
-c’est génial. Mais alors pourquoi les diviser ?</p>
-<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
-<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
-conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
-même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
-est de prendre celui de quelqu’un et refaire les changements ou de corriger les
-sources en croisant les doigts. Accompagné de 4 L de café.<br>
-Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
-travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
-chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
-de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
-<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
-<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
-groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
-facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
-une <code>scene</code> à l’autre bout du storyboard.</p>
-<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
-<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
-grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
-d’éléments vous avez à recompiler, plus vite ça ira.</p>
-<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
-<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
-pour les clients, vous pouvez vous faire des petits storyboards que vous
-réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
-faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
-<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
-<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
-<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
-<span class="hljs-comment">// Aller chercher le storyboard</span>
-<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-keyword">let</span> controllerSettings =
-storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
-<span class="hljs-comment">// Présenter</span>
-<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
-<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
-<span class="hljs-comment">// Aller chercher le sotyboard</span>
-<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
-bundle:<span class="hljs-literal">nil</span>];
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
-instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
-<span class="hljs-comment">// Présenter</span>
-[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
-<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
-fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
-<ul>
-<li>créez un nouveau storyboard pour votre <em>secteur</em>
-(File→New→File→[OS]→User Interface),</li>
-<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
-(sinon le compilateur n’aime pas),</li>
-<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
-<code>Utilies&gt;Identity Inspector</code>,</li>
-<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
-<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
-<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
-votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
-<em>storyboardID</em> de la <code>scene</code>,</li>
-<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
-<em>Storyboard Reference</em> voulus.</li>
-</ul>
-<p>Plus long à lire qu’à faire !</p>
-]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
-to <code>let</code> and <code>const</code>, but also keeps <code>var</code> in the language specification.</p>
-<p>The first thing you need to do: forget everything you know about <code>var</code>.</p>
-<h1 id="declarations"><a class="markdownIt-Anchor" href="#declarations">#</a> Declarations</h1>
-<h2 id="const"><a class="markdownIt-Anchor" href="#const">#</a> const</h2>
-<p><code>const</code> allows you to declare a single assignment variable lexically bound.
-Sounds posh right? That just means that you can only assign once a value in a
-variable, scoped at the block level.</p>
-<p>If you have already read stuff about <code>const</code>, be careful: this is not a way to
-declare immutable variables. Only the assigned reference is immutable, not the
-value. This means that the content of an array or an object declared using
-<code>const</code> can evolve but the re-assignment of the reference is impossible.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"bar"</span>
-  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
-    <span class="hljs-keyword">const</span> foo <span class="hljs-comment">// SyntaxError, variable needs to be assigned to something</span>
-    <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"qux"</span>
-    foo = <span class="hljs-string">"norf"</span> <span class="hljs-comment">// SyntaxError, variable cannot be re-assigned</span>
-    <span class="hljs-built_in">console</span>.log(foo)
-    <span class="hljs-comment">// "qux", variable belongs to the scope of the current block (the "if" one)</span>
-  }
-  <span class="hljs-built_in">console</span>.log(foo)
-  <span class="hljs-comment">// "bar", variable belongs to the scope of the "fn" function</span>
-}</code></pre>
-<p>Just a fancy trick using <code>const</code> with an iterator:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> el <span class="hljs-keyword">of</span> arr) {
-    <span class="hljs-built_in">console</span>.log(el)
-  }
-}</code></pre>
-<p>You might think a <code>let</code> should be used here but the declaration is evaluated
-on each iteration, so <code>const</code> fits better here.</p>
-<h2 id="let"><a class="markdownIt-Anchor" href="#let">#</a> let</h2>
-<p><code>let</code> allows you to do the same as <code>const</code> without the single assignment
-constraint. So you can understand here that the use-cases are the same as for
-its ancestor, <code>var</code>.
-By the way, you might have been told that <em><code>let</code> is the new <code>var</code></em>.
-It is partly true because it can do the same, but even better if we consider
-the ability of the variable to be scoped to the block level.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
-  <span class="hljs-keyword">var</span> foo2 = <span class="hljs-string">"bar"</span>
-  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
-    <span class="hljs-keyword">let</span> foo <span class="hljs-comment">// that's ok (foo === undefined)</span>
-    <span class="hljs-keyword">var</span> foo2
-    <span class="hljs-comment">// Be careful, `var` statements are not scoped to the block level</span>
-    <span class="hljs-comment">// so previous foo2 is overwritten!</span>
-    foo = <span class="hljs-string">"qux"</span>
-    foo2 = <span class="hljs-string">"qux"</span>
-    <span class="hljs-built_in">console</span>.log(foo)
-    <span class="hljs-comment">// "qux", variable belongs to the scope of the current block (the "if" one)</span>
-    <span class="hljs-built_in">console</span>.log(foo2)
-    <span class="hljs-comment">// "qux"</span>
-  }
-  <span class="hljs-built_in">console</span>.log(foo)
-  <span class="hljs-comment">// "bar", variable belongs to the scope of its block (the "fn" function)</span>
-  <span class="hljs-built_in">console</span>.log(foo2)
-  <span class="hljs-comment">// "qux"</span>
-}</code></pre>
-<p>You can use <code>let</code> in loops, the variable used for the iteration will be scoped
-to the block of the loop, not the (parent) scope of the code that contains the
-loop. This resolves any issues that you may have had with <code>i</code> already defined in
-the upper scope!</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn2</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i=i; i&lt;<span class="hljs-number">10</span>; i++) {
-    <span class="hljs-built_in">console</span>.log(i)
-  }
-  <span class="hljs-built_in">console</span>.log(i)
-  <span class="hljs-comment">// 0</span>
-
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j=i; j&lt;<span class="hljs-number">10</span>; j++) {}
-  <span class="hljs-built_in">console</span>.log(j)
-  <span class="hljs-comment">// j is not defined</span>
-}
-fn2() <span class="hljs-comment">// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9</span></code></pre>
-<p>Note: the example with <code>const</code> used in the <code>for ... of</code> loop cannot be
-reproduced here.
-The classic <code>for</code> loop is imperative, and the declaration is only made once when
-the loop starts. <code>const</code> is not relevant in this case.</p>
-<h2 id="var"><a class="markdownIt-Anchor" href="#var">#</a> var</h2>
-<p>With <code>const</code> and <code>let</code>, there is no more space for <code>var</code> anymore.
-<a href="https://twitter.com/getify/status/658662478528643072">Maybe in a <code>try</code>/<code>catch</code>
-context</a>.</p>
-<h1 id="hoisting-and-tdz-temporal-dead-zone-issues"><a class="markdownIt-Anchor" href="#hoisting-and-tdz-temporal-dead-zone-issues">#</a> Hoisting and TDZ (Temporal Dead Zone) issues</h1>
-<p>As a reminder, JavaScript does have a hoisting mechanism. For example, you can
-write:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(foo) <span class="hljs-comment">// undefined (no ReferenceError)</span>
-  <span class="hljs-keyword">var</span> foo = <span class="hljs-string">"bar"</span>
-}</code></pre>
-<p>JavaScript engine will read all <code>var</code> declarations and virtually move those at
-the start of your function scope.</p>
-<p><code>let</code> and <code>const</code> do not benefit from variable hoisting, and therefore can
-create TDZ (Temporal Dead Zone) issues; these occur when a variable does not
-exist yet.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(foo)
-  <span class="hljs-comment">// ReferenceError, we are in the TDZ of "foo"</span>
-  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
-}</code></pre>
-<h1 id="outro"><a class="markdownIt-Anchor" href="#outro">#</a> Outro</h1>
-<p>So, let’s recap:</p>
-<ul>
-<li>Use <code>const</code> (might be relevant 99% of the time)</li>
-<li>If during you development you happen to have to change the value of this
-variable, switch to <code>let</code> (that might happen 1% of the time)</li>
-<li>If you are in the worst use-case of the world, use <code>var</code> (you can do the math)</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
 <a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
 which</p>
 <blockquote>
@@ -2109,234 +2161,4 @@ n’est pas la seule initiative. Hayden Bleasel développe
 <a href="https://github.com/google/web-starter-kit/issues/599">intégré au Web Starter Kit de Google</a>.</p>
 <p>Et maintenant, c’est à vous : que pensez-vous de la formule “génération de
 Gulp/Grunt/autre” ? Quelles sont les technos que vous aimeriez trouver ?</p>
-]]></description><link>http://putaindecode.io/fr/articles/favicon/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/favicon/</guid><pubDate>Tue, 17 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Gérer son thème WordPress avec Webpack]]></title><description><![CDATA[<h1 id="pourquoi-webpack-pour-g-rer-son-th-me-wordpress"><a class="markdownIt-Anchor" href="#pourquoi-webpack-pour-g-rer-son-th-me-wordpress">#</a> Pourquoi Webpack pour gérer son thème WordPress ?</h1>
-<p>La réponse est la même qu’à la simple question
-<a href="/fr/articles/js/webpack/">“pourquoi Webpack ?”</a>.
-L’intérêt principal est d’obtenir des rapports d’erreurs liés à
-la gestion des assets (images, fonts, etc).</p>
-<p>Qu’y a-t-il de si particulier à savoir pour utiliser Webpack pour gérer un thème
-WordPress ? Pas grand chose, mais voici de quoi vous faire gagner (peut-être)
-un peu de temps.</p>
-<p>Il y a certainement plusieurs façons de gérer son thème WordPress
-avec Webpack. Celle que je vous propose va se limiter à des choses
-simples en concentrant le code dans le répertoire du thème pour plus de
-modularité.</p>
-<p>Pour commencer, deux choses importantes à savoir :</p>
-<ul>
-<li>Ne mettez pas de CSS dans le fameux <code>style.css</code> à la racine de votre thème,
-laissez juste le cartouche en commentaire (sans lequel WordPress ne détectera
-pas votre thème…) ;</li>
-<li>créez un dossier <code>src</code> dans votre thème, où nous
-mettrons nos “sources”, la partie du thème “compilé” sera dans un dossier
-<code>dist</code> et n’aura donc pas besoin d’être versionnée.</li>
-</ul>
-<p>La seule petite chose à laquelle il faut faire attention finalement, c’est de
-bien configurer le <code>publicPath</code> de Webpack afin que les fichiers qu’il génère
-soient bien dans le bon chemin, et que les ressources liées (dans les fichiers CSS
-par exemple) comportent les bons chemins relatifs (à la racine du site).</p>
-<p>Avec l’arborescence suivante, nous n’aurons pas de difficulté à faire une
-configuration portable :</p>
-<pre><code>-<span class="ruby"> htdocs
-</span>  -<span class="ruby"> wp-content
-</span>    -<span class="ruby"> themes
-</span>      -<span class="ruby"> putaindetheme
-</span>        -<span class="ruby"> node_modules
-</span>        -<span class="ruby"> src
-</span>          -<span class="ruby"> index.js
-</span>          -<span class="ruby"> index.css
-</span>          -<span class="ruby"> images/*
-</span>          -<span class="ruby"> fonts/*
-</span>        -<span class="ruby"> style.css
-</span>        -<span class="ruby"> webpack.config.babel.json
-</span>        -<span class="ruby"> package.json
-</span>-<span class="ruby"> package.json</span></code></pre>
-<p>En plus de cela, nous pouvons ajouter une sorte de raccourci via un
-<code>package.json</code> supplémentaire à la racine de notre projet :</p>
-<pre><code class="language-json">{
-  "<span class="hljs-attribute">private</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
-  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">start</span>": <span class="hljs-value"><span class="hljs-string">"cd htdocs/wp-content/themes/putaindetheme &amp;&amp; npm start"</span></span>,
-    "<span class="hljs-attribute">build</span>": <span class="hljs-value"><span class="hljs-string">"cd htdocs/wp-content/themes/putaindetheme &amp;&amp; npm run build"</span>
-  </span>}
-</span>}</code></pre>
-<p>Ce petit raccourci nous évitera de devoir nous taper en CLI tout le chemin du
-thème et nous pourrions même, pourquoi pas, rajouter un
-<code>&quot;prestart&quot;: &quot;open http://yourlocalhost.tld&quot;</code> afin d’ouvrir automatiquement
-le projet dans le navigateur lorsque nous démarrerons notre développement via
-<code>$ npm start</code>.</p>
-<p>Voyons rapidement donc le <code>package.json</code> du thème ainsi que la config Webpack.</p>
-<p><code>package.json</code></p>
-<pre><code class="language-json">{
-  "<span class="hljs-attribute">private</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
-  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">start</span>": <span class="hljs-value"><span class="hljs-string">"webpack --config=webpack.config.babel.js --watch"</span></span>,
-    "<span class="hljs-attribute">build</span>": <span class="hljs-value"><span class="hljs-string">"webpack --config=webpack.config.babel.js -p"</span>
-  </span>}</span>,
-  "<span class="hljs-attribute">devDependencies</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">babel</span>": <span class="hljs-value"><span class="hljs-string">"^5.8.12"</span></span>,
-    "<span class="hljs-attribute">babel-core</span>": <span class="hljs-value"><span class="hljs-string">"^5.8.12"</span></span>,
-    "<span class="hljs-attribute">babel-loader</span>": <span class="hljs-value"><span class="hljs-string">"^5.3.2"</span></span>,
-    "<span class="hljs-attribute">css-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.15.6"</span></span>,
-    "<span class="hljs-attribute">eslint</span>": <span class="hljs-value"><span class="hljs-string">"^0.24.1"</span></span>,
-    "<span class="hljs-attribute">eslint-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.14.2"</span></span>,
-    "<span class="hljs-attribute">extract-text-webpack-plugin</span>": <span class="hljs-value"><span class="hljs-string">"^0.8.2"</span></span>,
-    "<span class="hljs-attribute">file-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.8.4"</span></span>,
-    "<span class="hljs-attribute">json-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.5.2"</span></span>,
-    "<span class="hljs-attribute">postcss-cssnext</span>": <span class="hljs-value"><span class="hljs-string">"^2.1.0"</span></span>,
-    "<span class="hljs-attribute">postcss-import</span>": <span class="hljs-value"><span class="hljs-string">"^7.0.0"</span></span>,
-    "<span class="hljs-attribute">postcss-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.6.0"</span></span>,
-    "<span class="hljs-attribute">postcss-url</span>": <span class="hljs-value"><span class="hljs-string">"^5.0.2"</span></span>,
-    "<span class="hljs-attribute">style-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.12.3"</span></span>,
-    "<span class="hljs-attribute">webpack</span>": <span class="hljs-value"><span class="hljs-string">"^1.10.5"</span>
-  </span>}</span>,
-  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">normalize.css</span>": <span class="hljs-value"><span class="hljs-string">"^3.0.3"</span>
-  </span>}
-</span>}</code></pre>
-<p>Quelques petites notes sur ce contenu :</p>
-<ul>
-<li><code>private</code> sert à éviter la publication de votre “paquet” sur npm, ainsi qu’à
-devoir remplir certains champs tels que <code>name</code> et compagnie ;</li>
-<li>nous mettrons dans <code>devDependencies</code> les dépendances pour le développement et
-dans <code>dependencies</code> les dépendances qui seront dans le build final. Ici, j’ai
-simplement mis <code>normalize.css</code> pour exemple, mais vous pourriez très bien avoir
-aussi jQuery (:trollface:) ou React ;</li>
-<li>les scripts utilisent <code>webpack.config.babel.js</code> afin de pouvoir définir la
-configuration en es6/7 via <em>babel</em>.</li>
-</ul>
-<p>Voyons maintenant la config <code>webpack.config.babel.js</code> :</p>
-<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> le code ci-dessous est mal rendu</span>
-<span class="hljs-comment">// Une issue est ouverte à ce propos</span>
-<span class="hljs-comment">// https://github.com/isagalaev/highlight.js/issues/958</span>
-
-<span class="hljs-keyword">import</span> <span class="hljs-string">"babel/polyfill"</span>
-<span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">"path"</span>
-<span class="hljs-keyword">import</span> ExtractTextPlugin <span class="hljs-keyword">from</span> <span class="hljs-string">"extract-text-webpack-plugin"</span>
-<span class="hljs-keyword">import</span> postcssImport <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-import"</span>
-<span class="hljs-keyword">import</span> postcssUrl <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-url"</span>
-<span class="hljs-keyword">import</span> postcssCssnext <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-cssnext"</span>
-
-const production = process.argv.includes(`-p`)
-
-const theme = path.basename(__dirname)
-const src = path.join(__dirname, `src`)
-
-export default {
-  entry: {
-    index: [`${ src }/index.js<span class="hljs-string">`],
-  },
-
-  output: {
-    path: path.join(__dirname, `</span>dist<span class="hljs-string">`),
-    filename: `</span>[name].js<span class="hljs-string">`,
-    publicPath: `</span>wp-content/themes/${ theme }/dist/<span class="hljs-string">`,
-  },
-  resolve: {
-    extensions: [
-      `</span><span class="hljs-string">`,
-      `</span>.js<span class="hljs-string">`,
-      `</span>.json<span class="hljs-string">`,
-    ],
-  },
-
-  module: {
-    loaders: [
-      {
-        test: /\.json$/,
-        loader: `</span>json-loader<span class="hljs-string">`,
-      },
-      {
-        test: /\.js$/,
-        loaders: [
-          `</span>babel-loader<span class="hljs-string">`,
-          `</span>eslint-loader<span class="hljs-string">`,
-        ],
-        include: src,
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          `</span>style-loader<span class="hljs-string">`,
-          [
-            `</span>css-loader<span class="hljs-string">`,
-            `</span>postcss-loader<span class="hljs-string">`,
-          ].join(`</span>!<span class="hljs-string">`)
-        ),
-      },
-      {
-        test: /\.(ico|jpe?g|png|gif)$/,
-        loader: `</span>file-loader?name=[path][name].[ext]&amp;context=${ src }/<span class="hljs-string">`,
-      },
-    ],
-  },
-
-  plugins: [
-    new ExtractTextPlugin(`</span>[name].css<span class="hljs-string">`, {disable: !production}),
-  ],
-
-  postcss: function() {
-    // https://github.com/postcss/postcss-loader/issues/31
-    const webpack = this
-
-    return [
-      postcssImport({
-        onImport: (files) =&gt; files.forEach(webpack.addDependency),
-      }),
-      postcssUrl(),
-      postcssCssnext({
-        browsers: `</span>last <span class="hljs-number">2</span> versions<span class="hljs-string">`,
-      }),
-    ]
-  },
-}</span></code></pre>
-<p><em>Bien entendu, libre à vous d’adapter les loaders Webpack à utiliser, ainsi que
-la configuration PostCSS par exemple.</em> Faites un tour sur notre article de
-<a href="/fr/articles/js/webpack/premier-exemple/">premier exemple de configuration Webpack</a> afin
-d’y voir plus clair.</p>
-<p>Il nous reste maintenant à ajouter dans notre thème WordPress les
-références à nos points d’entrées CSS et JavaScript que sont <code>index.css</code> et
-<code>index.js</code>.</p>
-<p>Pour faire simplement, dans votre fichier <code>functions.php</code> (oui, le fichier qui a un nom
-qui n’indique pas du tout ce pour quoi tout le monde se sert du fichier, c’est à
-dire la configuration du thème au runtime…), on va ajouter une petite constante
-qui servira à adapter votre thème en fonction de l’environnement :</p>
-<pre><code class="language-php"><span class="hljs-comment">// ENV est à définir dans votre configuration Apache par exemple.</span>
-<span class="hljs-comment">// Si vous ne voulez pas y toucher, vous pouvez plutôt définir d'une autre façon</span>
-<span class="hljs-comment">// en testant le SERVER_NAME par exemple</span>
-define(<span class="hljs-string">'ENV'</span>, getenv(<span class="hljs-string">'ENV'</span>));
-
-<span class="hljs-comment">// en local, on pourrait définir ENV à "development"</span></code></pre>
-<p><em>Nous pourrions dans ce fichier utiliser l’API de Wordpress pour enregister nos
-<code>index.css</code> et <code>index.js</code> via les méthodes <code>wp_(de)register_</code>, mais nous
-resterons simples pour l’exemple.</em></p>
-<p>Vu qu’on utilise le <code>style-loader</code> de Webpack en développement, on ne va ajouter
-notre feuille de style qu’en production (dans le <code>&lt;head&gt;</code>).</p>
-<pre><code class="language-php"><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">if</span> (ENV != <span class="hljs-string">"development"</span>): <span class="hljs-preprocessor">?&gt;</span>
-  &lt;link rel=<span class="hljs-string">"stylesheet"</span> href=<span class="hljs-string">"&lt;?php echo get_bloginfo('template_directory') ?&gt;/dist/index.css"</span> /&gt;
-<span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">endif</span>; <span class="hljs-preprocessor">?&gt;</span></code></pre>
-<p>Pensez aussi à supprimer la référence à <code>style.css</code> dans <code>header.php</code>.</p>
-<p>Dans la même idée mais en plus simple, on va ajouter dans notre <code>footer.php</code>.</p>
-<pre><code class="language-php">&lt;script src=<span class="hljs-string">"&lt;?php echo get_bloginfo('template_directory') ?&gt;/dist/index.js"</span>&gt;&lt;/script&gt;</code></pre>
-<p>Rien de bien compliqué finalement.</p>
-<p><em>Attention si votre thème hérite d’un autre,
-<code>get_bloginfo('template_directory')</code> ne pointera pas vers votre thème mais le
-thème parent. Il vous faudra donc ajuster le code 😑.</em></p>
-<hr>
-<p>Pour le test vous pouvez mettre dans les CSS et JS :</p>
-<p><code>index.css</code></p>
-<pre><code class="language-css"><span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">"normalize.css"</span></span>;
-<span class="hljs-tag">body</span> <span class="hljs-rules">{
-  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> red</span></span>;
-}</span></code></pre>
-<p>Notez ici que par la façon dont nous avons défini Webpack ci-dessus, vous
-devriez placer et référencer vos assets (images &amp; co), depuis <code>src</code>. Exemple :</p>
-<pre><code class="language-css"><span class="hljs-tag">html</span> <span class="hljs-rules">{
-  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-function">url</span>(./images/background.jpg)
-  <span class="hljs-comment">/* =&gt; wp-content/themes/putaindetheme/src/images/background.jpg */</span>
-</span></span></span>}</code></pre>
-<p>Ensuite, dans <code>index.js</code>, je vous laisse vous débrouiller :)</p>
-<pre><code class="language-js"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Hey !"</span>)</code></pre>
-<p>Libre à vous maintenant d’ajouter vos dépendances favorites et de remplir vos
-<code>index.css</code> et <code>index.js</code> avec une gestion d’erreurs autre que des requêtes HTTP
-en 404 !</p>
-]]></description><link>http://putaindecode.io/fr/articles/wordpress/webpack/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/wordpress/webpack/</guid><pubDate>Tue, 20 Oct 2015 00:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>http://putaindecode.io/fr/articles/favicon/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/favicon/</guid><pubDate>Tue, 17 Nov 2015 00:00:00 GMT</pubDate></item></channel></rss>
