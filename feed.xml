@@ -1,57 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Wed, 09 Dec 2015 14:19:30 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
-lors de l’initialisation d’objets.</p>
-<h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
-<p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
-propriété depuis une variable, la clé porte le même nom que la variable.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
-
-<span class="hljs-keyword">return</span> {
-  firstname: firstname,
-  lastname: lastname,
-}</code></pre>
-<p>Avec ES2015, on va pouvoir l’écrire comme ça :</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
-
-<span class="hljs-keyword">return</span> {
-  firstname,
-  lastname,
-}
-<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
-<p>De la même manière, on pourra déclarer des méthodes en se passant du mot clé
-<code>function</code>. Idem pour les <em>getter</em> / <em>setter</em>.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
-  get email() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
-  },
-  set email(email) {
-    <span class="hljs-keyword">this</span>.email = email
-  },
-  validateEmail(email) {
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
-  },
-}</code></pre>
-<h2 id="nom-de-propri-t-s-calcul-es"><a class="markdownIt-Anchor" href="#nom-de-propri-t-s-calcul-es">#</a> Nom de propriétés calculées</h2>
-<p>La dernière nouveauté concernant les <em>literal objects</em> va nous permettre
-de créer des noms de propriétés depuis une expression, directement à la
-création de l’objet. Auparavant, il fallait procéder en 2 temps, création
-puis affectation.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">var</span> payload = {}
-  payload[type] = data
-  <span class="hljs-keyword">return</span> payload
-}</code></pre>
-<p>En ES2015, cela donnerait :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    [type]: data
-  }
-}</code></pre>
-<p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
-aussi déclarer plusieurs fois une même propriété, la dernière déclaration
-écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Wed, 09 Dec 2015 14:25:32 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
 en conséquence enlever le spread, le destructuring, les générateurs, le for…of
 et bien d’autres. Ce concept, introduit dans l’ES6, est enfait un protocole :
 le protocole d’itération.</p>
@@ -114,7 +61,7 @@ retourné est utilisé pour boucler sur ses valeurs.</p>
 </ul>
 <pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
 
-<span class="hljs-comment">// La syntaxe à laquelle on pense immédiatement est la syntaxe « for .. of » </span>
+<span class="hljs-comment">// La syntaxe à laquelle on pense immédiatement est la syntaxe « for .. of »</span>
 <span class="hljs-comment">// qui permet de boucler sur les valeurs des Iterable.</span>
 <span class="hljs-keyword">for</span> (val <span class="hljs-keyword">of</span> arr) {
     <span class="hljs-built_in">console</span>.log(val);
@@ -258,7 +205,60 @@ qu’un générateur est à la fois un Iterable et un Iterator, qu’un Iterable
 </ul>
 <p>La pratique restant le meilleur moyen de se former, le site
 <a href="http://es6katas.org/">ES6 Katas</a> est très bien fait pour s’exercer.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/iterators/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/iterators/</guid><pubDate>Wed, 09 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+lors de l’initialisation d’objets.</p>
+<h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
+<p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
+propriété depuis une variable, la clé porte le même nom que la variable.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
+
+<span class="hljs-keyword">return</span> {
+  firstname: firstname,
+  lastname: lastname,
+}</code></pre>
+<p>Avec ES2015, on va pouvoir l’écrire comme ça :</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
+
+<span class="hljs-keyword">return</span> {
+  firstname,
+  lastname,
+}
+<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
+<p>De la même manière, on pourra déclarer des méthodes en se passant du mot clé
+<code>function</code>. Idem pour les <em>getter</em> / <em>setter</em>.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
+  get email() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
+  },
+  set email(email) {
+    <span class="hljs-keyword">this</span>.email = email
+  },
+  validateEmail(email) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+  },
+}</code></pre>
+<h2 id="nom-de-propri-t-s-calcul-es"><a class="markdownIt-Anchor" href="#nom-de-propri-t-s-calcul-es">#</a> Nom de propriétés calculées</h2>
+<p>La dernière nouveauté concernant les <em>literal objects</em> va nous permettre
+de créer des noms de propriétés depuis une expression, directement à la
+création de l’objet. Auparavant, il fallait procéder en 2 temps, création
+puis affectation.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">var</span> payload = {}
+  payload[type] = data
+  <span class="hljs-keyword">return</span> payload
+}</code></pre>
+<p>En ES2015, cela donnerait :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    [type]: data
+  }
+}</code></pre>
+<p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
+aussi déclarer plusieurs fois une même propriété, la dernière déclaration
+écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
 creating new object.</p>
 <h2 id="shorter-property-name"><a class="markdownIt-Anchor" href="#shorter-property-name">#</a> Shorter property name</h2>
 <p>When you create an object, you might create a variable and then reuse it to
