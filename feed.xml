@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Wed, 09 Dec 2015 08:16:49 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Wed, 09 Dec 2015 14:19:30 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
@@ -51,7 +51,214 @@ puis affectation.</p>
 <p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
 aussi déclarer plusieurs fois une même propriété, la dernière déclaration
 écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
+en conséquence enlever le spread, le destructuring, les générateurs, le for…of
+et bien d’autres. Ce concept, introduit dans l’ES6, est enfait un protocole :
+le protocole d’itération.</p>
+<p>Le principe est de définir une convention dans le langage, qui permet de
+standardiser la façon dont des sources de données peuvent être traversées.</p>
+<p>Première bonne nouvelle, ce protocole est assez simple à comprendre et se base
+sur 2 “interfaces” (oui les guillemets c’est pour dire qu’on ne parle pas
+d’interface au sens technique, puisqu’elles n’existent pas en JS).</p>
+<p>La première interface, appelée <strong>Iterator</strong> permet à un objet de produire en
+séquence des valeurs. Un objet est un Iterator lorsqu’il implémente une
+function <code>next()</code> qui retourne un object avec 2 propriétés :</p>
+<ul>
+<li><code>value</code>: la valeur courante lors de l’itération</li>
+<li><code>done</code> : un booléen qui indique si on a atteint la fin de l’itération ou non</li>
+</ul>
+<p>Les appels successifs à la méthode <code>next()</code> d’un Iterator permettent donc de
+traverser et récupérer les valeurs d’un objet. Prenons l’exemple de l’Iterator
+retourné par un Array qui contiendrait 2 valeurs (“a” et “b”) :</p>
+<pre><code class="language-js">iteratorArray.next();
+<span class="hljs-comment">// -&gt; Object {value: "a", done: false}</span>
+iteratorArray.next();
+<span class="hljs-comment">// -&gt; Object {value: "b", done: false}</span>
+iteratorArray.next();
+<span class="hljs-comment">// -&gt; Object {value: undefined, done: true}</span></code></pre>
+<p>Mais comment récupérer l’Iterator d’un objet vas-tu me dire ? (n’est-ce pas ?)
+Ça tombe bien, c’est le rôle de la seconde interface, appelée <strong>Iterable</strong>. Un
+objet est Iterable s’il implémente une méthode particulière qui va retourner
+l’Iterator. Cette méthode particulière (appelée <em>@@iterator</em> dans la
+spécification) doit être définie en utilisant le symbole <code>[Symbol.iterator]</code>.
+(Les symboles seront expliqués dans un prochain article, pas de panique).</p>
+<p>En reprenant l’exemple précédent, voici comment récupérer l’Iterator d’un Array :</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
+<span class="hljs-keyword">var</span> iteratorArray = arr[<span class="hljs-built_in">Symbol</span>.iterator]();
+iteratorArray.next();
+<span class="hljs-comment">// -&gt; Object {value: "a", done: false}</span>
+iteratorArray.next();
+<span class="hljs-comment">// -&gt; Object {value: "b", done: false}</span>
+iteratorArray.next();
+<span class="hljs-comment">// -&gt; Object {value: undefined, done: true}</span></code></pre>
+<p>L’exemple ci-dessus illustre donc l’implémentation du protocole par l’Array.
+Il n’est pas très utile en soi, en voici donc un autre qui va permettre de
+boucler sur les valeurs et les afficher :</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
+<span class="hljs-keyword">var</span> iterator = arr[<span class="hljs-built_in">Symbol</span>.iterator]();
+
+<span class="hljs-keyword">var</span> result = iterator.next();
+<span class="hljs-keyword">while</span> (!result.done) {
+  <span class="hljs-built_in">console</span>.log(result.value);
+  result = iterator.next();
+}
+<span class="hljs-comment">// 'a'</span>
+<span class="hljs-comment">// 'b'</span></code></pre>
+<p>De manière générale, quand un objet qui implémente le protocole d’itération est
+traversé, sa méthode <em>@@iterator</em> est appelée (une seule fois donc) et l’Iterator
+retourné est utilisé pour boucler sur ses valeurs.</p>
+<h1 id="consommateurs-d-iterable"><a class="markdownIt-Anchor" href="#consommateurs-d-iterable">#</a> Consommateurs d’Iterable</h1>
+<p>La deuxième bonne nouvelle, c’est que plusieurs concepts du langage tirent avantage de ce protocole :</p>
+<ul>
+<li>Certaines syntaxes s’attendent à recevoir des Iterable</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
+
+<span class="hljs-comment">// La syntaxe à laquelle on pense immédiatement est la syntaxe « for .. of » </span>
+<span class="hljs-comment">// qui permet de boucler sur les valeurs des Iterable.</span>
+<span class="hljs-keyword">for</span> (val <span class="hljs-keyword">of</span> arr) {
+    <span class="hljs-built_in">console</span>.log(val);
+}
+
+<span class="hljs-comment">// Le spread qui permet d'insérer facilement des valeurs dans un Array</span>
+<span class="hljs-comment">// utilise également des Iterable</span>
+[<span class="hljs-string">'0'</span>, ...arr, <span class="hljs-string">'1'</span>] <span class="hljs-comment">// 0, a, b, 1</span>
+
+<span class="hljs-comment">// yield nécessite également des Iterable</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">gen</span>(<span class="hljs-params"></span>)</span>{
+  <span class="hljs-keyword">yield</span>* arr;
+}
+gen().next(); <span class="hljs-comment">// { value:"a", done:false }</span>
+
+<span class="hljs-comment">// Le destructuring avec le pattern Array</span>
+<span class="hljs-keyword">let</span> [x, y] = arr; <span class="hljs-comment">// x = 'a',  y = "b"</span></code></pre>
+<ul>
+<li>Des API acceptent également des Iterable</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"b"</span>];
+
+<span class="hljs-comment">// Certains constructeurs acceptent des Iterable</span>
+
+<span class="hljs-comment">// Set et Weakset</span>
+<span class="hljs-keyword">var</span> set = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(arr);
+set.has(<span class="hljs-string">"b"</span>) <span class="hljs-comment">// true</span>
+<span class="hljs-comment">// Map et WeakMap</span>
+<span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(arr.entries()); <span class="hljs-comment">// Attention, le constructeur attend un ensemble [clé, valeur]</span>
+map.get(<span class="hljs-number">0</span>) <span class="hljs-comment">// 'a'</span>
+
+
+<span class="hljs-comment">// Ou encore les API suivants :</span>
+
+<span class="hljs-built_in">Array</span>.from(iterable); <span class="hljs-comment">// transforme n'importe quel Iterable en Array.</span>
+<span class="hljs-built_in">Promise</span>.all(iterableCollectionDePromises); <span class="hljs-comment">// n'importe quel Iterable qui contient un ensemble de Promises</span>
+<span class="hljs-built_in">Promise</span>.race(iterableCollectionDePromises); <span class="hljs-comment">// idem</span></code></pre>
+<h1 id="built-in-iterable"><a class="markdownIt-Anchor" href="#built-in-iterable">#</a> Built-in Iterable</h1>
+<p>Troisième bonne nouvelles, plusieurs objets du langage implémentent déjà ce protocole :</p>
+<pre><code class="language-js"><span class="hljs-comment">// évidemment les Array</span>
+<span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"l"</span>, <span class="hljs-string">"o"</span>, <span class="hljs-string">"l"</span>];
+<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> arr) {
+    <span class="hljs-built_in">console</span>.log(v);
+    <span class="hljs-comment">// 'l'</span>
+    <span class="hljs-comment">// 'o'</span>
+    <span class="hljs-comment">// 'l'</span>
+}
+
+<span class="hljs-comment">// les String</span>
+<span class="hljs-keyword">var</span> str = <span class="hljs-string">"lol"</span>;
+<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> str) {
+    <span class="hljs-built_in">console</span>.log(v);
+    <span class="hljs-comment">// 'l'</span>
+    <span class="hljs-comment">// 'o'</span>
+    <span class="hljs-comment">// 'l'</span>
+}
+
+<span class="hljs-comment">// les Map et Set (mais PAS WeakMap et WeakSet)</span>
+<span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>().set(<span class="hljs-string">'l'</span>, <span class="hljs-number">1</span>).set(<span class="hljs-string">'o'</span>, <span class="hljs-number">2</span>);
+<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> map) {
+    <span class="hljs-built_in">console</span>.log(v);
+    <span class="hljs-comment">// ["l", 1]</span>
+    <span class="hljs-comment">// ["o", 2]</span>
+}
+<span class="hljs-keyword">var</span> set = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>().add(<span class="hljs-string">'l'</span>).add(<span class="hljs-string">'o'</span>);
+<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> map) {
+    <span class="hljs-built_in">console</span>.log(v);
+    <span class="hljs-comment">// 'l'</span>
+    <span class="hljs-comment">// 'o'</span>
+}
+
+<span class="hljs-comment">// Les TypedArray que vous utilisez tous les jours</span>
+<span class="hljs-keyword">var</span> int16 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Int16Array</span>(<span class="hljs-number">2</span>);
+int16[<span class="hljs-number">0</span>] = <span class="hljs-number">42</span>;
+<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> int16) {
+    <span class="hljs-built_in">console</span>.log(v);
+    <span class="hljs-comment">// 42</span>
+    <span class="hljs-comment">// 0</span>
+}
+
+<span class="hljs-comment">// Même l'objet spécial arguments (que vous</span>
+<span class="hljs-comment">// ne devriez plus utilisé avec l'ES6) est un Iterable</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span>(<span class="hljs-params"></span>)
+</span>{
+    <span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> <span class="hljs-built_in">arguments</span>) {
+        <span class="hljs-built_in">console</span>.log(v);
+        <span class="hljs-comment">// 'l'</span>
+        <span class="hljs-comment">// 'o'</span>
+        <span class="hljs-comment">// 'l'</span>
+    }
+}
+test(<span class="hljs-string">'l'</span>, <span class="hljs-string">'o'</span>, <span class="hljs-string">'l'</span>);
+
+<span class="hljs-comment">// Les NodeList retournés par l'API DOM également !</span>
+<span class="hljs-keyword">var</span> matches = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'div'</span>);
+<span class="hljs-keyword">for</span> (m <span class="hljs-keyword">of</span> matches) {
+    <span class="hljs-built_in">console</span>.log(m);
+    <span class="hljs-comment">// &lt;div id="topSection"&gt;</span>
+    <span class="hljs-comment">// &lt;div id="brandLogo"&gt;</span>
+    <span class="hljs-comment">// ...</span>
+}</code></pre>
+<p>Autre point : Array, TypedArray, Map, Set sont des Iterable mais définissent
+aussi des méthodes qui retournent également des Iterable (Ca va, vous suivez
+toujours ?) :</p>
+<ul>
+<li>entries() retourne un ensemble des clés/valeurs</li>
+<li>keys() retourne les clés</li>
+<li>values() retourne les valeurs</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">for</span> (cleVals <span class="hljs-keyword">of</span> arr.entries()) {
+    <span class="hljs-built_in">console</span>.log(cleVals);
+    <span class="hljs-comment">// [0, "l"]</span>
+    <span class="hljs-comment">// [1, "o"]</span>
+    <span class="hljs-comment">// [2, "l"]</span>
+}</code></pre>
+<p>Détail important, Object n’est pas Iterable mais il n’est pas impossible de
+voir apparaitre dans l’ES7 les méthodes entries(), keys() et values() sur
+Object. (cf : <a href="https://github.com/tc39/proposal-object-values-entries">Proposition spec</a>)</p>
+<h1 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h1>
+<p>J’espère que cet article a bien illustré l’importance de ce protocole dans le
+langage. Nous avons vu ci-dessus que de nombreux concepts du langage tirent
+déjà avantage de ce protocole mais il est au moins aussi important de noter que
+cela permet d’établir une convention sur laquelle des librairies externes peuvent
+s’appuyer.</p>
+<p>Elles peuvent le faire de 2 manières :</p>
+<ul>
+<li>En proposant des sources de données qui implémentent le protocole (ex:
+liste chaînée)</li>
+<li>En tant que consommateur du protocole (ex: un algorithme de tri)</li>
+</ul>
+<h1 id="un-dernier-verre-pour-la-route"><a class="markdownIt-Anchor" href="#un-dernier-verre-pour-la-route">#</a> Un dernier verre pour la route</h1>
+<p>Les articles suivants vous permettront d’aller encore plus loin dans le sujet. Vous y
+apprendrez notamment qu’un iterator peut retourner en option 2 autres méthodes,
+qu’un générateur est à la fois un Iterable et un Iterator, qu’un Iterable peut
+être infini ou encore des exemples d’implémentations divers et variés :</p>
+<ul>
+<li><a href="http://www.2ality.com/2015/02/es6-iteration.html">Iterables and iterators in ECMAScript 6</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">Iteration Protocols</a></li>
+<li><a href="https://hacks.mozilla.org/2015/04/es6-in-depth-iterators-and-the-for-of-loop/">ES6 in depth : iterators and the for of loop</a></li>
+<li><a href="https://ponyfoo.com/articles/es6-iterators-in-depth">ES6 iterators in depth</a></li>
+</ul>
+<p>La pratique restant le meilleur moyen de se former, le site
+<a href="http://es6katas.org/">ES6 Katas</a> est très bien fait pour s’exercer.</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/iterators/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
 creating new object.</p>
 <h2 id="shorter-property-name"><a class="markdownIt-Anchor" href="#shorter-property-name">#</a> Shorter property name</h2>
 <p>When you create an object, you might create a variable and then reuse it to
@@ -103,109 +310,7 @@ With ES5 you have to do that in two steps:</p>
 <p><strong>Note:</strong> with dynamic properties, declaring multiples properties with the same
 name is accepted and do not throw an error. Keep in mind that only the last
 value will be kept.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
-the <em>template strings</em>.</p>
-<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
-<p>To define a string in JavaScript, we have single quotes or double quotes.
-No one is really better than the other since you need to escape the quotes you
-are using in the string itself.</p>
-<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
-<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
-<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
-<p>Now you can directly use expression in a <em>template string</em> if you use the new
-place holder syntax.: <code>${ expression }</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
-<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
-<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
-<p>Here we are just using a variable, but we can use any expression:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
-  <span class="hljs-keyword">return</span> num * num;
-}
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
-<p>This is what make <em>template strings</em> awesome.</p>
-<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
-<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
-                 bar \
-                 baz"</span>;
-
-<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
-multiline2 += <span class="hljs-string">"bar"</span>;
-multiline2 += <span class="hljs-string">"baz"</span>;
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
-                   bar
-                   baz`</span>;</code></pre>
-<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
-bar`</span>;
-
-<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
-             bar`</span>;
-
-str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
-<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
-<p>Let’s dive into another interesting feature of <em>template strings</em>.
-Tags are functions that will use just before the <em>template string</em> and they
-allow us to enhance the string result.</p>
-<p>A tag take an array of “literals” (strings), and then all interpolated
-(evaluated) expressions that we can still modify.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
-      <span class="hljs-keyword">return</span> c.toUpperCase();
-    });
-  }
-
-  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
-    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
-    result += replaceVowels(strings[i]);
-    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
-      result += replaceVowels(nextValue)
-    } <span class="hljs-keyword">else</span> {
-      result += nextValue;
-    }
-  }
-  <span class="hljs-keyword">return</span> result;
-}
-
-
-capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
-<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
-<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
-<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
-capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
-<p>Here is an interesting example of tagged <em>template strings</em> to handle
-<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
-<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>A new function has been added to <code>String</code> prototype that allows us display raw
-content so you can see unescaped characters:</p>
-<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>When you will start to use <em>template strings</em>, you are likely going to like
-them. They are clearly really useful in a daily basis.</p>
-<p>Almost all
-<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
-today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
-hesitate to use <em>template strings</em>.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaînes de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -316,7 +421,109 @@ automatiquement gérés avec une <em>template string</em>.</p>
 simplifie grandement la vie et permet d’oublier les erreurs d’échappement.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des <em>template strings</em>…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
+the <em>template strings</em>.</p>
+<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
+<p>To define a string in JavaScript, we have single quotes or double quotes.
+No one is really better than the other since you need to escape the quotes you
+are using in the string itself.</p>
+<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
+<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
+<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
+<p>Now you can directly use expression in a <em>template string</em> if you use the new
+place holder syntax.: <code>${ expression }</code>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
+<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
+<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
+<p>Here we are just using a variable, but we can use any expression:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
+  <span class="hljs-keyword">return</span> num * num;
+}
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
+<p>This is what make <em>template strings</em> awesome.</p>
+<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
+<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
+                 bar \
+                 baz"</span>;
+
+<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
+multiline2 += <span class="hljs-string">"bar"</span>;
+multiline2 += <span class="hljs-string">"baz"</span>;
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
+                   bar
+                   baz`</span>;</code></pre>
+<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
+bar`</span>;
+
+<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
+             bar`</span>;
+
+str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
+<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
+<p>Let’s dive into another interesting feature of <em>template strings</em>.
+Tags are functions that will use just before the <em>template string</em> and they
+allow us to enhance the string result.</p>
+<p>A tag take an array of “literals” (strings), and then all interpolated
+(evaluated) expressions that we can still modify.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
+    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
+      <span class="hljs-keyword">return</span> c.toUpperCase();
+    });
+  }
+
+  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
+    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
+    result += replaceVowels(strings[i]);
+    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
+      result += replaceVowels(nextValue)
+    } <span class="hljs-keyword">else</span> {
+      result += nextValue;
+    }
+  }
+  <span class="hljs-keyword">return</span> result;
+}
+
+
+capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
+<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
+<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
+<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
+capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
+<p>Here is an interesting example of tagged <em>template strings</em> to handle
+<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
+<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
+<p>A new function has been added to <code>String</code> prototype that allows us display raw
+content so you can see unescaped characters:</p>
+<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>When you will start to use <em>template strings</em>, you are likely going to like
+them. They are clearly really useful in a daily basis.</p>
+<p>Almost all
+<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
+today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
+hesitate to use <em>template strings</em>.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
 promises.
 The concept of promises exists is not new in the JavaScript world, but now
 we got an official feature!</p>
@@ -891,7 +1098,85 @@ to be able to use classes.</p>
 <p>One last thing: when you are in a class context,
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>
 is enabled automatically.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -970,85 +1255,7 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
-
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
-
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
@@ -1209,7 +1416,80 @@ this way using ES5:</p>
 <p>About the compatibility (at the time of the writing): only Firefox ≥ 43
 support this feature (and just for function…).
 So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
+an array based on their structure.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
+<span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>,
+}
+
+<span class="hljs-comment">// With ES5, you need to do</span>
+<span class="hljs-keyword">var</span> foo = myObject.foo
+<span class="hljs-keyword">var</span> bar = myObject.bar
+
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// With ES6, you can write the same with</span>
+<span class="hljs-keyword">const</span> { foo, bar } = myObject
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
+<span class="hljs-comment">// returns a function or an array)</span>
+<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    foo: <span class="hljs-number">1</span>,
+    bar: <span class="hljs-number">2</span>,
+  }
+}
+<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span></code></pre>
+<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
+<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
+<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
+<span class="hljs-comment">// of an array</span>
+<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
+<span class="hljs-comment">// commas</span>
+<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+first <span class="hljs-comment">// 1</span>
+second <span class="hljs-comment">// 2</span>
+fourth <span class="hljs-comment">// 4</span></code></pre>
+<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
+<p>For an object, the default behavior is that the name of a variable will match
+the name of the key.
+So if you have already a variable with this name, you can choose another one.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>
+}
+<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
+renamedFoo <span class="hljs-comment">// 1</span></code></pre>
+<p>This syntax doesn’t offer a good readability.</p>
+<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
+<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
+	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
+}
+
+myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
+<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
+<p>We can also nest the assignments.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: {
+    bar: <span class="hljs-number">1</span>,
+  },
+}
+<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
+bar <span class="hljs-comment">// 1</span></code></pre>
+<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
+(if the value doesn’t exist), be sure that you will have a nesting error, since
+a value will try to be retrieved from an <code>undefined</code> property.
+To prevent this issue, you will need to define
+<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Le destructuring consiste à assigner des variables provenant d’un objet ou
 tableau en reposant sur leur structure.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Partons d'un objet `myObject`</span>
@@ -1283,80 +1563,125 @@ bar <span class="hljs-comment">// 1</span></code></pre>
 nesting, puisqu’il essaiera d’aller chercher une propriété d’<code>undefined</code>.
 Pour pallier ces soucis, rendez-vous pour l’article sur les
 <a href="/fr/articles/js/es2015/defaults/">defaults</a>.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
-an array based on their structure.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
-<span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>,
-}
-
-<span class="hljs-comment">// With ES5, you need to do</span>
-<span class="hljs-keyword">var</span> foo = myObject.foo
-<span class="hljs-keyword">var</span> bar = myObject.bar
-
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// With ES6, you can write the same with</span>
-<span class="hljs-keyword">const</span> { foo, bar } = myObject
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
-<span class="hljs-comment">// returns a function or an array)</span>
-<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    foo: <span class="hljs-number">1</span>,
-    bar: <span class="hljs-number">2</span>,
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
+variables grâce à <code>let</code> et <code>const</code> mais garde aussi la déclaration par <code>var</code>
+dans la spécification du langage.</p>
+<p>Première étape, on oublie tout ce qu’on sait sur <code>var</code>.</p>
+<h1 id="d-clarations"><a class="markdownIt-Anchor" href="#d-clarations">#</a> Déclarations</h1>
+<h2 id="const"><a class="markdownIt-Anchor" href="#const">#</a> const</h2>
+<p><code>const</code> vous permet de déclarer une variable à assignation unique bindée
+lexicalement. Bon, ça fait un peu pompeux, alors pour les devs au fond de la
+salle à côté du radiateur, ça veut simplement dire que vous pouvez déclarer une
+variable qui ne contiendra qu’une valeur et qui sera scopée au niveau du bloc.</p>
+<p>Si vous avez déjà lu des posts ou des ressources parlant de <code>const</code>, méfiez-vous
+: ce ne sont pas des vraies constantes au sens <em>valeur</em> de variable. Ce sont des
+constantes au niveau référence. C’est à dire que le contenu d’un tableau ou d’un
+objet déclaré avec <code>const</code> bloque la réassignation de la variable, mais ne rend
+pas la valeur immuable.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"bar"</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">const</span> foo <span class="hljs-comment">// SyntaxError, la variable a besoin d'être assignée</span>
+    <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"qux"</span>
+    foo = <span class="hljs-string">"norf"</span> <span class="hljs-comment">// SyntaxError, la variable ne peut pas être réassignée</span>
+    <span class="hljs-built_in">console</span>.log(foo)
+    <span class="hljs-comment">// "qux", la variable appartient au scope de son bloc (le "if")</span>
   }
-}
-<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span></code></pre>
-<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
-<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
-<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
-<span class="hljs-comment">// of an array</span>
-<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
-<span class="hljs-comment">// commas</span>
-<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
-first <span class="hljs-comment">// 1</span>
-second <span class="hljs-comment">// 2</span>
-fourth <span class="hljs-comment">// 4</span></code></pre>
-<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
-<p>For an object, the default behavior is that the name of a variable will match
-the name of the key.
-So if you have already a variable with this name, you can choose another one.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>
-}
-<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
-renamedFoo <span class="hljs-comment">// 1</span></code></pre>
-<p>This syntax doesn’t offer a good readability.</p>
-<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
-<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
-	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
-}
+  <span class="hljs-built_in">console</span>.log(foo)
+  <span class="hljs-comment">// "bar", la variable appartient au scope de la fonction "fn"</span>
+}</code></pre>
+<p>Le fonctionnement <code>const</code> peut être utilisé de manière cool dans le cas
+d’itérables :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> el <span class="hljs-keyword">of</span> arr) {
+    <span class="hljs-built_in">console</span>.log(el)
+  }
+}</code></pre>
+<p>En effet, on pourrait croire qu’un <code>let</code> doit être utilisé ici, mais la
+déclaration est évaluée à chaque passage de l’itérateur, <code>const</code> est donc un
+meilleur choix !</p>
+<h2 id="let"><a class="markdownIt-Anchor" href="#let">#</a> let</h2>
+<p><code>let</code> vous permet de faire pareil que <code>const</code> mais sans la contrainte
+d’assignation unique. Vous devriez donc instinctivement voir que les cas
+d’utilisation pour <code>let</code> sont les mêmes que ceux de <code>var</code>, son ancêtre.
+D’ailleurs, vous entendrez souvent : <code>let</code> est le nouveau <code>var</code> (<em><code>let</code> is the
+new <code>var</code></em>). C’est en partie vrai car il est capable de faire les mêmes choses,
+mais en mieux, car il a cette caractéristique d’être scopé au bloc courant.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
+  <span class="hljs-keyword">var</span> foo2 = <span class="hljs-string">"bar"</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">let</span> foo <span class="hljs-comment">// pas d'erreur, foo === undefined</span>
+    <span class="hljs-keyword">var</span> foo2
+    <span class="hljs-comment">// Attention, les déclarations "var" ne sont pas scopées au niveau bloc</span>
+    <span class="hljs-comment">// foo2 est en réalité écrasé !</span>
+    foo = <span class="hljs-string">"qux"</span>
+    foo2 = <span class="hljs-string">"qux"</span>
+    <span class="hljs-built_in">console</span>.log(foo)
+    <span class="hljs-comment">// "qux", la variable appartient au scope de son blocs (le "if")</span>
+    <span class="hljs-built_in">console</span>.log(foo2)
+    <span class="hljs-comment">// "qux"</span>
+  }
+  <span class="hljs-built_in">console</span>.log(foo)
+  <span class="hljs-comment">// "bar", la variable appartient au scope de son bloc (la fonction "fn")</span>
+  <span class="hljs-built_in">console</span>.log(foo2)
+  <span class="hljs-comment">// "qux"</span>
+}</code></pre>
+<p>Vous pouvez par exemple utiliser <code>let</code> pour vos boucles, la variable servant à
+l’itération est désormais scopée au niveau de cette boucle et n’entrera pas en
+conflit avec votre code autour. Plus de problème de <code>i</code> déjà pris !</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn2</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i=i; i&lt;<span class="hljs-number">10</span>; i++) {
+    <span class="hljs-built_in">console</span>.log(i)
+  }
+  <span class="hljs-built_in">console</span>.log(i)
+  <span class="hljs-comment">// 0</span>
 
-myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
-<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
-<p>We can also nest the assignments.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: {
-    bar: <span class="hljs-number">1</span>,
-  },
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j=i; j&lt;<span class="hljs-number">10</span>; j++) {}
+  <span class="hljs-built_in">console</span>.log(j)
+  <span class="hljs-comment">// j is not defined</span>
 }
-<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
-bar <span class="hljs-comment">// 1</span></code></pre>
-<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
-(if the value doesn’t exist), be sure that you will have a nesting error, since
-a value will try to be retrieved from an <code>undefined</code> property.
-To prevent this issue, you will need to define
-<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
+fn2() <span class="hljs-comment">// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9</span></code></pre>
+<p>Note : l’exemple avec <code>const</code> dans une boucle <code>for ... of</code> ne peut être
+reproduit ici. En effet, la boucle <code>for</code> classique est impérative, et la
+déclaration n’est effectuée qu’une seule fois au début de la boucle. Un <code>const</code>
+n’est donc pas utilisable.</p>
+<h2 id="var"><a class="markdownIt-Anchor" href="#var">#</a> var</h2>
+<p>On a vu <code>const</code>, on a vu <code>let</code>. Avec ces deux nouveaux outils, il ne reste pas
+de grande place pour <code>var</code>. À mon avis, le seul cas d’utilisation valable pour
+<code>var</code> est lors de l’utilisation de <code>try</code>/<code>catch</code>, et ce n’est pas dans le cadre
+d’un bug, mais juste de syntaxe et de préférence
+(<a href="https://twitter.com/getify/status/658662478528643072">exemple</a>).</p>
+<h1 id="pi-ge-du-hoisting-et-de-la-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#pi-ge-du-hoisting-et-de-la-tdz-temporal-dead-zone">#</a> Piège du hoisting et de la TDZ (<em>Temporal Dead Zone</em>)</h1>
+<p>Pour rappel, JavaScript possède un mécanisme de hoisting, par exemple, vous
+pouvez écrire :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(foo) <span class="hljs-comment">// undefined (au lieu de ReferenceError)</span>
+  <span class="hljs-keyword">var</span> foo = <span class="hljs-string">"bar"</span>
+}</code></pre>
+<p>Concrètement, le moteur d’exécution JavaScript va lire toutes les déclarations
+et remonter celles avec <code>var</code> au début du scope de votre fonction (attention,
+cela concerne les déclarations, pas les affectations).</p>
+<p><code>let</code> et <code>const</code> ne bénéficient pas de ce mécanisme de hoisting, ce qui peut
+mener à des problèmes de TDZ (<em>Temporal Dead Zone</em>). Vu que la déclaration de
+votre variable n’est pas remontée au scope de la fonction, il existe un moment
+où votre variable n’existe pas. Ce moment, c’est la TDZ.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(foo)
+  <span class="hljs-comment">// ReferenceError, on est dans la TDZ pour la variable foo</span>
+  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
+}</code></pre>
+<h1 id="outro"><a class="markdownIt-Anchor" href="#outro">#</a> Outro</h1>
+<p>Comment choisir quelle déclaration de variable utiliser ? C’est très simple :</p>
+<ul>
+<li>Utilisez une déclaration par <code>const</code> (99% du temps, c’est le bon choix)</li>
+<li>Si au fil de votre code vous changez sa valeur, modifiez pour un <code>let</code> (1%)</li>
+<li>Si vous avez trouvé le pire cas d’utilisation du monde, changez pour un <code>var</code>
+(je vous laisse faire le calcul)</li>
+</ul>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
 to <code>let</code> and <code>const</code>, but also keeps <code>var</code> in the language specification.</p>
 <p>The first thing you need to do: forget everything you know about <code>var</code>.</p>
 <h1 id="declarations"><a class="markdownIt-Anchor" href="#declarations">#</a> Declarations</h1>
@@ -1540,125 +1865,7 @@ votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> 
 <em>Storyboard Reference</em> voulus.</li>
 </ul>
 <p>Plus long à lire qu’à faire !</p>
-]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
-variables grâce à <code>let</code> et <code>const</code> mais garde aussi la déclaration par <code>var</code>
-dans la spécification du langage.</p>
-<p>Première étape, on oublie tout ce qu’on sait sur <code>var</code>.</p>
-<h1 id="d-clarations"><a class="markdownIt-Anchor" href="#d-clarations">#</a> Déclarations</h1>
-<h2 id="const"><a class="markdownIt-Anchor" href="#const">#</a> const</h2>
-<p><code>const</code> vous permet de déclarer une variable à assignation unique bindée
-lexicalement. Bon, ça fait un peu pompeux, alors pour les devs au fond de la
-salle à côté du radiateur, ça veut simplement dire que vous pouvez déclarer une
-variable qui ne contiendra qu’une valeur et qui sera scopée au niveau du bloc.</p>
-<p>Si vous avez déjà lu des posts ou des ressources parlant de <code>const</code>, méfiez-vous
-: ce ne sont pas des vraies constantes au sens <em>valeur</em> de variable. Ce sont des
-constantes au niveau référence. C’est à dire que le contenu d’un tableau ou d’un
-objet déclaré avec <code>const</code> bloque la réassignation de la variable, mais ne rend
-pas la valeur immuable.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"bar"</span>
-  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
-    <span class="hljs-keyword">const</span> foo <span class="hljs-comment">// SyntaxError, la variable a besoin d'être assignée</span>
-    <span class="hljs-keyword">const</span> foo = <span class="hljs-string">"qux"</span>
-    foo = <span class="hljs-string">"norf"</span> <span class="hljs-comment">// SyntaxError, la variable ne peut pas être réassignée</span>
-    <span class="hljs-built_in">console</span>.log(foo)
-    <span class="hljs-comment">// "qux", la variable appartient au scope de son bloc (le "if")</span>
-  }
-  <span class="hljs-built_in">console</span>.log(foo)
-  <span class="hljs-comment">// "bar", la variable appartient au scope de la fonction "fn"</span>
-}</code></pre>
-<p>Le fonctionnement <code>const</code> peut être utilisé de manière cool dans le cas
-d’itérables :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> el <span class="hljs-keyword">of</span> arr) {
-    <span class="hljs-built_in">console</span>.log(el)
-  }
-}</code></pre>
-<p>En effet, on pourrait croire qu’un <code>let</code> doit être utilisé ici, mais la
-déclaration est évaluée à chaque passage de l’itérateur, <code>const</code> est donc un
-meilleur choix !</p>
-<h2 id="let"><a class="markdownIt-Anchor" href="#let">#</a> let</h2>
-<p><code>let</code> vous permet de faire pareil que <code>const</code> mais sans la contrainte
-d’assignation unique. Vous devriez donc instinctivement voir que les cas
-d’utilisation pour <code>let</code> sont les mêmes que ceux de <code>var</code>, son ancêtre.
-D’ailleurs, vous entendrez souvent : <code>let</code> est le nouveau <code>var</code> (<em><code>let</code> is the
-new <code>var</code></em>). C’est en partie vrai car il est capable de faire les mêmes choses,
-mais en mieux, car il a cette caractéristique d’être scopé au bloc courant.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
-  <span class="hljs-keyword">var</span> foo2 = <span class="hljs-string">"bar"</span>
-  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
-    <span class="hljs-keyword">let</span> foo <span class="hljs-comment">// pas d'erreur, foo === undefined</span>
-    <span class="hljs-keyword">var</span> foo2
-    <span class="hljs-comment">// Attention, les déclarations "var" ne sont pas scopées au niveau bloc</span>
-    <span class="hljs-comment">// foo2 est en réalité écrasé !</span>
-    foo = <span class="hljs-string">"qux"</span>
-    foo2 = <span class="hljs-string">"qux"</span>
-    <span class="hljs-built_in">console</span>.log(foo)
-    <span class="hljs-comment">// "qux", la variable appartient au scope de son blocs (le "if")</span>
-    <span class="hljs-built_in">console</span>.log(foo2)
-    <span class="hljs-comment">// "qux"</span>
-  }
-  <span class="hljs-built_in">console</span>.log(foo)
-  <span class="hljs-comment">// "bar", la variable appartient au scope de son bloc (la fonction "fn")</span>
-  <span class="hljs-built_in">console</span>.log(foo2)
-  <span class="hljs-comment">// "qux"</span>
-}</code></pre>
-<p>Vous pouvez par exemple utiliser <code>let</code> pour vos boucles, la variable servant à
-l’itération est désormais scopée au niveau de cette boucle et n’entrera pas en
-conflit avec votre code autour. Plus de problème de <code>i</code> déjà pris !</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn2</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i=i; i&lt;<span class="hljs-number">10</span>; i++) {
-    <span class="hljs-built_in">console</span>.log(i)
-  }
-  <span class="hljs-built_in">console</span>.log(i)
-  <span class="hljs-comment">// 0</span>
-
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j=i; j&lt;<span class="hljs-number">10</span>; j++) {}
-  <span class="hljs-built_in">console</span>.log(j)
-  <span class="hljs-comment">// j is not defined</span>
-}
-fn2() <span class="hljs-comment">// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9</span></code></pre>
-<p>Note : l’exemple avec <code>const</code> dans une boucle <code>for ... of</code> ne peut être
-reproduit ici. En effet, la boucle <code>for</code> classique est impérative, et la
-déclaration n’est effectuée qu’une seule fois au début de la boucle. Un <code>const</code>
-n’est donc pas utilisable.</p>
-<h2 id="var"><a class="markdownIt-Anchor" href="#var">#</a> var</h2>
-<p>On a vu <code>const</code>, on a vu <code>let</code>. Avec ces deux nouveaux outils, il ne reste pas
-de grande place pour <code>var</code>. À mon avis, le seul cas d’utilisation valable pour
-<code>var</code> est lors de l’utilisation de <code>try</code>/<code>catch</code>, et ce n’est pas dans le cadre
-d’un bug, mais juste de syntaxe et de préférence
-(<a href="https://twitter.com/getify/status/658662478528643072">exemple</a>).</p>
-<h1 id="pi-ge-du-hoisting-et-de-la-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#pi-ge-du-hoisting-et-de-la-tdz-temporal-dead-zone">#</a> Piège du hoisting et de la TDZ (<em>Temporal Dead Zone</em>)</h1>
-<p>Pour rappel, JavaScript possède un mécanisme de hoisting, par exemple, vous
-pouvez écrire :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(foo) <span class="hljs-comment">// undefined (au lieu de ReferenceError)</span>
-  <span class="hljs-keyword">var</span> foo = <span class="hljs-string">"bar"</span>
-}</code></pre>
-<p>Concrètement, le moteur d’exécution JavaScript va lire toutes les déclarations
-et remonter celles avec <code>var</code> au début du scope de votre fonction (attention,
-cela concerne les déclarations, pas les affectations).</p>
-<p><code>let</code> et <code>const</code> ne bénéficient pas de ce mécanisme de hoisting, ce qui peut
-mener à des problèmes de TDZ (<em>Temporal Dead Zone</em>). Vu que la déclaration de
-votre variable n’est pas remontée au scope de la fonction, il existe un moment
-où votre variable n’existe pas. Ce moment, c’est la TDZ.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(foo)
-  <span class="hljs-comment">// ReferenceError, on est dans la TDZ pour la variable foo</span>
-  <span class="hljs-keyword">let</span> foo = <span class="hljs-string">"bar"</span>
-}</code></pre>
-<h1 id="outro"><a class="markdownIt-Anchor" href="#outro">#</a> Outro</h1>
-<p>Comment choisir quelle déclaration de variable utiliser ? C’est très simple :</p>
-<ul>
-<li>Utilisez une déclaration par <code>const</code> (99% du temps, c’est le bon choix)</li>
-<li>Si au fil de votre code vous changez sa valeur, modifiez pour un <code>let</code> (1%)</li>
-<li>Si vous avez trouvé le pire cas d’utilisation du monde, changez pour un <code>var</code>
-(je vous laisse faire le calcul)</li>
-</ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
+]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
 <a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
 which</p>
 <blockquote>
@@ -2012,153 +2219,4 @@ pour cette approche.</li>
 <p>Avec ces exemples, nous espérons vraiment que vous n’aurez plus peur de tester
 votre code et que vous n’hésiterez plus à couvrir tous vos composants React de
 tests 😍.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Un favicon vite fait bien fait]]></title><description><![CDATA[<p>Oublions un instant CSS et JavaScript pour parler d’un sujet vraiment
-important : le favicon.</p>
-<p>Alors d’accord, le favicon n’est que le petit détail qu’on expédie en fin de
-projet. Mais oubliez-le et votre client comprendra tout de suite qu’il manque
-quelque chose.</p>
-<p>Dans ce post, nous allons voir comment s’acquitter de cette tâche dans les temps
-et les règles de l’art. Et nous ferons intervenir un outil dont je suis l’heureux
-auteur.</p>
-<h2 id="vite-fait"><a class="markdownIt-Anchor" href="#vite-fait">#</a> Vite fait</h2>
-<p>Pourquoi vite fait ? Parce qu’on ne peut pas consacrer trop de temps au favicon.
-L’optimisation pour les smartphones, l’amélioration du score PageSpeed ou
-encore l’augmentation du taux de conversion, voilà des sujets sur lesquels on
-peut plancher des heures, des jours ou bien plus. Mais le favicon, franchement,
-est-ce vraiment la raison à invoquer pour expliquer le retard d’un projet ? Un
-détail qu’on vous dit !</p>
-<p>Pour créer un favicon vite fait :</p>
-<ul>
-<li>Créez un <code>favicon.ico</code> avec n’importe quel générateur trouvé sur le net.
-Déclarez-le avec <code>&lt;link rel=&quot;icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot;&gt;</code>.
-Ou peut-être <code>&lt;link rel=&quot;shortcut icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot;&gt;</code> ? Non parce qu’on trouve les deux. Dans le doute,
-déclarez-le deux fois.</li>
-<li>Créez une Touch icon (pour iOS et les autres). Si on en croit les résultats
-pour “apple touch icon size” sur Google, la taille maximale est 144x144.</li>
-</ul>
-<p>Voilà. Si vous faites tout ça, vous vous serez acquitté de la tâche rapidement.
-Bon, ça sera mal fait, mais fait. C’est un début.</p>
-<h2 id="bien-fait"><a class="markdownIt-Anchor" href="#bien-fait">#</a> Bien fait</h2>
-<p>À présent, penchons-nous sur les difficultés qui nous attendent.</p>
-<h3 id="c-est-la-taille-qui-compte"><a class="markdownIt-Anchor" href="#c-est-la-taille-qui-compte">#</a> C’est la taille qui compte</h3>
-<p>Ça ne fait pas plaisir à entendre et pourtant nous sommes au cœur du problème
-(nous parlons bien de favicon).</p>
-<p><code>favicon.ico</code> devrait-il être en 16x16 ou 32x32 ? <a href="https://msdn.microsoft.com/library/gg491740(v=vs.85).aspx">Les deux, selon
-Microsoft</a>. Quelle
-est la taille de la Touch icon d’Apple ? <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2">180x180 depuis iOS 8</a>.
-La tuile <code>square70x70logo</code> pour Windows 8 et 10, c’est… du 70x70, hein ?
-Moui, mais <a href="https://msdn.microsoft.com/library/dn455106(v=vs.85).aspx">idéalement, 128x128</a>.</p>
-<p>Ça n’est pas tout : encore faut-il trouver ces informations. Google est
-assez variable sur ce point. Il met dans le mille pour une recherche concernant
-le favicon classique (16x16 <em>et</em> 32x32), mais échoue, on l’a vu, pour la
-Touch icon. Les éditeurs ne sont pas en reste. Si <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2">Apple indique bien les
-dimensions attendues pour l’iPhone 6</a>,
-il a en revanche <a href="https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html">oublié de mettre à jour sa page qui sort pourtant en premier résultat pour la recherche “apple touch icon”</a> (152x152 d’après elle).</p>
-<p>Le <a href="https://github.com/audreyr/favicon-cheat-sheet">favicon cheat sheet</a> est une
-ressource intéressante à ce titre, quoique pas à jour à l’heure où ces lignes
-sont écrites.</p>
-<p>Bref, le temps de rassembler toutes ces informations et l’après-midi s’est envolé. Oups.</p>
-<p>Ce que je décris ici est le premier problème auquel je me suis frotté il y
-a un peu plus de deux ans, alors que j’achevais mon premier site responsive et
-que je voulais une icône digne de ce nom.</p>
-<h3 id="le-design-vraiment"><a class="markdownIt-Anchor" href="#le-design-vraiment">#</a> Le design. Vraiment.</h3>
-<p>Allez, j’ai fait dans l’anxiogène avec ces histoires de taille mais en réalité
-ce problème a été largement amoindri ces derniers mois avec l’arrivée de
-générateurs de favicon de nouvelle génération. Et vous en aurez pour votre
-argent (d’autant qu’ils sont gratuits) : envoyez votre image et vous vous
-retrouverez avec plus d’une vingtaine d’images. C’est beaucoup, presque trop
-diront certains.</p>
-<p>Mais cette solution cache un problème presque plus grave. Si votre image
-originale passera bien sur une platforme, elle risque fort de ne pas
-correspondre à une autre.</p>
-<p>Prenons l’exemple des icônes pour Android et iOS. Elles servent surtout au <em>Add
-to homescreen</em>, lorsque votre visiteur vous fait l’honneur d’ajouter un lien
-vers votre site sur l’écran de son smartphone. Pas vraiment le moment de le
-décevoir. Sur Android, beaucoup d’icônes ne sont pas carrées mais exploitent
-la transparence, notamment les applications natives de Google.</p>
-<p><img src="google_apps.png" alt=""></p>
-<p>Bonne idée, donc, de suivre ce principe pour notre propre icône. C’est cette
-voie qu’a choisie mon cerveau auxilière, je veux parler de StackOverflow, et sa
-Touch icône transparente.</p>
-<p><img src="so_android.png" alt=""></p>
-<p>Sur iOS et son univers tout de parallélépipèdes aux coins arrondis, point de
-transparence en revanche. L’icône de StackOverflow se voit affublée d’un fond
-noir. Le résultat n’est pas si mauvais, mais était-ce vraiment voulu ?</p>
-<p><img src="so_ios.png" alt=""></p>
-<p>Passer son image à la moulinette pour en tirer une vingtaine d’icônes est une
-fausse bonne idée. Elle donne la dangereuse illusion d’un travail bien fait
-alors qu’en réalité vous n’avez pas de réel moyen de savoir ce que vous venez
-de faire. Sauf à tester vos icônes sur différents appareils et navigateurs, mais
-là ce sont encore quelques heures qui partent en fumée.</p>
-<p>Et voilà quel était le second problème que j’ai découvert dans ma quête d’une
-icône correcte. Un <code>-resize</code> d’ImageMagick et un script bash un peu brutal ne
-suffisent pas.</p>
-<p>Cela a donné le coup d’envoi à
-<a href="https://realfavicongenerator.net/">RealFaviconGenerator.net</a>, un générateur de
-favicon qui devait vraiment solutionner le problème.</p>
-<p>Il n’y a pas grand chose à dire sur le sujet, et c’est le but: n’oublions pas
-que nous n’avons que peu de temps. Rendez-vous sur <a href="http://RealFaviconGenerator.net">RealFaviconGenerator.net</a>,
-postez votre image, éditez vos icônes plate-forme par plate-forme et vous voilà
-avec ce qu’il faut d’images, de fichiers annexes et de code HTML pour
-configurer votre favicon.</p>
-<p><img src="favicon_editor.png" alt=""></p>
-<p>Voilà, c’est terminé.</p>
-<h3 id="se-mettre-la-page"><a class="markdownIt-Anchor" href="#se-mettre-la-page">#</a> Se mettre à la page</h3>
-<p>Ou presque.</p>
-<p>Il y a encore quelques années, il était normal de télécharger un framework
-JavaScript à la main puis de le déposer tel quel dans un projet Web.
-Aujourd’hui, cela est considéré comme une mauvaise pratique et on préférera
-utiliser un package manager.</p>
-<p>Est-il souhaitable d’industrialiser le favicon de la même manière ? Voyons voir
-ce qu’il s’est passé en un an :</p>
-<ul>
-<li>L’Iphone 6 est sorti, et avec lui la touch icon en 180x180 (avant c’était
-152x152).</li>
-<li>Android Chrome a cessé d’utiliser l’icône en 196x196 qui était autrefois
-spécifiée. À la place, il utilise une icône en 192x192 (et snobe la précédente
-quoi qu’il arrive).</li>
-<li>Oubliez cette histoire d’icône en 192x192, Android Chrome utilise désormais
-un manifeste et plusieurs versions d’icônes pour les différentes densités
-d’écran.</li>
-<li>Apple a sorti une nouvelle icône au format SVG pour les “pinned tabs” de
-Safari pour Mac OS X El Capitan.</li>
-</ul>
-<p>Autrement dit, si vous avez créé un favicon il y a un peu plus d’un an, il y a
-fort à parier qu’il rende mal sur un iPad de dernière génération et le résultat
-sur Android pourrait être assez aléatoire (Chrome utilisera une icône PNG qui
-n’est pas pour lui ou bien une Touch icon).</p>
-<p>À cet effet,
-<a href="https://realfavicongenerator.net/api">RealFaviconGenerator propose une API</a>.
-Tout ce qu’il est possible de faire via l’UI peut être reproduit via l’API.
-Hum… une API… de la doc à lire… Manifestement, ce n’est pas de cette
-façon qu’on va accélérer les choses. Mais tout n’est pas perdu car le code peut
-être généré automatiquement.</p>
-<p>Actuellement, RealFaviconGenerator supporte Grunt et Gulp. Par exemple, après
-avoir créé votre favicon, cliquez sur l’onglet “Gulp”. Vous avez le fragment de
-Gulpfile ainsi que les instructions pour intégrer votre favicon à votre
-processus de build, au même titre que la minification des CSS ou le processing
-des Coffee scripts.</p>
-<p><img src="gulp_instructions.png" alt=""></p>
-<p>Les règles :</p>
-<ul>
-<li><code>generate-favicon</code> : génère les icônes. Elle prend quelques
-secondes et c’est le genre de règle qu’on n’exécute qu’une fois de temps en
-temps, lorsqu’il y a du changement dans le paysage des favicons.</li>
-<li><code>inject-favicon-markups</code> : injecte les déclarations d’icônes
-dans les pages HTML. À exécuter à chaque modification de page, autant dire
-qu’elle va souvent servir.</li>
-<li><code>check-for-favicon-update</code> : vérifie s’il y a du nouveau sur
-RealFaviconGenerator. Si c’est le cas, elle fera échouer votre build bien
-comme il faut. Un peu brutal mais ça a le mérite d’être clair. Si vous
-avez un système d’intégration continue, arrangez-vous pour ajouter cette règle
-à votre radar.</li>
-</ul>
-<p>La favicon a toujours été un parent pauvre des projets web, à juste titre.
-Avec la prolifération des plates-formes, le négliger est de plus en plus hasardeux.
-J’ai conçu RealFaviconGenerator pour apporter un peu d’ordre à tout cela. Ce
-n’est pas la seule initiative. Hayden Bleasel développe
-<a href="https://github.com/haydenbleasel/favicons">favicons</a> qui ambitionne d’être
-<a href="https://github.com/google/web-starter-kit/issues/599">intégré au Web Starter Kit de Google</a>.</p>
-<p>Et maintenant, c’est à vous : que pensez-vous de la formule “génération de
-Gulp/Grunt/autre” ? Quelles sont les technos que vous aimeriez trouver ?</p>
-]]></description><link>http://putaindecode.io/fr/articles/favicon/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/favicon/</guid><pubDate>Tue, 17 Nov 2015 00:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item></channel></rss>
