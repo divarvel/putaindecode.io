@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 10:30:11 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : les Maps & WeakMaps]]></title><description><![CDATA[<h2 id="maps"><a class="markdownIt-Anchor" href="#maps">#</a> Maps</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 10:32:56 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : les Maps & WeakMaps]]></title><description><![CDATA[<h2 id="maps"><a class="markdownIt-Anchor" href="#maps">#</a> Maps</h2>
 <p>Comme les objets, les maps et weak maps introduites avec ES6 sont des dictionnaires. La différence avec un objet, c’est que n’importe quelle valeur peut-être utilisée comme clé.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()
 myMap.set(<span class="hljs-built_in">window</span>, <span class="hljs-number">1</span>)
@@ -55,7 +55,7 @@ myWeakMap.set(<span class="hljs-built_in">window</span>, <span class="hljs-numbe
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> callbacks = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>()
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleEventEmitter</span> </span>{
-	constructor() {
+  constructor() {
     callbacks.set(<span class="hljs-keyword">this</span>, [])
   }
   addEventListener(callback) {
