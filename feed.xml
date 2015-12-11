@@ -1,339 +1,254 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Thu, 10 Dec 2015 06:50:37 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
-en conséquence enlever le spread, le destructuring, les générateurs, le for…of
-et bien d’autres. Ce concept, introduit dans l’ES6, est en fait un protocole :
-le protocole d’itération.</p>
-<p>Le principe est de définir une convention dans le langage, qui permet de
-standardiser la façon dont des sources de données peuvent être traversées.</p>
-<p>Première bonne nouvelle, ce protocole est assez simple à comprendre et se base
-sur 2 “interfaces” (oui les guillemets c’est pour dire qu’on ne parle pas
-d’interface au sens technique, puisqu’elles n’existent pas en JS).</p>
-<p>La première interface, appelée <strong>Iterator</strong> permet à un objet de produire des
-valeurs en séquence. Un objet est un Iterator lorsqu’il implémente une
-function <code>next()</code> qui retourne un objet avec 2 propriétés :</p>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 06:41:56 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : itérateurs et générateurs]]></title><description><![CDATA[<h1 id="it-rateurs-et-g-n-rateurs"><a class="markdownIt-Anchor" href="#it-rateurs-et-g-n-rateurs">#</a> Itérateurs et générateurs</h1>
+<p>Un gros morceau aujourd’hui : les itérateurs et les fonctions qui les génèrent,
+appelées donc “générateurs”. ES6/2015 apporte énormément de “sucres
+syntaxiques”, même s’ils sont terriblement pratiques. Les valeurs par défaut,
+l’affectation par déstructuration, les fonctions flêchées, etc… tout ça
+n’apporte pas de réelle nouvelle fonctionnalité. C’est un peu différent pour les
+générateurs qui vont permettre de prendre le contrôle sur l’éxécution d’une
+fonction depuis l’extérieur.</p>
+<h2 id="fonction-en-pause"><a class="markdownIt-Anchor" href="#fonction-en-pause">#</a> Fonction “en pause”</h2>
+<p>Un nouveau mot-clé fait son apparition : <code>function*</code>, une fonction marquée par
+l’astérisque n’est jamais exécutée directement, à la place, elle retourne un
+<em>itérateur</em>. Un générateur est donc capable de s’interrompre (il est interrompu
+par défaut en fait). Il est également capable de reprendre là où il s’était
+arrêté : l’itérateur retourné est un objet exposant une méthode  <code>next</code> qui
+lorsqu’elle est appelée demande au générateur de reprendre là où il en était.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">idleFunction</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'World'</span>)
+}
+
+<span class="hljs-keyword">const</span> iterator = idleFunction()
+<span class="hljs-comment">// L'exécution de la fonction est interrompue en attente d'être "débloquée"</span>
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Hello'</span>)
+iterator.next() <span class="hljs-comment">// L'éxécution reprend et on affiche "World"</span></code></pre>
+<p>Notez qu’il ne s’agit pas de code <strong>bloquant</strong> : la fonction est mise en pause,
+son traitement sera repris plus tard, pendant ce temps l’<em>event-loop</em> continue
+sa petite vie.</p>
+<h2 id="reprise-du-traitement-et-mission-de-valeur-avec-yield"><a class="markdownIt-Anchor" href="#reprise-du-traitement-et-mission-de-valeur-avec-yield">#</a> Reprise du traitement et émission de valeur avec <code>yield</code></h2>
+<p>La méthode <code>next()</code> de l’itérateur retourne un objet possédant les propriétés
+suivantes :</p>
 <ul>
-<li><code>value</code>: la valeur courante lors de l’itération</li>
-<li><code>done</code> : un booléen qui indique si on a atteint la fin de l’itération ou non</li>
+<li><code>done</code> vaut <code>true</code> quand le générateur a terminé son exécution</li>
+<li><code>value</code> est la valeur émise par le générateur dans cette portion de code</li>
 </ul>
-<p>Les appels successifs à la méthode <code>next()</code> d’un Iterator permettent donc de
-traverser et récupérer les valeurs d’un objet. Prenons l’exemple de l’Iterator
-retourné par un Array qui contiendrait 2 valeurs (“a” et “b”) :</p>
-<pre><code class="language-js">iteratorArray.next();
-<span class="hljs-comment">// -&gt; Object {value: "a", done: false}</span>
-iteratorArray.next();
-<span class="hljs-comment">// -&gt; Object {value: "b", done: false}</span>
-iteratorArray.next();
-<span class="hljs-comment">// -&gt; Object {value: undefined, done: true}</span></code></pre>
-<p>Mais comment récupérer l’Iterator d’un objet vas-tu me dire ? (n’est-ce pas ?)
-Ça tombe bien, c’est le rôle de la seconde interface, appelée <strong>Iterable</strong>. Un
-objet est Iterable s’il implémente une méthode particulière qui va retourner
-l’Iterator. Cette méthode particulière (appelée <em>@@iterator</em> dans la
-spécification) doit être définie en utilisant le symbole <code>[Symbol.iterator]</code>.
-(Les symboles seront expliqués dans un prochain article, pas de panique).</p>
-<p>En reprenant l’exemple précédent, voici comment récupérer l’Iterator d’un Array :</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
-<span class="hljs-keyword">var</span> iteratorArray = arr[<span class="hljs-built_in">Symbol</span>.iterator]();
-iteratorArray.next();
-<span class="hljs-comment">// -&gt; Object {value: "a", done: false}</span>
-iteratorArray.next();
-<span class="hljs-comment">// -&gt; Object {value: "b", done: false}</span>
-iteratorArray.next();
-<span class="hljs-comment">// -&gt; Object {value: undefined, done: true}</span></code></pre>
-<p>L’exemple ci-dessus illustre donc l’implémentation du protocole par l’Array.
-Il n’est pas très utile en soi, en voici donc un autre qui va permettre de
-boucler sur les valeurs et les afficher :</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
-<span class="hljs-keyword">var</span> iterator = arr[<span class="hljs-built_in">Symbol</span>.iterator]();
-
-<span class="hljs-keyword">var</span> result = iterator.next();
-<span class="hljs-keyword">while</span> (!result.done) {
-  <span class="hljs-built_in">console</span>.log(result.value);
-  result = iterator.next();
-}
-<span class="hljs-comment">// 'a'</span>
-<span class="hljs-comment">// 'b'</span></code></pre>
-<p>De manière générale, quand un objet qui implémente le protocole d’itération est
-traversé, sa méthode <em>@@iterator</em> est appelée (une seule fois donc) et l’Iterator
-retourné est utilisé pour boucler sur ses valeurs.</p>
-<h1 id="consommateurs-d-iterable"><a class="markdownIt-Anchor" href="#consommateurs-d-iterable">#</a> Consommateurs d’Iterable</h1>
-<p>La deuxième bonne nouvelle, c’est que plusieurs concepts du langage tirent avantage de ce protocole :</p>
-<ul>
-<li>Certaines syntaxes s’attendent à recevoir des Iterable</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>];
-
-<span class="hljs-comment">// La syntaxe à laquelle on pense immédiatement est la syntaxe « for .. of »</span>
-<span class="hljs-comment">// qui permet de boucler sur les valeurs des Iterable.</span>
-<span class="hljs-keyword">for</span> (val <span class="hljs-keyword">of</span> arr) {
-    <span class="hljs-built_in">console</span>.log(val);
+<p>Comment émettre une valeur ? Le mot-clé <code>yield</code> a le double rôle de fournir
+une valeur et de remettre en pause l’exécution de la fonction. Le principe étant
+qu’on va émettre <strong>plusieurs</strong> valeurs, sinon on utiliserait simplement
+<code>return</code>.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">numbers</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
 }
 
-<span class="hljs-comment">// Le spread qui permet d'insérer facilement des valeurs dans un Array</span>
-<span class="hljs-comment">// utilise également des Iterable</span>
-[<span class="hljs-string">'0'</span>, ...arr, <span class="hljs-string">'1'</span>] <span class="hljs-comment">// 0, a, b, 1</span>
-
-<span class="hljs-comment">// yield nécessite également des Iterable</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">gen</span>(<span class="hljs-params"></span>)</span>{
-  <span class="hljs-keyword">yield</span>* arr;
-}
-gen().next(); <span class="hljs-comment">// { value:"a", done:false }</span>
-
-<span class="hljs-comment">// Le destructuring avec le pattern Array</span>
-<span class="hljs-keyword">let</span> [x, y] = arr; <span class="hljs-comment">// x = 'a',  y = "b"</span></code></pre>
-<ul>
-<li>Des API acceptent également des Iterable</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"b"</span>];
-
-<span class="hljs-comment">// Certains constructeurs acceptent des Iterable</span>
-
-<span class="hljs-comment">// Set et Weakset</span>
-<span class="hljs-keyword">var</span> set = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(arr);
-set.has(<span class="hljs-string">"b"</span>) <span class="hljs-comment">// true</span>
-<span class="hljs-comment">// Map et WeakMap</span>
-<span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(arr.entries()); <span class="hljs-comment">// Attention, le constructeur attend un ensemble [clé, valeur]</span>
-map.get(<span class="hljs-number">0</span>) <span class="hljs-comment">// 'a'</span>
-
-
-<span class="hljs-comment">// Ou encore les API suivants :</span>
-
-<span class="hljs-built_in">Array</span>.from(iterable); <span class="hljs-comment">// transforme n'importe quel Iterable en Array.</span>
-<span class="hljs-built_in">Promise</span>.all(iterableCollectionDePromises); <span class="hljs-comment">// n'importe quel Iterable qui contient un ensemble de Promises</span>
-<span class="hljs-built_in">Promise</span>.race(iterableCollectionDePromises); <span class="hljs-comment">// idem</span></code></pre>
-<h1 id="built-in-iterable"><a class="markdownIt-Anchor" href="#built-in-iterable">#</a> Built-in Iterable</h1>
-<p>Troisième bonne nouvelle, plusieurs objets du langage implémentent déjà ce protocole :</p>
-<pre><code class="language-js"><span class="hljs-comment">// évidemment les Array</span>
-<span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"l"</span>, <span class="hljs-string">"o"</span>, <span class="hljs-string">"l"</span>];
-<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> arr) {
-    <span class="hljs-built_in">console</span>.log(v);
-    <span class="hljs-comment">// 'l'</span>
-    <span class="hljs-comment">// 'o'</span>
-    <span class="hljs-comment">// 'l'</span>
+<span class="hljs-keyword">const</span> iterator = numbers()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+iterator.next() <span class="hljs-comment">// { value: 2, done: false }</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<p>Note : si notre générateur <code>return</code> une valeur, elle sera affecté à la
+propriété <code>value</code> de la dernière itération.</p>
+<h3 id="use-case-listes-infinies"><a class="markdownIt-Anchor" href="#use-case-listes-infinies">#</a> Use-case : listes infinies</h3>
+<p>Un premier use-case à ce stade est la possibilité de générer des listes de
+longueur non définie à l’avance. On peut parcourir une suite dont on ne sait pas
+à l’avance <em>combien</em> d’éléments on veut, par exemple récupérer tous les éléments
+de la suite de Fibonacci inférieurs à 100 :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fibo</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> [a, b] = [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]
+  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) { <span class="hljs-comment">// Who can stop me?</span>
+    [a, b] = [b, a + b]
+    <span class="hljs-keyword">yield</span> a
+  }
 }
 
-<span class="hljs-comment">// les String</span>
-<span class="hljs-keyword">var</span> str = <span class="hljs-string">"lol"</span>;
-<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> str) {
-    <span class="hljs-built_in">console</span>.log(v);
-    <span class="hljs-comment">// 'l'</span>
-    <span class="hljs-comment">// 'o'</span>
-    <span class="hljs-comment">// 'l'</span>
+<span class="hljs-keyword">const</span> iterator = fibo()
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> n <span class="hljs-keyword">of</span> iterator) {
+  <span class="hljs-keyword">if</span> (n &gt;= <span class="hljs-number">100</span>) {
+    <span class="hljs-keyword">break</span> <span class="hljs-comment">// *I* can stop you</span>
+  }
+  <span class="hljs-built_in">console</span>.log(n)
+}
+<span class="hljs-comment">// 1 2 3 5 8 13 21 34 55 89</span></code></pre>
+<p>Note : l’opérateur <code>for … of</code> sera vu plus en détail dans un prochain article.</p>
+<h2 id="passage-de-valeur-au-g-n-rateur"><a class="markdownIt-Anchor" href="#passage-de-valeur-au-g-n-rateur">#</a> Passage de valeur au générateur</h2>
+<p>On a vu que <code>yield</code> permettait d’émettre une valeur depuis le générateur vers
+le code contrôleur. Mais le sens inverse est également possible : la méthode
+<code>next</code> de l’itérateur accepte une valeur en paramètre, qui sera alors
+retournée par l’appel correspondant à <code>yield</code>. Exemple :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">math</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// Le premier appel à next() permet de "démarrer" le générateur</span>
+  <span class="hljs-keyword">const</span> x = <span class="hljs-keyword">yield</span> <span class="hljs-comment">// la valeur de la première itération sera undefined</span>
+  <span class="hljs-comment">// x = le paramètre du second appel à next()</span>
+  <span class="hljs-keyword">const</span> y = <span class="hljs-keyword">yield</span> x + <span class="hljs-number">1</span> <span class="hljs-comment">// valeur de la seconde itération : x + 1</span>
+  <span class="hljs-comment">// y = paramètre du troisième appel à next()</span>
+  <span class="hljs-keyword">yield</span> y <span class="hljs-comment">// valeur de la troisième itération : y</span>
+  <span class="hljs-comment">// le 4e appel (et +) à next() retournent { value: undefined, done: true }</span>
 }
 
-<span class="hljs-comment">// les Map et Set (mais PAS WeakMap et WeakSet)</span>
-<span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>().set(<span class="hljs-string">'l'</span>, <span class="hljs-number">1</span>).set(<span class="hljs-string">'o'</span>, <span class="hljs-number">2</span>);
-<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> map) {
-    <span class="hljs-built_in">console</span>.log(v);
-    <span class="hljs-comment">// ["l", 1]</span>
-    <span class="hljs-comment">// ["o", 2]</span>
-}
-<span class="hljs-keyword">var</span> set = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>().add(<span class="hljs-string">'l'</span>).add(<span class="hljs-string">'o'</span>);
-<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> map) {
-    <span class="hljs-built_in">console</span>.log(v);
-    <span class="hljs-comment">// 'l'</span>
-    <span class="hljs-comment">// 'o'</span>
-}
+<span class="hljs-keyword">const</span> iterator = math()
+iterator.next(<span class="hljs-number">42</span>) <span class="hljs-comment">// { value: undefined, done: false }</span>
+<span class="hljs-comment">// Passer un paramètre au premier appel à next() n'est pas utile : cette valeur</span>
+<span class="hljs-comment">// n'est pas accessible dans le générateur car aucun "yield" correspondant</span>
 
-<span class="hljs-comment">// Les TypedArray que vous utilisez tous les jours</span>
-<span class="hljs-keyword">var</span> int16 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Int16Array</span>(<span class="hljs-number">2</span>);
-int16[<span class="hljs-number">0</span>] = <span class="hljs-number">42</span>;
-<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> int16) {
-    <span class="hljs-built_in">console</span>.log(v);
-    <span class="hljs-comment">// 42</span>
-    <span class="hljs-comment">// 0</span>
-}
+iterator.next(<span class="hljs-number">33</span>) <span class="hljs-comment">// { value: 34, done: false }, x = 33 dans le générateur</span>
+iterator.next(<span class="hljs-number">27</span>) <span class="hljs-comment">// { value: 27, done: false }, y = 27 dans le générateur</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<p>Ça ne semble pas très utile vu comme ça, mais on peut passer à <code>next()</code>
+n’importe quel type de donnée : une fonction, un objet, un autre itérateur… Les
+possibilités sont infinies. On va en explorer une rapidement avec les promesses.</p>
+<h3 id="use-case-coroutines"><a class="markdownIt-Anchor" href="#use-case-coroutines">#</a> Use-case : coroutines</h3>
+<p>Le code du générateur lui-même ne peut être réellement asynchrone : les appels à
+<code>yield</code> se suivent de manière synchrone. Le code contrôleur par contre, est
+libre d’appeler <code>next()</code> à loisir, et peut donc le faire de manière asynchrone.</p>
+<p>On a donc des fonctions dont on peut choisir quand elles sont interrompues, et
+quand elles peuvent reprendre leur traitement. Et si… notre générateur émettait
+des promesses ? Histoire d’expliquer à son code contrôleur <em>quand</em> il est sûr de
+reprendre le traitement. Et si ce code contrôleur, voyant qu’il récupère une
+promesse, attendait que cette dernière soit résolue pour transmettre au
+générateur en retour la valeur résolue ? Dans ce cas le générateur pourrait
+disposer de manière <strong>synchrone</strong> mais <strong>non bloquante</strong> de résultats de
+traitements asynchrones :</p>
+<pre><code class="language-js">execAsync(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Ajax request…"</span>)
+  <span class="hljs-keyword">var</span> rows = <span class="hljs-keyword">yield</span> fetch(<span class="hljs-string">"http://my.api/get"</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Work…"</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Save…"</span>)
+  <span class="hljs-keyword">yield</span> fetch(<span class="hljs-string">"http://my.api/post"</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"OK."</span>)
+}) <span class="hljs-comment">// Ajax request… Work… Save… OK.</span></code></pre>
+<p>Ne serait-ce pas merveilleux ? C’est le <em>use-case</em> le plus intéressant pour nous
+au quotidien, et c’est assez simple en fait :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execAsync</span> (<span class="hljs-params">promiseGenerator</span>) </span>{
+  <span class="hljs-keyword">const</span> iter = promiseGenerator() <span class="hljs-comment">// en pause…</span>
 
-<span class="hljs-comment">// Même l'objet spécial arguments (que vous</span>
-<span class="hljs-comment">// ne devriez plus utiliser avec l'ES6) est un Iterable</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span>(<span class="hljs-params"></span>)
-</span>{
-    <span class="hljs-keyword">for</span> (v <span class="hljs-keyword">of</span> <span class="hljs-built_in">arguments</span>) {
-        <span class="hljs-built_in">console</span>.log(v);
-        <span class="hljs-comment">// 'l'</span>
-        <span class="hljs-comment">// 'o'</span>
-        <span class="hljs-comment">// 'l'</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loop</span> (<span class="hljs-params">iteration</span>) </span>{
+    <span class="hljs-keyword">if</span> (iteration.done) { <span class="hljs-comment">// Le générateur a return'é, fin du game</span>
+      <span class="hljs-keyword">return</span> iteration.value
     }
-}
-test(<span class="hljs-string">'l'</span>, <span class="hljs-string">'o'</span>, <span class="hljs-string">'l'</span>);
 
-<span class="hljs-comment">// Les NodeList retournés par l'API DOM également !</span>
-<span class="hljs-keyword">var</span> matches = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'div'</span>);
-<span class="hljs-keyword">for</span> (m <span class="hljs-keyword">of</span> matches) {
-    <span class="hljs-built_in">console</span>.log(m);
-    <span class="hljs-comment">// &lt;div id="topSection"&gt;</span>
-    <span class="hljs-comment">// &lt;div id="brandLogo"&gt;</span>
-    <span class="hljs-comment">// ...</span>
-}</code></pre>
-<p>Autre point : Array, TypedArray, Map, Set sont des Iterable mais définissent
-aussi des méthodes qui retournent également des Iterable (ça va, vous suivez
-toujours ?) :</p>
-<ul>
-<li>entries() retourne un ensemble des clés/valeurs</li>
-<li>keys() retourne les clés</li>
-<li>values() retourne les valeurs</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">for</span> (cleVals <span class="hljs-keyword">of</span> arr.entries()) {
-    <span class="hljs-built_in">console</span>.log(cleVals);
-    <span class="hljs-comment">// [0, "l"]</span>
-    <span class="hljs-comment">// [1, "o"]</span>
-    <span class="hljs-comment">// [2, "l"]</span>
-}</code></pre>
-<p>Détail important, Object n’est pas Iterable mais il n’est pas impossible de
-voir apparaitre dans l’ES7 les méthodes entries(), keys() et values() sur
-Object. (cf : <a href="https://github.com/tc39/proposal-object-values-entries">Proposition spec</a>)</p>
-<h1 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h1>
-<p>J’espère que cet article a bien illustré l’importance de ce protocole dans le
-langage. Nous avons vu ci-dessus que de nombreux concepts du langage tirent
-déjà avantage de ce protocole mais il est au moins aussi important de noter que
-cela permet d’établir une convention sur laquelle des librairies externes peuvent
-s’appuyer.</p>
-<p>Elles peuvent le faire de 2 manières :</p>
-<ul>
-<li>en proposant des sources de données qui implémentent le protocole (ex:
-liste chaînée)</li>
-<li>en tant que consommateur du protocole (ex: un algorithme de tri)</li>
-</ul>
-<h1 id="un-dernier-verre-pour-la-route"><a class="markdownIt-Anchor" href="#un-dernier-verre-pour-la-route">#</a> Un dernier verre pour la route</h1>
-<p>Les articles suivants vous permettront d’aller encore plus loin dans le sujet. Vous y
-apprendrez notamment qu’un iterator peut retourner en option 2 autres méthodes,
-qu’un générateur est à la fois un Iterable et un Iterator, qu’un Iterable peut
-être infini ou encore des exemples d’implémentations divers et variés :</p>
-<ul>
-<li><a href="http://www.2ality.com/2015/02/es6-iteration.html">Iterables and iterators in ECMAScript 6</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">Iteration Protocols</a></li>
-<li><a href="https://hacks.mozilla.org/2015/04/es6-in-depth-iterators-and-the-for-of-loop/">ES6 in depth : iterators and the for of loop</a></li>
-<li><a href="https://ponyfoo.com/articles/es6-iterators-in-depth">ES6 iterators in depth</a></li>
-</ul>
-<p>La pratique restant le meilleur moyen de se former, le site
-<a href="http://es6katas.org/">ES6 Katas</a> est très bien fait pour s’exercer.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/iterators/</guid><pubDate>Wed, 09 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
-lors de l’initialisation d’objets.</p>
-<h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
-<p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
-propriété depuis une variable, la clé porte le même nom que la variable.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
+    <span class="hljs-comment">// c'est un générateur de promesse, dont on attend la résolution ici</span>
+    <span class="hljs-keyword">return</span> iteration.value.then(result =&gt; {
+      <span class="hljs-comment">// La promesse est résolue, on peut repasser sa valeur au générateur</span>
+      <span class="hljs-keyword">const</span> nextIteration = iter.next(result) <span class="hljs-comment">// cette valeur est return'ée par</span>
+      <span class="hljs-comment">// le même "yield" qui a émis la promesse, ça tombe bien :)</span>
 
-<span class="hljs-keyword">return</span> {
-  firstname: firstname,
-  lastname: lastname,
-}</code></pre>
-<p>Avec ES2015, on va pouvoir l’écrire comme ça :</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
-
-<span class="hljs-keyword">return</span> {
-  firstname,
-  lastname,
-}
-<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
-<p>De la même manière, on pourra déclarer des méthodes en se passant du mot clé
-<code>function</code>. Idem pour les <em>getter</em> / <em>setter</em>.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
-  get email() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
-  },
-  set email(email) {
-    <span class="hljs-keyword">this</span>.email = email
-  },
-  validateEmail(email) {
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
-  },
-}</code></pre>
-<h2 id="nom-de-propri-t-s-calcul-es"><a class="markdownIt-Anchor" href="#nom-de-propri-t-s-calcul-es">#</a> Nom de propriétés calculées</h2>
-<p>La dernière nouveauté concernant les <em>literal objects</em> va nous permettre
-de créer des noms de propriétés depuis une expression, directement à la
-création de l’objet. Auparavant, il fallait procéder en 2 temps, création
-puis affectation.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">var</span> payload = {}
-  payload[type] = data
-  <span class="hljs-keyword">return</span> payload
-}</code></pre>
-<p>En ES2015, cela donnerait :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    [type]: data
+      <span class="hljs-comment">// Puis on relance notre boucle, et on continue récursivement</span>
+      <span class="hljs-keyword">return</span> next(nextIteration)
+    })
   }
-}</code></pre>
-<p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
-aussi déclarer plusieurs fois une même propriété, la dernière déclaration
-écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
-creating new object.</p>
-<h2 id="shorter-property-name"><a class="markdownIt-Anchor" href="#shorter-property-name">#</a> Shorter property name</h2>
-<p>When you create an object, you might create a variable and then reuse it to
-define a property of an object that have the same name.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
 
-<span class="hljs-keyword">return</span> {
-  firstname: firstname,
-  lastname: lastname,
-}</code></pre>
-<p>Thanks to ES6, you can directly write:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
+  <span class="hljs-keyword">const</span> promiseIteration = iter.next() <span class="hljs-comment">// exécution reprise jusqu'au prochain "yield"</span>
+  <span class="hljs-comment">// le générateur est remis en pause jusqu'au prochain appel à "iter.next"</span>
 
-<span class="hljs-keyword">return</span> {
-  firstname,
-  lastname,
+  <span class="hljs-comment">// Première itération de la boucle</span>
+  <span class="hljs-keyword">return</span> loop(promiseIteration)
+}</code></pre>
+<h2 id="more-more-more"><a class="markdownIt-Anchor" href="#more-more-more">#</a> More! more! more!</h2>
+<h3 id="gestion-d-erreur"><a class="markdownIt-Anchor" href="#gestion-d-erreur">#</a> Gestion d’erreur</h3>
+<p>Les erreurs, tout comme les valeurs, peuvent être émises dans les deux
+directions. Le générateur peut <code>throw</code> vers le code contrôleur (le code est
+synchrone) :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fail</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'oops'</span>)
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
 }
-<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
-<p>In the same spirit, you will be able to declare methods without the <code>function</code>
-keyword (this also apply for <em>getter</em> and <em>setter</em>).</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
-  get email() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
-  },
-  set email(email) {
-    <span class="hljs-keyword">this</span>.email = email
-  },
-  validateEmail(email) {
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
-  },
+
+<span class="hljs-keyword">const</span> iterator = fail()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+<span class="hljs-keyword">try</span> {
+  iterator.next() <span class="hljs-comment">// throws</span>
+} <span class="hljs-keyword">catch</span> (e) {
+  e <span class="hljs-comment">// Error('oops')</span>
 }</code></pre>
-<h2 id="dynamic-property-name"><a class="markdownIt-Anchor" href="#dynamic-property-name">#</a> Dynamic property name</h2>
-<p>One last thing for <em>objects literal</em> will allow you to create dynamic property
-name using an expression, directly when you create an object.
-With ES5 you have to do that in two steps:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">var</span> payload = {}
-  payload[type] = data
-  <span class="hljs-keyword">return</span> payload
-}</code></pre>
-<p>Now with ES6, you can do:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    [type]: data
+<p>Mais le code contrôleur peut également émettre une erreur vers le générateur
+avec la méthode <code>throw</code> de l’itérateur :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fail</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  } <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-built_in">console</span>.error(e)
   }
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = fail()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+iterator.throw(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"nope"</span>)) <span class="hljs-comment">// affiche "[Error: nope]"</span>
+iterator.next() <span class="hljs-comment">// { value: 2, done: false }</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<p>Note : il faut bien se souvenir que le premier <code>next</code> sert à <em>débloquer</em>
+l’exécution du générateur, qui va alors jusqu’au premier <code>yield</code>, évalue
+l’expression émise, la transmet en retour de <code>next()</code>, et remet la fonction en
+pause. C’est au second <code>yield</code> seulement que l’exécution reprend <strong>à partir de
+<code>yield 1</code></strong>. C’est une partie que je trouve contre-intuitive et que j’ai eu du
+mal à assimiler.</p>
+<h3 id="d-l-gation"><a class="markdownIt-Anchor" href="#d-l-gation">#</a> Délégation</h3>
+<p>L’opérateur <code>yield*</code> permet d’émettre les valeurs d’un autre itérateur, par
+exemple :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">oneToThree</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">zeroToFour</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">0</span>
+  <span class="hljs-keyword">yield</span> * oneToThree()
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">4</span>
 }</code></pre>
-<p><strong>Note:</strong> with dynamic properties, declaring multiples properties with the same
-name is accepted and do not throw an error. Keep in mind that only the last
-value will be kept.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
+<p>Cela fonction bien sûr avec tous les <em>itérable</em> qui seront abordés dans un futur
+article : <code>yield * [1, 2, 3]</code> est valide par exemple.</p>
+<h3 id="retour-anticip"><a class="markdownIt-Anchor" href="#retour-anticip">#</a> Retour anticipé</h3>
+<p>Il est possible de terminer le traitement d’un générateur depuis le code
+contrôleur avec la méthode <code>return</code> de l’itérateur. Tout se passera comme si
+le générateur se terminait immédiatement avec la valeur de retour fournie.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">numbers</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = numbers()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+iterator.return(<span class="hljs-number">4</span>) <span class="hljs-comment">// { value: 4, done: true } → yield 2 and yield 3 are skipped</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>Un habituel petit coup d’œil sur <a href="https://kangax.github.io/compat-table/es6/#test-generators">la compatibilité</a> :</p>
+<ul>
+<li>Les navigateurs modernes (donc pas IE)</li>
+<li>IE Edge ≥ 13</li>
+<li>Niveau polyfill, c’est vers Babel ou Traceur qu’il faudra se tourner</li>
+</ul>
+<p>Les générateurs amènent tout un nouveau panel de fonctionnalités qui permettent
+d’inverser la responsabilité : c’est le code appelant qui prend le pouvoir sur
+la façon dont va s’exécuter la fonction appelée. Ils représentent le premier pas
+vers d’autres concepts qui bouleverseront probablement votre façon de coder dans
+quelques mois/années : fonctions asynchrones, observables… prennent leurs
+racines dans les générateurs. Les comprendre permettra de mieux appréhender de
+futures fonctionnalités.</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/generators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/generators/</guid><pubDate>Wed, 09 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaînes de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
 soit des double quotes. Malheureusement ces délimiteurs posent quelques
 problèmes lorsque justement la chaîne contient un single quote ou une
 double quote.</p>
-<p>Ainsi, les <em>template strings</em> utilisent le caractère <em>back-tick</em> (accent grave
-simple) pour délimiter les chaînes de caractères.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<p>Ainsi, les <em>template strings</em> utilisent le caractère “backtick” ou accent grave
+simple pour délimiter les chaînes de caractères.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
 <span class="hljs-keyword">var</span> myString = <span class="hljs-string">'Je suis une "chaîne de caractères"'</span>
 
-<span class="hljs-comment">// ES6</span>
+<span class="hljs-comment">// Maintenant en ES6</span>
 <span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`Je suis une "template string"`</span></code></pre>
 <p>Jusque là, rien de bien novateur mais voyons un exemple que l’on rencontre
 tout le temps : l’interpolation d’expression dans les chaînes de texte.</p>
 <h2 id="interpolation-d-expression"><a class="markdownIt-Anchor" href="#interpolation-d-expression">#</a> Interpolation d’expression</h2>
 <p>On peut maintenant directement utiliser les variables dans une <em>template string</em>
 si on les insère dans un placeholder qui s’écrit <code>${variable}</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
 <span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
 <span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
 
-<span class="hljs-comment">// ES6</span>
+<span class="hljs-comment">// Maintenant en ES6</span>
 <span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
 <span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
 <p>Il est également possible de faire des traitements dans un placeholder et
@@ -352,7 +267,7 @@ d’appeler des fonctions.</p>
 ES5 il n’existe aucune solution esthétique (et pratique) pour générer des
 chaînes multi-lignes.
 Ce problème disparait avec les <em>template strings</em>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<pre><code class="language-js"><span class="hljs-comment">// Avant en ES5</span>
 <span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
                  bar \
                  baz"</span>;
@@ -361,7 +276,7 @@ Ce problème disparait avec les <em>template strings</em>.</p>
 multiline2 += <span class="hljs-string">"bar"</span>;
 multiline2 += <span class="hljs-string">"baz"</span>;
 
-<span class="hljs-comment">// ES6</span>
+<span class="hljs-comment">// Aujourd'hui en ES6</span>
 <span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
                    bar
                    baz`</span>;</code></pre>
@@ -379,7 +294,7 @@ str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
 Les tags sont des fonctions que l’on place juste avant une <em>template string</em> et
 qui permettent de modifier le contenu de la dite chaîne de caractères.</p>
 <p>Ce tag aura pour paramètres un tableau de “literals” (les chaînes de caractères),
-et ensuite tous les paramètres correspondant aux valeurs interpolées qui auront
+et ensuite tous les paramètres correspondront aux valeurs interpolées qui auront
 déjà été évaluées, mais que l’on pourra quand même modifier.</p>
 <pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
 
@@ -411,7 +326,7 @@ capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</
 <p>Voici un exemple intéressant d’utilisation des <em>template strings</em> taggués qui
 présente un système <a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">de localisation de chaînes de caractères</a>.</p>
 <h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>Et pour finir, une nouvelle fonction a été ajoutée au prototype de <code>String</code> qui
+<p>Et pour finir, une nouvelle fonction a été ajouté au prototype de <code>String</code> qui
 permet d’afficher le contenu d’un <em>template string</em> brut. C’est à dire que la
 fonction permettra de voir les caractères d’échappement qui sont
 automatiquement gérés avec une <em>template string</em>.</p>
@@ -421,292 +336,23 @@ automatiquement gérés avec une <em>template string</em>.</p>
 simplifie grandement la vie et permet d’oublier les erreurs d’échappement.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des <em>template strings</em>…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
-the <em>template strings</em>.</p>
-<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
-<p>To define a string in JavaScript, we have single quotes or double quotes.
-No one is really better than the other since you need to escape the quotes you
-are using in the string itself.</p>
-<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
-<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
-<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
-<p>Now you can directly use expression in a <em>template string</em> if you use the new
-place holder syntax.: <code>${ expression }</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
-<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
-<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
-<p>Here we are just using a variable, but we can use any expression:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
-  <span class="hljs-keyword">return</span> num * num;
-}
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
-<p>This is what make <em>template strings</em> awesome.</p>
-<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
-<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
-                 bar \
-                 baz"</span>;
-
-<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
-multiline2 += <span class="hljs-string">"bar"</span>;
-multiline2 += <span class="hljs-string">"baz"</span>;
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
-                   bar
-                   baz`</span>;</code></pre>
-<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
-bar`</span>;
-
-<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
-             bar`</span>;
-
-str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
-<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
-<p>Let’s dive into another interesting feature of <em>template strings</em>.
-Tags are functions that will use just before the <em>template string</em> and they
-allow us to enhance the string result.</p>
-<p>A tag take an array of “literals” (strings), and then all interpolated
-(evaluated) expressions that we can still modify.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
-      <span class="hljs-keyword">return</span> c.toUpperCase();
-    });
-  }
-
-  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
-    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
-    result += replaceVowels(strings[i]);
-    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
-      result += replaceVowels(nextValue)
-    } <span class="hljs-keyword">else</span> {
-      result += nextValue;
-    }
-  }
-  <span class="hljs-keyword">return</span> result;
-}
-
-
-capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
-<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
-<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
-<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
-capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
-<p>Here is an interesting example of tagged <em>template strings</em> to handle
-<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
-<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>A new function has been added to <code>String</code> prototype that allows us display raw
-content so you can see unescaped characters:</p>
-<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>When you will start to use <em>template strings</em>, you are likely going to like
-them. They are clearly really useful in a daily basis.</p>
-<p>Almost all
-<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
-today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
-hesitate to use <em>template strings</em>.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
-promises.
-The concept of promises exists is not new in the JavaScript world, but now
-we got an official feature!</p>
-<h2 id="what-s-a-promise"><a class="markdownIt-Anchor" href="#what-s-a-promise">#</a> What’s a promise?</h2>
-<p>It’s a promise of an incoming value, not available yet. It’s a promise so it can
-be fulfilled or not (rejected). If fulfilled, it will give us the the value we
-were waiting for. If rejected, we will get the error so we can handle it.</p>
-<p>This mechanism allows to avoid the callback hell :</p>
-<pre><code class="language-js"><span class="hljs-comment">// With callbacks.</span>
-<span class="hljs-comment">// Let's say that all those function are doing async tasks (like http or</span>
-<span class="hljs-comment">// database request, fs read...)</span>
-<span class="hljs-keyword">const</span> functionWithCallback1 = (callback) =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback5 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback6 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-
-functionWithCallback1((result1, err) =&gt; {
-  <span class="hljs-keyword">if</span> (err) {
-    <span class="hljs-keyword">throw</span> err
-  }
-  functionWithCallback2(result1, (result2, err) =&gt; {
-    <span class="hljs-keyword">if</span> (err) {
-      <span class="hljs-keyword">throw</span> err
-    }
-    functionWithCallback3(result2, (result3, err) =&gt; {
-      <span class="hljs-keyword">if</span> (err) {
-        <span class="hljs-keyword">throw</span> err
-      }
-      functionWithCallback4(result3, (result4, err) =&gt; {
-        <span class="hljs-keyword">if</span> (err) {
-          <span class="hljs-keyword">throw</span> err
-        }
-        functionWithCallback5(result4, (result5, err) =&gt; {
-          <span class="hljs-keyword">if</span> (err) {
-            <span class="hljs-keyword">throw</span> err
-          }
-          functionWithCallback6(result5, (result6, err) =&gt; {
-            <span class="hljs-keyword">if</span> (err) {
-              <span class="hljs-keyword">throw</span> err
-            }
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with callbacks: <span class="hljs-subst">${result6}</span>`</span>)
-          })
-        })
-      })
-    })
-  })
-})
-
-<span class="hljs-comment">// Now the same thing with promises</span>
-<span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
-<span class="hljs-keyword">const</span> functionWithPromise2 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise3 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise4 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise5 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise6 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-
-functionWithPromise1()
-  .then(functionWithPromise2)
-  .then(functionWithPromise3)
-  .then(functionWithPromise4)
-  .then(functionWithPromise5)
-  .then(functionWithPromise6)
-  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with promises: <span class="hljs-subst">${result}</span>`</span>))
-  .catch(err =&gt; {
-    <span class="hljs-keyword">throw</span> err
-  })</code></pre>
-<p>As you can see, example with promises is clear and more concise.</p>
-<h2 id="that-s-cool-how-can-i-use-promises"><a class="markdownIt-Anchor" href="#that-s-cool-how-can-i-use-promises">#</a> That’s cool. How can I use promises?</h2>
-<p>A promise can have different status:</p>
-<ul>
-<li>in progress: value is not ready yet</li>
-<li>resolved: value is here, we can use it</li>
-<li>rejected: an error has been thrown, we should handle it.</li>
-</ul>
-<p>A promise have 2 functions: <code>then</code> and <code>catch</code>.
-You can use <code>then</code> to wait for the result (or handle an error), and <code>catch</code> to
-catch all possibles errors of one promise or more.</p>
-<p>Let’s see how to use promises with an example of the incoming standardized
-<a href="https://fetch.spec.whatwg.org"><code>fetch</code></a> method.</p>
-<pre><code class="language-js"><span class="hljs-comment">// At this moment, promise is in progress</span>
-<span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-
-<span class="hljs-comment">// When promise is resolved, you go a value you can work with</span>
-<span class="hljs-keyword">const</span> parsePromise = fetchPromise.then(fetchResult =&gt; {
-  <span class="hljs-comment">// I can return a new result that can be used as a new promise</span>
-  <span class="hljs-comment">// Here we call .text() which parse the content of the request and return</span>
-  <span class="hljs-comment">// promise</span>
-  <span class="hljs-keyword">return</span> fetchResult.text()
-})
-
-<span class="hljs-comment">// When parsing is done, we can work with the content</span>
-parsePromise.then(textResult =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
-})
-
-<span class="hljs-comment">// If the request encounter an issue, promise might be rejected with an error</span>
-fetchPromise.catch(fetchError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
-})
-
-<span class="hljs-comment">// If there is an issue during the parsing, we can handle it too</span>
-parsePromise.catch(parseError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
-})
-
-<span class="hljs-comment">// The same can be written like this</span>
-fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-  .then((fetchResult) =&gt; fetchResult.text())
-  .then((textResult) =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
-  })
-  .catch((error) =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request or the parsing`</span>, fetchError)
-  })
-
-<span class="hljs-comment">// Or like this</span>
-fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-  .then(
-    (fetchResult) =&gt; {
-      <span class="hljs-keyword">return</span> fetchResult.text()
-    },
-    (fetchError) =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
-    })
-  .then(
-    (textResult) =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
-    },
-    (parseError) =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
-    }
-  )</code></pre>
-<h2 id="how-do-i-create-my-own-promises"><a class="markdownIt-Anchor" href="#how-do-i-create-my-own-promises">#</a> How do I create my own promises?</h2>
-<p>Using a promise is nice, but creating yours is even better. Let’s be clear: it’s
-easy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> functionThatReturnAPromise = (success) =&gt; {
-  <span class="hljs-comment">// We will need to use Promise class to use one.</span>
-  <span class="hljs-comment">// constructor takes 2 arguments:</span>
-  <span class="hljs-comment">// - resolve, a callback to pass the value you want to send</span>
-  <span class="hljs-comment">// - reject, a callback to throw an error</span>
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
-    <span class="hljs-keyword">if</span> (success) {
-      resolve(<span class="hljs-string">'success'</span>)
-    }
-    <span class="hljs-keyword">else</span> {
-      reject(<span class="hljs-string">'failed'</span>)
-    }
-  })
-}
-
-<span class="hljs-comment">// You can use this promise like this</span>
-functionThatReturnAPromise(success)
-  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res))
-  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error))
-
-<span class="hljs-comment">// In our case, the previous example can be also written</span>
-functionThatReturnAPromise(success)
-  .then(
-    (res) =&gt; <span class="hljs-built_in">console</span>.log(res),
-    (error) =&gt; <span class="hljs-built_in">console</span>.log(error)
-  )</code></pre>
-<h2 id="what-s-next"><a class="markdownIt-Anchor" href="#what-s-next">#</a> What’s next?</h2>
-<p>A new way to write asynchronous will land in JavaScript with <code>async</code> and <code>await</code>
-keywords, but we will need to way another ES year (or two) for it !</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promesses]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
-JavaScript, les promesses ! Visible depuis longtemps dans l’écosystème
-JavaScript grâce a diverses librairies, on peut maintenant utiliser directement
-la spécification officielle.</p>
-<h2 id="c-est-quoi-une-promesse"><a class="markdownIt-Anchor" href="#c-est-quoi-une-promesse">#</a> C’est quoi une promesse ?</h2>
-<p>Et bien comme son nom l’indique vous pouvez voir ça comme la promesse que vous
-allez recevoir une valeur. Comme toute promesse, elle peut être tenue,
-la valeur est arrivée et on peut s’en servir, ou ne pas l’être, dans ce cas
-une erreur arrive et on peut réagir en conséquence.</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promises]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
+JavaScript, les promises ! Visible depuis longtemps dans l’écosystème JavaScript
+grâce a diverses librairies, on peut maintenant utiliser directement la
+spécification officielle.</p>
+<h2 id="c-est-quoi-une-promise"><a class="markdownIt-Anchor" href="#c-est-quoi-une-promise">#</a> C’est quoi une promise ?</h2>
+<p>Une promise peut être vue comme la promesse d’une valeur non-disponible
+immédiatement. Comme toute promesse, elle peut être tenue, la valeur est arrivée
+et on peut s’en servir, ou ne pas l’être, dans ce cas une erreur arrive et on
+peut réagir en conséquence.</p>
 <p>Ce mécanisme permet de remplacer les callbacks d’une manière plus élégante. Au
 revoir, la suite de callbacks qui rend votre code illisible ! Vous ne me croyez
 pas ? Voici un exemple pour vous le prouver :</p>
-<pre><code class="language-js"><span class="hljs-comment">// En utilisant les callbacks</span>
+<pre><code class="language-javascript"><span class="hljs-comment">// En utilisant les callbacks</span>
 <span class="hljs-comment">// Imaginez que chacune de ces fonctions effectue des tâches asynchrones</span>
 <span class="hljs-comment">// plus ou moins complexes (requête HTTP, appel à une base de données</span>
 <span class="hljs-comment">// ou encore lecture de fichier)</span>
-<span class="hljs-keyword">const</span> functionWithCallback1 = (callback) =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback1 = callback =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
 <span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
@@ -745,13 +391,13 @@ functionWithCallback1((result1, err) =&gt; {
   })
 })
 
-<span class="hljs-comment">// Et maintenant, en utilisant les promesses</span>
+<span class="hljs-comment">// Et maintenant, en utilisant les promises</span>
 <span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
-<span class="hljs-keyword">const</span> functionWithPromise2 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise3 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise4 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise5 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise6 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise2 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise3 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise4 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise5 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise6 = arg =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
 
 functionWithPromise1()
   .then(functionWithPromise2)
@@ -759,33 +405,33 @@ functionWithPromise1()
   .then(functionWithPromise4)
   .then(functionWithPromise5)
   .then(functionWithPromise6)
-  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Exemple avec les promesses : <span class="hljs-subst">${result}</span>`</span>))
+  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Exemple avec les promises : <span class="hljs-subst">${result}</span>`</span>))
   .catch(err =&gt; {
     <span class="hljs-keyword">throw</span> err
   })</code></pre>
-<p>Comme vous pouvez le voir, l’exemple avec les promesses est tout de même plus
+<p>Comme vous pouvez le voir, l’exemple avec les promises est tout de même plus
 lisible !</p>
 <h2 id="trop-bien-comment-je-les-utilise"><a class="markdownIt-Anchor" href="#trop-bien-comment-je-les-utilise">#</a> Trop bien ! Comment je les utilise ?</h2>
-<p>Une promesse peut avoir plusieurs états au cours de son existence :</p>
+<p>Une promise peut avoir plusieurs états au cours de son existence :</p>
 <ul>
 <li>en cours : la valeur qu’elle contient n’est pas encore arrivée</li>
 <li>résolue : la valeur est arrivée, on peut l’utiliser</li>
 <li>rejetée : une erreur est survenue, on peut y réagir</li>
 </ul>
-<p>Une promesse possède 2 fonctions : <code>then</code> et <code>catch</code>, vous pouvez utiliser
-<code>then</code> pour récupérer le resultat ou l’erreur d’une promesse et <code>catch</code> pour
-récupérer l’erreur d’une ou plusieurs promesses.</p>
-<p>Voyons comment utiliser les promesses à l’aide de la future implémentation de
-<a href="https://fetch.spec.whatwg.org"><code>fetch</code></a>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// À ce moment, la promesse est en attente</span>
+<p>Une promise possède 2 fonctions : <code>then</code> et <code>catch</code>, vous pouvez utiliser <code>then</code>
+pour récupérer le resultat ou l’erreur d’une promise et <code>catch</code> pour récupérer
+l’erreur d’une ou plusieurs promises.</p>
+<p>Voyons comment utiliser les promises à l’aide de la future implémentation de
+<code>fetch</code>.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// À ce moment, la promise est en attente</span>
 <span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
 
-<span class="hljs-comment">// Quand la requête est terminée la promesse est résolue avec le résultat de</span>
+<span class="hljs-comment">// Quand la requête est terminée la promise est résolue avec le résultat de</span>
 <span class="hljs-comment">// la requête</span>
 <span class="hljs-keyword">const</span> parsePromise = fetchPromise.then(fetchResult =&gt; {
-  <span class="hljs-comment">// Je peux retourner une nouvelle promesse à partir d'un then, ici</span>
+  <span class="hljs-comment">// Je peux retourner une nouvelle promise à partir d'un then, ici</span>
   <span class="hljs-comment">// j'appelle .text() qui parse le contenu de la requête et retourne</span>
-  <span class="hljs-comment">// une promesse</span>
+  <span class="hljs-comment">// une promise</span>
   <span class="hljs-keyword">return</span> fetchResult.text()
 })
 
@@ -794,14 +440,14 @@ parsePromise.then(textResult =&gt; {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
 })
 
-<span class="hljs-comment">// Si la requête a un problème, la promesse est rejetée avec une erreur</span>
+<span class="hljs-comment">// Si la requête a un problème, la promise est rejetée avec une erreur</span>
 fetchPromise.catch(fetchError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant la requête"</span>, fetchError)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête : <span class="hljs-subst">${fetchError}</span>`</span>)
 })
 
 <span class="hljs-comment">// S'il y a une erreur pendant le parsing, je peux la récupérer</span>
 parsePromise.catch(parseError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant le parsing"</span>, parseError)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
 })
 
 <span class="hljs-comment">// Cela peut aussi être écrit</span>
@@ -811,31 +457,25 @@ fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
   })
   .catch(error =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant la requête ou le parsing"</span>, fetchError)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête ou le parsing : <span class="hljs-subst">${error}</span>`</span>)
   })
 
 <span class="hljs-comment">// Ou encore</span>
 fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-  .then(
-    fetchResult =&gt; {
-      <span class="hljs-keyword">return</span> fetchResult.text()
-    },
-    fetchError =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant la requête"</span>, fetchError)
-    }
-  )
-  .then(
-    textResult =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
-    },
-    parseError =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Une erreur a eu lieu pendant le parsing"</span>, parseError)
-    }
-  )</code></pre>
-<h2 id="mais-comment-je-cr-e-mes-propres-promesses"><a class="markdownIt-Anchor" href="#mais-comment-je-cr-e-mes-propres-promesses">#</a> Mais comment je crée mes propres promesses ?</h2>
-<p>C’est bien beau d’utiliser les promesses, mais c’est encore mieux de savoir
-créer les vôtres ! Je vous rassure, c’est très simple.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> functionThatReturnAPromise = (success) =&gt; {
+  .then(fetchResult =&gt; {
+    <span class="hljs-keyword">return</span> fetchResult.text()
+  }, fetchError =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant la requête : <span class="hljs-subst">${fetchError}</span>`</span>)
+  })
+  .then(textResult =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Voici le résultat : <span class="hljs-subst">${textResult}</span>`</span>)
+  }, parseError =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Une erreur a eu lieu pendant le parsing : <span class="hljs-subst">${parseError}</span>`</span>)
+  })</code></pre>
+<h2 id="mais-comment-je-cr-e-mes-propres-promises"><a class="markdownIt-Anchor" href="#mais-comment-je-cr-e-mes-propres-promises">#</a> Mais comment je crée mes propres promises ?</h2>
+<p>C’est bien beau d’utiliser les promises, mais c’est encore mieux de savoir créer
+les vôtres ! Je vous rassure, c’est très simple.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> functionThatReturnAPromise = () =&gt; {
   <span class="hljs-comment">// On utilise la classe Promise pour en créer une, le constructeur prend 2</span>
   <span class="hljs-comment">// fonctions en paramètre :</span>
   <span class="hljs-comment">// - resolve que l'on pourra appeler avec le résultat de notre fonction</span>
@@ -843,29 +483,21 @@ créer les vôtres ! Je vous rassure, c’est très simple.</p>
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
     <span class="hljs-keyword">if</span> (success) {
       resolve(<span class="hljs-string">'success'</span>)
-    }
-    <span class="hljs-keyword">else</span> {
+    } <span class="hljs-keyword">else</span> {
       reject(<span class="hljs-string">'failed'</span>)
     }
   })
 }
 
 <span class="hljs-comment">// Vous pouvez maintenant utiliser votre fonction comme vu précédemment</span>
-functionThatReturnAPromise(success)
-  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res))
-  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error))
-
-<span class="hljs-comment">// équivalent dans notre cas à</span>
-functionThatReturnAPromise(success)
-  .then(
-    (res) =&gt; <span class="hljs-built_in">console</span>.log(res),
-    (error) =&gt; <span class="hljs-built_in">console</span>.log(error)
-  )</code></pre>
+functionThatReturnAPromise()
+  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res)) <span class="hljs-comment">// log : 'success'</span>
+  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error)) <span class="hljs-comment">// log : 'failed'</span></code></pre>
 <h2 id="et-demain"><a class="markdownIt-Anchor" href="#et-demain">#</a> Et demain ?</h2>
-<p>Une fonctionnalité encore plus pratique que les promesses arrive en JavaScript,
-les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un
-code encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne
-pas ES2015 :)</p>
+<p>Une fonctionnalité encore plus pratique que les promises arrive en JavaScript,
+les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un code
+encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne pas
+ES2015 :)</p>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
 Elles n’apportent rien de plus en terme de fonctionnalité. Toutefois, l’objectif
 de cette évolution est de rendre le code plus lisible et plus facilement
@@ -1337,7 +969,7 @@ votre code une fois passé à ES6.</p>
 implémente les valeurs par défaut, et encore seulement pour les paramètres de
 fonctions.
 Il faudra donc utiliser <a href="http://babeljs.io">Babel</a> ou Traceur pour en profiter.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: default values for arguments]]></title><description><![CDATA[<p>Tired of typing <code>if (typeof x === 'undefined') x = defaultValue</code>? Again, ES6
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : default values for arguments]]></title><description><![CDATA[<p>Tired of typing <code>if (typeof x === 'undefined') x = defaultValue</code>? Again, ES6
 will brings us a elegant solution.</p>
 <h1 id="default-values"><a class="markdownIt-Anchor" href="#default-values">#</a> Default values</h1>
 <p>The <code>=</code> operator can now help to define a default value to a parameter.</p>
@@ -1376,17 +1008,17 @@ hello() <span class="hljs-comment">// 'Hello ANYONE?'</span></code></pre>
 
 foo() <span class="hljs-comment">// 1 + (1 + 1) → 3</span>
 bar() <span class="hljs-comment">// (undefined + 1) + 1 → NaN</span></code></pre>
-<h3 id="particular-case-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#particular-case-tdz-temporal-dead-zone">#</a> Particular case: TDZ (Temporal Dead Zone)</h3>
-<p>A temporal dead zone is an area of your program where a variable exists, but is
+<h3 id="particular-case-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#particular-case-tdz-temporal-dead-zone">#</a> Particular case : TDZ (Temporal Dead Zone)</h3>
+<p>A <em>temporal dead zone</em> is a area of your program where a variable exist, but is
 not available yet while it didn’t get its value.</p>
-<p>The following example is obviously invalid:</p>
+<p>The following example is obviously invalid :</p>
 <pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// throws ReferenceError?</span>
 }</code></pre>
 <p>In fact, during the call of the function, <code>x</code> has not been defined yet,
-so it cannot be used as a default value.
+so cannot be used as a default value.
 This example should trigger an
 <a href="http://dmitrysoshnikov.com/ecmascript/es6-notes-default-values-of-parameters/#tdz-temporal-dead-zone-for-parameters">error</a></p>
-<p>However, scope rules will make this example invalid:</p>
+<p>However, scope rules will make this example invalid :</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// 'x' used here is the parameter itself</span>
 }</code></pre>
@@ -1397,7 +1029,7 @@ the value defined above.</p>
 (that might helps to read and understand your code).</p>
 <h2 id="destructuring"><a class="markdownIt-Anchor" href="#destructuring">#</a> Destructuring</h2>
 <p>Like for the function arguments, assignments using
-<a href="/en/articles/js/es2015/destructuring/">destructuring</a>
+<a href="/fr/articles/js/es2015/destructuring/">destructuring</a>
 can have a default value.</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {z: <span class="hljs-number">42</span>} 
 <span class="hljs-keyword">const</span> { x = <span class="hljs-number">1</span>, y = x + <span class="hljs-number">1</span>, z, w } = obj
@@ -1406,90 +1038,17 @@ x <span class="hljs-comment">// 1</span>
 y <span class="hljs-comment">// 2</span>
 z <span class="hljs-comment">// 42</span></code></pre>
 <p>As a reminder, the assignation in the previous example would have been written
-this way using ES5:</p>
+this way using ES5 :</p>
 <pre><code class="language-js"><span class="hljs-keyword">var</span> x = (obj.x === <span class="hljs-literal">undefined</span>) ? <span class="hljs-number">1</span> : obj.x 
 <span class="hljs-keyword">var</span> y = (obj.y === <span class="hljs-literal">undefined</span>) ? x + <span class="hljs-number">1</span> : obj.y 
 <span class="hljs-keyword">var</span> z = obj.z
 <span class="hljs-keyword">var</span> w = obj.w</code></pre>
 <h1 id="enjoy"><a class="markdownIt-Anchor" href="#enjoy">#</a> Enjoy!</h1>
-<p>There is no more reasons <em>a priori</em> to see an <code>undefined</code> in an ES6 codebase.</p>
+<p>There is no more reasons <em>a priori</em> to see an <code>undefined</code> in a ES6 codebase.</p>
 <p>About the compatibility (at the time of the writing): only Firefox ≥ 43
 support this feature (and just for function…).
 So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
-an array based on their structure.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
-<span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>,
-}
-
-<span class="hljs-comment">// With ES5, you need to do</span>
-<span class="hljs-keyword">var</span> foo = myObject.foo
-<span class="hljs-keyword">var</span> bar = myObject.bar
-
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// With ES6, you can write the same with</span>
-<span class="hljs-keyword">const</span> { foo, bar } = myObject
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
-<span class="hljs-comment">// returns a function or an array)</span>
-<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    foo: <span class="hljs-number">1</span>,
-    bar: <span class="hljs-number">2</span>,
-  }
-}
-<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span></code></pre>
-<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
-<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
-<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
-<span class="hljs-comment">// of an array</span>
-<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
-<span class="hljs-comment">// commas</span>
-<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
-first <span class="hljs-comment">// 1</span>
-second <span class="hljs-comment">// 2</span>
-fourth <span class="hljs-comment">// 4</span></code></pre>
-<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
-<p>For an object, the default behavior is that the name of a variable will match
-the name of the key.
-So if you have already a variable with this name, you can choose another one.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>
-}
-<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
-renamedFoo <span class="hljs-comment">// 1</span></code></pre>
-<p>This syntax doesn’t offer a good readability.</p>
-<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
-<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
-	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
-}
-
-myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
-<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
-<p>We can also nest the assignments.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: {
-    bar: <span class="hljs-number">1</span>,
-  },
-}
-<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
-bar <span class="hljs-comment">// 1</span></code></pre>
-<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
-(if the value doesn’t exist), be sure that you will have a nesting error, since
-a value will try to be retrieved from an <code>undefined</code> property.
-To prevent this issue, you will need to define
-<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Le destructuring consiste à assigner des variables provenant d’un objet ou
 tableau en reposant sur leur structure.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Partons d'un objet `myObject`</span>
@@ -1563,7 +1122,80 @@ bar <span class="hljs-comment">// 1</span></code></pre>
 nesting, puisqu’il essaiera d’aller chercher une propriété d’<code>undefined</code>.
 Pour pallier ces soucis, rendez-vous pour l’article sur les
 <a href="/fr/articles/js/es2015/defaults/">defaults</a>.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
+an array based on their structure.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
+<span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>,
+}
+
+<span class="hljs-comment">// With ES5, you need to do</span>
+<span class="hljs-keyword">var</span> foo = myObject.foo
+<span class="hljs-keyword">var</span> bar = myObject.bar
+
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// With ES6, you can write the same with</span>
+<span class="hljs-keyword">const</span> { foo, bar } = myObject
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
+<span class="hljs-comment">// returns a function or an array)</span>
+<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    foo: <span class="hljs-number">1</span>,
+    bar: <span class="hljs-number">2</span>,
+  }
+}
+<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span></code></pre>
+<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
+<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
+<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
+<span class="hljs-comment">// of an array</span>
+<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
+<span class="hljs-comment">// commas</span>
+<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+first <span class="hljs-comment">// 1</span>
+second <span class="hljs-comment">// 2</span>
+fourth <span class="hljs-comment">// 4</span></code></pre>
+<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
+<p>For an object, the default behavior is that the name of a variable will match
+the name of the key.
+So if you have already a variable with this name, you can choose another one.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>
+}
+<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
+renamedFoo <span class="hljs-comment">// 1</span></code></pre>
+<p>This syntax doesn’t offer a good readability.</p>
+<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
+<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
+	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
+}
+
+myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
+<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
+<p>We can also nest the assignments.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: {
+    bar: <span class="hljs-number">1</span>,
+  },
+}
+<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
+bar <span class="hljs-comment">// 1</span></code></pre>
+<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
+(if the value doesn’t exist), be sure that you will have a nesting error, since
+a value will try to be retrieved from an <code>undefined</code> property.
+To prevent this issue, you will need to define
+<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la déclaration de variables avec const, let et var]]></title><description><![CDATA[<p>ES6 (aussi appelé ES2015) vous apporte de nouvelles façons de déclarer vos
 variables grâce à <code>let</code> et <code>const</code> mais garde aussi la déclaration par <code>var</code>
 dans la spécification du langage.</p>
 <p>Première étape, on oublie tout ce qu’on sait sur <code>var</code>.</p>
@@ -1681,7 +1313,81 @@ où votre variable n’existe pas. Ce moment, c’est la TDZ.</p>
 <li>Si vous avez trouvé le pire cas d’utilisation du monde, changez pour un <code>var</code>
 (je vous laisse faire le calcul)</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
+<strong>storyboards</strong>.</p>
+<blockquote>
+<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
+C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
+entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
+de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
+mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
+graphiquement et simplement le workflow de l’application.</p>
+</blockquote>
+<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
+<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
+c’est génial. Mais alors pourquoi les diviser ?</p>
+<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
+<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
+conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
+même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
+est de prendre celui de quelqu’un et refaire les changements ou de corriger les
+sources en croisant les doigts. Accompagné de 4 L de café.<br>
+Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
+travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
+chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
+de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
+<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
+<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
+groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
+facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
+une <code>scene</code> à l’autre bout du storyboard.</p>
+<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
+<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
+grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
+d’éléments vous avez à recompiler, plus vite ça ira.</p>
+<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
+<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
+pour les clients, vous pouvez vous faire des petits storyboards que vous
+réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
+faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
+<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
+<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
+<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
+<span class="hljs-comment">// Aller chercher le storyboard</span>
+<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-keyword">let</span> controllerSettings =
+storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
+<span class="hljs-comment">// Présenter</span>
+<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
+<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
+<span class="hljs-comment">// Aller chercher le sotyboard</span>
+<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
+bundle:<span class="hljs-literal">nil</span>];
+<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
+<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
+instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
+<span class="hljs-comment">// Présenter</span>
+[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
+<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
+fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
+<ul>
+<li>créez un nouveau storyboard pour votre <em>secteur</em>
+(File→New→File→[OS]→User Interface),</li>
+<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
+(sinon le compilateur n’aime pas),</li>
+<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
+<code>Utilies&gt;Identity Inspector</code>,</li>
+<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
+<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
+<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
+votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
+<em>storyboardID</em> de la <code>scene</code>,</li>
+<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
+<em>Storyboard Reference</em> voulus.</li>
+</ul>
+<p>Plus long à lire qu’à faire !</p>
+]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
 to <code>let</code> and <code>const</code>, but also keeps <code>var</code> in the language specification.</p>
 <p>The first thing you need to do: forget everything you know about <code>var</code>.</p>
 <h1 id="declarations"><a class="markdownIt-Anchor" href="#declarations">#</a> Declarations</h1>
@@ -1791,255 +1497,7 @@ exist yet.</p>
 variable, switch to <code>let</code> (that might happen 1% of the time)</li>
 <li>If you are in the worst use-case of the world, use <code>var</code> (you can do the math)</li>
 </ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Avantages à diviser ses storyboards sur iOS/OS X]]></title><description><![CDATA[<p>Aujourd’hui, on va parler d’un sujet qui parle à tous les devs iOS : les
-<strong>storyboards</strong>.</p>
-<blockquote>
-<p>Pour faire court :  les storyboards sont les fichiers d’interface sous iOS/OS X.
-C’est là où vous placer vos <code>vues</code> dans vos <code>scenes</code>, vous les positionnez
-entre elles, vous pouvez créer des interactions entre les <code>scenes</code> pour passer
-de l’une à l’autre. C’est proche des XAML de Visual ou des Layouts d’Android,
-mais avec la notion de relation entre les <code>scenes</code> en plus. Ça permet de créer
-graphiquement et simplement le workflow de l’application.</p>
-</blockquote>
-<h2 id="pourquoi-d-couper-son-storyboard"><a class="markdownIt-Anchor" href="#pourquoi-d-couper-son-storyboard">#</a> Pourquoi découper son storyboard</h2>
-<p>Pouvoir relier aussi facilement toutes les <code>scenes</code> dans un même storyboard,
-c’est génial. Mais alors pourquoi les diviser ?</p>
-<h3 id="viter-des-conflits"><a class="markdownIt-Anchor" href="#viter-des-conflits">#</a> Éviter des conflits</h3>
-<p>Si vous travaillez à plusieurs, vous avez sûrement déjà rencontré des
-conflits lors de merges où tout le monde a décidé d’éditer le <code>storyboard</code> en
-même temps. Le storyboard est donc corrompu et le seul moyen de le récupérer
-est de prendre celui de quelqu’un et refaire les changements ou de corriger les
-sources en croisant les doigts. Accompagné de 4 L de café.<br>
-Avec plusieurs <code>storyboards</code> : chacun bosse sur sa partie graphique. Si <em>Bob</em>
-travaille sur les <em>vues de comptes</em> et <em>Joe</em> sur les <em>settings</em> de l’app,
-chacun a un storyboard et ne change pas ceux des autres. Ça fait beaucoup moins
-de chance d’avoir des conflits, voire aucun si tout le monde se met d’accord !</p>
-<h3 id="les-gros-projets-plus-faciles-diter-comprendre"><a class="markdownIt-Anchor" href="#les-gros-projets-plus-faciles-diter-comprendre">#</a> Les gros projets plus faciles à éditer/comprendre</h3>
-<p>Pour les gros projets, avec beaucoup de <code>scenes</code>, ranger ces <code>scenes</code> par
-groupes dans différents <code>storyboards</code> peut être un bon moyen de s’y retrouver
-facilement. Vous n’avez pas à dézoomer à chaque fois que vous voulez chercher
-une <code>scene</code> à l’autre bout du storyboard.</p>
-<h3 id="augmenter-la-vitesse-de-compilation"><a class="markdownIt-Anchor" href="#augmenter-la-vitesse-de-compilation">#</a> Augmenter la vitesse de compilation</h3>
-<p>Recompiler tout le storyboard juste pour un label changé ça ne sert pas à
-grand chose et certains <code>storyboards</code> peuvent être long à compiler. Donc moins
-d’éléments vous avez à recompiler, plus vite ça ira.</p>
-<h3 id="r-utilisation-de-code"><a class="markdownIt-Anchor" href="#r-utilisation-de-code">#</a> Réutilisation de code</h3>
-<p>Imaginons que vous bossez dans une boîte qui fait souvent les mêmes apps
-pour les clients, vous pouvez vous faire des petits storyboards que vous
-réutiliserez et customiserez grâce aux contrôleurs (couleur, font, etc). Ça peut
-faire gagner du temps, mais aussi beaucoup en perdre si vous en abusez ⚠️.</p>
-<h2 id="comment-faire"><a class="markdownIt-Anchor" href="#comment-faire">#</a> Comment faire</h2>
-<p>Rentrons dans le vif du sujet, le côté technique. En quelques lignes de code :</p>
-<pre><code class="language-swift"><span class="hljs-comment">// *** Swift ***</span>
-<span class="hljs-comment">// Aller chercher le storyboard</span>
-<span class="hljs-keyword">let</span> storyboardSettings = <span class="hljs-type">UIStoryboard</span>(name: <span class="hljs-string">"settings"</span>, bundle: <span class="hljs-literal">nil</span>)
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-keyword">let</span> controllerSettings =
-storyboardSettings.instantiateViewControllerWithIdentifier(<span class="hljs-string">"settingsController"</span>)
-<span class="hljs-comment">// Présenter</span>
-<span class="hljs-keyword">self</span>.presentViewController(controllerSettings,animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)</code></pre>
-<pre><code class="language-objc"><span class="hljs-comment">// *** Objective C ***</span>
-<span class="hljs-comment">// Aller chercher le sotyboard</span>
-<span class="hljs-built_in">UIStoryboard</span> * storyboardSettings = [<span class="hljs-built_in">UIStoryboard</span> storyboardWithName:<span class="hljs-string">@"settings"</span>
-bundle:<span class="hljs-literal">nil</span>];
-<span class="hljs-comment">// Aller chercher le contrôleur qui est dans le storybard</span>
-<span class="hljs-built_in">UIViewController</span>* controllerSettings = [storyboardSettings
-instantiateViewControllerWithIdentifier:<span class="hljs-string">@"settingsController"</span>];
-<span class="hljs-comment">// Présenter</span>
-[<span class="hljs-keyword">self</span> presentViewController:controllerSettings animated:<span class="hljs-literal">YES</span> completion:<span class="hljs-literal">nil</span>];</code></pre>
-<p>Rien de plus simple ! Mais c’est bien connu, les développeurs iOS sont des
-fainéants, alors il y a encore plus simple, sans taper une seule ligne de code :</p>
-<ul>
-<li>créez un nouveau storyboard pour votre <em>secteur</em>
-(File→New→File→[OS]→User Interface),</li>
-<li>ajoutez une <code>scene</code> (<code>UIViewController</code>), mettre l’une en <code>vue initial</code>
-(sinon le compilateur n’aime pas),</li>
-<li>nommez les <code>storyboardID</code> de chacune de ces <code>scenes</code> dans le menu
-<code>Utilies&gt;Identity Inspector</code>,</li>
-<li>dans votre storyboard original, dans le menu <code>Utilies&gt;Object Library</code> cherchez
-<code>storyboard</code> et ajoutez une <strong><code>Storyboard References</code></strong>,</li>
-<li>sur la référence dans <code>Utilises&gt;Attributes Inspector</code> rentrez le nom dans
-votre storyboard (dans <em>storyboard</em>) et remplissez <em>Reference ID</em> avec le
-<em>storyboardID</em> de la <code>scene</code>,</li>
-<li>pour finir, ajoutez une <code>segue</code>, à partir d’un bouton (par exemple) vers les
-<em>Storyboard Reference</em> voulus.</li>
-</ul>
-<p>Plus long à lire qu’à faire !</p>
-]]></description><link>http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/xcode/storyboards/diviser/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
-<a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
-which</p>
-<blockquote>
-<p>lets you render a component “one level deep” and assert facts about
-what its render method returns, without worrying about the behavior of child
-components, which are not instantiated or rendered.
-This does not require a DOM.</p>
-</blockquote>
-<p>Sounds good, right? And guess what, shallow rendering is currently the
-<a href="https://discuss.reactjs.org/t/whats-the-prefered-way-to-test-react-js-components/26">preferred way to test your React components</a>.</p>
-<p>As you can see in the post mentioned at the end of this one, the
-actual code to test some components might seem a bit longer that what you could
-expect.</p>
-<p>Hopefully, <a href="https://github.com/vvo">someone</a> created something pretty cool:
-<a href="https://github.com/algolia/react-element-to-jsx-string">react-element-to-jsx-string</a>.
-As the name of the package says, this library helps to render a react component
-into a JSX string.</p>
-<p>Now things start to become interesting:
-with those two things in mind (shallow render and react components as JSX strings),
-we can easily add some basic unit tests to some components.</p>
-<p><em>There are others techniques to test React components, and most of those
-involve the DOM. This means you will need to run your tests in the browser (or
-using jsdom): your tests will be slower than the following method
-(which is more real unit testing since you execute less code and do not require
-a huge environment).</em></p>
-<h2 id="easy-unit-testing-react-components-without-a-dom"><a class="markdownIt-Anchor" href="#easy-unit-testing-react-components-without-a-dom">#</a> Easy unit testing React components (without a DOM)</h2>
-<p>Let’s do this with the following (dumb) component:</p>
-<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/index.js</span>
-
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-<span class="hljs-keyword">import</span> { PropTypes } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-
-const Component = ({
-  img,
-  title,
-  Loader,
-  Title,
-}) =&gt; (
-  &lt;div&gt;
-    {
-      (!img || !img.src) &amp;&amp; Loader &amp;&amp;
-      &lt;Loader /&gt;
-    }
-    {
-      img &amp;&amp; img.src &amp;&amp;
-      &lt;img src={ img.src } alt={ img.alt }/&gt;
-    }
-    {
-      title &amp;&amp; Title &amp;&amp;
-      &lt;Title text={ title } /&gt;
-    }
-  &lt;/div&gt;
-)
-
-Component.propTypes = {
-  img: PropTypes.object,
-  title: PropTypes.string,
-  Loader: PropTypes.func.isRequired,
-  Title: PropTypes.func.isRequired,
-}
-
-Component.displayName = <span class="hljs-string">"Picture"</span>
-
-export default Component</code></pre>
-<p>This component displays an image with a title component.
-If the image data are not ready yet, it can display a loader component.</p>
-<p>Now let’s write some simple test for it. For the example we will use
-<a href="https://medium.com/javascript-scene/why-i-use-tape-instead-of-mocha-so-should-you-6aa105d8eaf4">tape</a>
-with the help of <a href="https://github.com/atabel/tape-jsx-equals">tape-jsx-equals</a>,
-but you will find
-<a href="https://www.npmjs.com/search?q=expect+jsx">all kind of flavors on npm</a>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/__tests__/index.js</span>
-
-<span class="hljs-keyword">import</span> tape <span class="hljs-keyword">from</span> <span class="hljs-string">"tape"</span>
-<span class="hljs-keyword">import</span> addAssertions <span class="hljs-keyword">from</span> <span class="hljs-string">"extend-tape"</span>
-<span class="hljs-keyword">import</span> jsxEquals <span class="hljs-keyword">from</span> <span class="hljs-string">"tape-jsx-equals"</span>
-const test = addAssertions(tape, { jsxEquals })
-
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
-<span class="hljs-keyword">import</span> { createRenderer } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-addons-test-utils"</span>
-
-<span class="hljs-keyword">import</span> Picture <span class="hljs-keyword">from</span> <span class="hljs-string">".."</span>
-
-// fixtures (empty and stateless react components)
-const Loader = () =&gt; {}
-const Title = () =&gt; {}
-
-test(<span class="hljs-string">"PageContainer is properly rendered"</span>, (t) =&gt; {
-  const renderer = createRenderer()
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;Loader /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"can render a Loader component if no image data are passed"</span>
-  )
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-      img={ {
-        src: <span class="hljs-string">"SRC"</span>,
-        alt: <span class="hljs-string">"ALT"</span>,
-      } }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"should render an image if data are passed"</span>
-  )
-
-  renderer.render(
-    &lt;Picture
-      Loader={ Loader }
-      Title={ Title }
-      img={ {
-        src: <span class="hljs-string">"SRC"</span>,
-        alt: <span class="hljs-string">"ALT"</span>,
-      } }
-      title={ <span class="hljs-string">"TITLE"</span> }
-    /&gt;
-  )
-  t.jsxEquals(
-    renderer.getRenderOutput(),
-    &lt;div&gt;
-      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
-      &lt;Title text=<span class="hljs-string">"TITLE"</span> /&gt;
-    &lt;/div&gt;,
-    <span class="hljs-string">"can render a Title if data are passed"</span>
-  )
-
-  t.end()
-})</code></pre>
-<p>These tests are the minimum coverage to ensure you don’t break anything when you work
-on your component.</p>
-<p>As you can see, tests here are pretty easy to write &amp; straightforward.<br>
-<strong>The interesting part is that you don’t compare using strings.
-You can use real React components.</strong></p>
-<p>You can easily run this full example by getting it from this repository:</p>
-<p><a href="https://github.com/MoOx/react-component-unit-testing-example">github.com/MoOx/react-component-unit-testing-example</a></p>
-<p>This example contains all the commands and dependencies
-(defined in the <code>package.json</code>)
-that you might need.</p>
-<h1 id="what-about-testing-events-like-onclick"><a class="markdownIt-Anchor" href="#what-about-testing-events-like-onclick">#</a> What about testing events like <code>onClick</code>?</h1>
-<p>You don’t need to reproduce the entire click.</p>
-<p><strong>Your tests don’t need to check that your <code>onClick</code> prop will be executed when
-you click on a DOM element.</strong>
-<em>React probably have tests to cover this.</em></p>
-<p>You only need to test that the <code>onClick</code> prop value will do what you want.
-So if you have something like <code>onClick={ yourCallback }</code>,
-just call directly <code>yourCallback()</code> in your test just before your comparison.
-That’s enough!</p>
-<p>If you want to go deeper, you might also read:</p>
-<ul>
-<li><a href="http://simonsmith.io/unit-testing-react-components-without-a-dom/"><em>Unit testing React components without a DOM</em></a>,
-by Simon Smith, that covers the same topic without the simplicity of the JSX
-comparisons,</li>
-<li><a href="https://blog.algolia.com/how-we-unit-test-react-components-using-expect-jsx/"><em>How we unit test React components using expect-jsx</em></a>
-on Algolia blog, that explains why they choose and create tools for this approach.</li>
-</ul>
-<p>With all those examples, we hope you will stop being afraid to test your code
-and will not hesitate to cover all your React components with tests 😍.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/react/unit-testing/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/react/unit-testing/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/const-let-var/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/const-let-var/</guid><pubDate>Tue, 01 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Tester unitairement des composants React]]></title><description><![CDATA[<p>L’équipe de React a implémenté une fonctionnalité appelée
 <a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>
 (rendu peu profond),
 qui permet de rendre un composant avec un seul niveau de profondeur de rendu.</p>
@@ -2219,4 +1677,1045 @@ pour cette approche.</li>
 <p>Avec ces exemples, nous espérons vraiment que vous n’aurez plus peur de tester
 votre code et que vous n’hésiterez plus à couvrir tous vos composants React de
 tests 😍.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>http://putaindecode.io/fr/articles/js/react/test-unitaires/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/react/test-unitaires/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Unit testing React components]]></title><description><![CDATA[<p>The React team has implemented a feature called
+<a href="http://facebook.github.io/react/docs/test-utils.html#shallow-rendering">shallow rendering</a>,
+which</p>
+<blockquote>
+<p>lets you render a component “one level deep” and assert facts about
+what its render method returns, without worrying about the behavior of child
+components, which are not instantiated or rendered.
+This does not require a DOM.</p>
+</blockquote>
+<p>Sounds good, right? And guess what, shallow rendering is currently the
+<a href="https://discuss.reactjs.org/t/whats-the-prefered-way-to-test-react-js-components/26">preferred way to test your React components</a>.</p>
+<p>As you can see in the post mentioned at the end of this one, the
+actual code to test some components might seem a bit longer that what you could
+expect.</p>
+<p>Hopefully, <a href="https://github.com/vvo">someone</a> created something pretty cool:
+<a href="https://github.com/algolia/react-element-to-jsx-string">react-element-to-jsx-string</a>.
+As the name of the package says, this library helps to render a react component
+into a JSX string.</p>
+<p>Now things start to become interesting:
+with those two things in mind (shallow render and react components as JSX strings),
+we can easily add some basic unit tests to some components.</p>
+<p><em>There are others techniques to test React components, and most of those
+involve the DOM. This means you will need to run your tests in the browser (or
+using jsdom): your tests will be slower than the following method
+(which is more real unit testing since you execute less code and do not require
+a huge environment).</em></p>
+<h2 id="easy-unit-testing-react-components-without-a-dom"><a class="markdownIt-Anchor" href="#easy-unit-testing-react-components-without-a-dom">#</a> Easy unit testing React components (without a DOM)</h2>
+<p>Let’s do this with the following (dumb) component:</p>
+<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/index.js</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { PropTypes } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+
+const Component = ({
+  img,
+  title,
+  Loader,
+  Title,
+}) =&gt; (
+  &lt;div&gt;
+    {
+      (!img || !img.src) &amp;&amp; Loader &amp;&amp;
+      &lt;Loader /&gt;
+    }
+    {
+      img &amp;&amp; img.src &amp;&amp;
+      &lt;img src={ img.src } alt={ img.alt }/&gt;
+    }
+    {
+      title &amp;&amp; Title &amp;&amp;
+      &lt;Title text={ title } /&gt;
+    }
+  &lt;/div&gt;
+)
+
+Component.propTypes = {
+  img: PropTypes.object,
+  title: PropTypes.string,
+  Loader: PropTypes.func.isRequired,
+  Title: PropTypes.func.isRequired,
+}
+
+Component.displayName = <span class="hljs-string">"Picture"</span>
+
+export default Component</code></pre>
+<p>This component displays an image with a title component.
+If the image data are not ready yet, it can display a loader component.</p>
+<p>Now let’s write some simple test for it. For the example we will use
+<a href="https://medium.com/javascript-scene/why-i-use-tape-instead-of-mocha-so-should-you-6aa105d8eaf4">tape</a>
+with the help of <a href="https://github.com/atabel/tape-jsx-equals">tape-jsx-equals</a>,
+but you will find
+<a href="https://www.npmjs.com/search?q=expect+jsx">all kind of flavors on npm</a>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// web_modules/Picture/__tests__/index.js</span>
+
+<span class="hljs-keyword">import</span> tape <span class="hljs-keyword">from</span> <span class="hljs-string">"tape"</span>
+<span class="hljs-keyword">import</span> addAssertions <span class="hljs-keyword">from</span> <span class="hljs-string">"extend-tape"</span>
+<span class="hljs-keyword">import</span> jsxEquals <span class="hljs-keyword">from</span> <span class="hljs-string">"tape-jsx-equals"</span>
+const test = addAssertions(tape, { jsxEquals })
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>
+<span class="hljs-keyword">import</span> { createRenderer } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-addons-test-utils"</span>
+
+<span class="hljs-keyword">import</span> Picture <span class="hljs-keyword">from</span> <span class="hljs-string">".."</span>
+
+// fixtures (empty and stateless react components)
+const Loader = () =&gt; {}
+const Title = () =&gt; {}
+
+test(<span class="hljs-string">"PageContainer is properly rendered"</span>, (t) =&gt; {
+  const renderer = createRenderer()
+
+  renderer.render(
+    &lt;Picture
+      Loader={ Loader }
+      Title={ Title }
+    /&gt;
+  )
+  t.jsxEquals(
+    renderer.getRenderOutput(),
+    &lt;div&gt;
+      &lt;Loader /&gt;
+    &lt;/div&gt;,
+    <span class="hljs-string">"can render a Loader component if no image data are passed"</span>
+  )
+
+  renderer.render(
+    &lt;Picture
+      Loader={ Loader }
+      Title={ Title }
+      img={ {
+        src: <span class="hljs-string">"SRC"</span>,
+        alt: <span class="hljs-string">"ALT"</span>,
+      } }
+    /&gt;
+  )
+  t.jsxEquals(
+    renderer.getRenderOutput(),
+    &lt;div&gt;
+      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
+    &lt;/div&gt;,
+    <span class="hljs-string">"should render an image if data are passed"</span>
+  )
+
+  renderer.render(
+    &lt;Picture
+      Loader={ Loader }
+      Title={ Title }
+      img={ {
+        src: <span class="hljs-string">"SRC"</span>,
+        alt: <span class="hljs-string">"ALT"</span>,
+      } }
+      title={ <span class="hljs-string">"TITLE"</span> }
+    /&gt;
+  )
+  t.jsxEquals(
+    renderer.getRenderOutput(),
+    &lt;div&gt;
+      &lt;img src=<span class="hljs-string">"SRC"</span> alt=<span class="hljs-string">"ALT"</span> /&gt;
+      &lt;Title text=<span class="hljs-string">"TITLE"</span> /&gt;
+    &lt;/div&gt;,
+    <span class="hljs-string">"can render a Title if data are passed"</span>
+  )
+
+  t.end()
+})</code></pre>
+<p>These tests are the minimum coverage to ensure you don’t break anything when you work
+on your component.</p>
+<p>As you can see, tests here are pretty easy to write &amp; straightforward.<br>
+<strong>The interesting part is that you don’t compare using strings.
+You can use real React components.</strong></p>
+<p>You can easily run this full example by getting it from this repository:</p>
+<p><a href="https://github.com/MoOx/react-component-unit-testing-example">github.com/MoOx/react-component-unit-testing-example</a></p>
+<p>This example contains all the commands and dependencies
+(defined in the <code>package.json</code>)
+that you might need.</p>
+<h1 id="what-about-testing-events-like-onclick"><a class="markdownIt-Anchor" href="#what-about-testing-events-like-onclick">#</a> What about testing events like <code>onClick</code>?</h1>
+<p>You don’t need to reproduce the entire click.</p>
+<p><strong>Your tests don’t need to check that your <code>onClick</code> prop will be executed when
+you click on a DOM element.</strong>
+<em>React probably have tests to cover this.</em></p>
+<p>You only need to test that the <code>onClick</code> prop value will do what you want.
+So if you have something like <code>onClick={ yourCallback }</code>,
+just call directly <code>yourCallback()</code> in your test just before your comparison.
+That’s enough!</p>
+<p>If you want to go deeper, you might also read:</p>
+<ul>
+<li><a href="http://simonsmith.io/unit-testing-react-components-without-a-dom/"><em>Unit testing React components without a DOM</em></a>,
+by Simon Smith, that covers the same topic without the simplicity of the JSX
+comparisons,</li>
+<li><a href="https://blog.algolia.com/how-we-unit-test-react-components-using-expect-jsx/"><em>How we unit test React components using expect-jsx</em></a>
+on Algolia blog, that explains why they choose and create tools for this approach.</li>
+</ul>
+<p>With all those examples, we hope you will stop being afraid to test your code
+and will not hesitate to cover all your React components with tests 😍.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/react/unit-testing/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/react/unit-testing/</guid><pubDate>Tue, 24 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Un favicon vite fait bien fait]]></title><description><![CDATA[<p>Oublions un instant CSS et JavaScript pour parler d’un sujet vraiment
+important : le favicon.</p>
+<p>Alors d’accord, le favicon n’est que le petit détail qu’on expédie en fin de
+projet. Mais oubliez-le et votre client comprendra tout de suite qu’il manque
+quelque chose.</p>
+<p>Dans ce post, nous allons voir comment s’acquitter de cette tâche dans les temps
+et les règles de l’art. Et nous ferons intervenir un outil dont je suis l’heureux
+auteur.</p>
+<h2 id="vite-fait"><a class="markdownIt-Anchor" href="#vite-fait">#</a> Vite fait</h2>
+<p>Pourquoi vite fait ? Parce qu’on ne peut pas consacrer trop de temps au favicon.
+L’optimisation pour les smartphones, l’amélioration du score PageSpeed ou
+encore l’augmentation du taux de conversion, voilà des sujets sur lesquels on
+peut plancher des heures, des jours ou bien plus. Mais le favicon, franchement,
+est-ce vraiment la raison à invoquer pour expliquer le retard d’un projet ? Un
+détail qu’on vous dit !</p>
+<p>Pour créer un favicon vite fait :</p>
+<ul>
+<li>Créez un <code>favicon.ico</code> avec n’importe quel générateur trouvé sur le net.
+Déclarez-le avec <code>&lt;link rel=&quot;icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot;&gt;</code>.
+Ou peut-être <code>&lt;link rel=&quot;shortcut icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot;&gt;</code> ? Non parce qu’on trouve les deux. Dans le doute,
+déclarez-le deux fois.</li>
+<li>Créez une Touch icon (pour iOS et les autres). Si on en croit les résultats
+pour “apple touch icon size” sur Google, la taille maximale est 144x144.</li>
+</ul>
+<p>Voilà. Si vous faites tout ça, vous vous serez acquitté de la tâche rapidement.
+Bon, ça sera mal fait, mais fait. C’est un début.</p>
+<h2 id="bien-fait"><a class="markdownIt-Anchor" href="#bien-fait">#</a> Bien fait</h2>
+<p>À présent, penchons-nous sur les difficultés qui nous attendent.</p>
+<h3 id="c-est-la-taille-qui-compte"><a class="markdownIt-Anchor" href="#c-est-la-taille-qui-compte">#</a> C’est la taille qui compte</h3>
+<p>Ça ne fait pas plaisir à entendre et pourtant nous sommes au cœur du problème
+(nous parlons bien de favicon).</p>
+<p><code>favicon.ico</code> devrait-il être en 16x16 ou 32x32 ? <a href="https://msdn.microsoft.com/library/gg491740(v=vs.85).aspx">Les deux, selon
+Microsoft</a>. Quelle
+est la taille de la Touch icon d’Apple ? <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2">180x180 depuis iOS 8</a>.
+La tuile <code>square70x70logo</code> pour Windows 8 et 10, c’est… du 70x70, hein ?
+Moui, mais <a href="https://msdn.microsoft.com/library/dn455106(v=vs.85).aspx">idéalement, 128x128</a>.</p>
+<p>Ça n’est pas tout : encore faut-il trouver ces informations. Google est
+assez variable sur ce point. Il met dans le mille pour une recherche concernant
+le favicon classique (16x16 <em>et</em> 32x32), mais échoue, on l’a vu, pour la
+Touch icon. Les éditeurs ne sont pas en reste. Si <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2">Apple indique bien les
+dimensions attendues pour l’iPhone 6</a>,
+il a en revanche <a href="https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html">oublié de mettre à jour sa page qui sort pourtant en premier résultat pour la recherche “apple touch icon”</a> (152x152 d’après elle).</p>
+<p>Le <a href="https://github.com/audreyr/favicon-cheat-sheet">favicon cheat sheet</a> est une
+ressource intéressante à ce titre, quoique pas à jour à l’heure où ces lignes
+sont écrites.</p>
+<p>Bref, le temps de rassembler toutes ces informations et l’après-midi s’est envolé. Oups.</p>
+<p>Ce que je décris ici est le premier problème auquel je me suis frotté il y
+a un peu plus de deux ans, alors que j’achevais mon premier site responsive et
+que je voulais une icône digne de ce nom.</p>
+<h3 id="le-design-vraiment"><a class="markdownIt-Anchor" href="#le-design-vraiment">#</a> Le design. Vraiment.</h3>
+<p>Allez, j’ai fait dans l’anxiogène avec ces histoires de taille mais en réalité
+ce problème a été largement amoindri ces derniers mois avec l’arrivée de
+générateurs de favicon de nouvelle génération. Et vous en aurez pour votre
+argent (d’autant qu’ils sont gratuits) : envoyez votre image et vous vous
+retrouverez avec plus d’une vingtaine d’images. C’est beaucoup, presque trop
+diront certains.</p>
+<p>Mais cette solution cache un problème presque plus grave. Si votre image
+originale passera bien sur une platforme, elle risque fort de ne pas
+correspondre à une autre.</p>
+<p>Prenons l’exemple des icônes pour Android et iOS. Elles servent surtout au <em>Add
+to homescreen</em>, lorsque votre visiteur vous fait l’honneur d’ajouter un lien
+vers votre site sur l’écran de son smartphone. Pas vraiment le moment de le
+décevoir. Sur Android, beaucoup d’icônes ne sont pas carrées mais exploitent
+la transparence, notamment les applications natives de Google.</p>
+<p><img src="google_apps.png" alt=""></p>
+<p>Bonne idée, donc, de suivre ce principe pour notre propre icône. C’est cette
+voie qu’a choisie mon cerveau auxilière, je veux parler de StackOverflow, et sa
+Touch icône transparente.</p>
+<p><img src="so_android.png" alt=""></p>
+<p>Sur iOS et son univers tout de parallélépipèdes aux coins arrondis, point de
+transparence en revanche. L’icône de StackOverflow se voit affublée d’un fond
+noir. Le résultat n’est pas si mauvais, mais était-ce vraiment voulu ?</p>
+<p><img src="so_ios.png" alt=""></p>
+<p>Passer son image à la moulinette pour en tirer une vingtaine d’icônes est une
+fausse bonne idée. Elle donne la dangereuse illusion d’un travail bien fait
+alors qu’en réalité vous n’avez pas de réel moyen de savoir ce que vous venez
+de faire. Sauf à tester vos icônes sur différents appareils et navigateurs, mais
+là ce sont encore quelques heures qui partent en fumée.</p>
+<p>Et voilà quel était le second problème que j’ai découvert dans ma quête d’une
+icône correcte. Un <code>-resize</code> d’ImageMagick et un script bash un peu brutal ne
+suffisent pas.</p>
+<p>Cela a donné le coup d’envoi à
+<a href="https://realfavicongenerator.net/">RealFaviconGenerator.net</a>, un générateur de
+favicon qui devait vraiment solutionner le problème.</p>
+<p>Il n’y a pas grand chose à dire sur le sujet, et c’est le but: n’oublions pas
+que nous n’avons que peu de temps. Rendez-vous sur <a href="http://RealFaviconGenerator.net">RealFaviconGenerator.net</a>,
+postez votre image, éditez vos icônes plate-forme par plate-forme et vous voilà
+avec ce qu’il faut d’images, de fichiers annexes et de code HTML pour
+configurer votre favicon.</p>
+<p><img src="favicon_editor.png" alt=""></p>
+<p>Voilà, c’est terminé.</p>
+<h3 id="se-mettre-la-page"><a class="markdownIt-Anchor" href="#se-mettre-la-page">#</a> Se mettre à la page</h3>
+<p>Ou presque.</p>
+<p>Il y a encore quelques années, il était normal de télécharger un framework
+JavaScript à la main puis de le déposer tel quel dans un projet Web.
+Aujourd’hui, cela est considéré comme une mauvaise pratique et on préférera
+utiliser un package manager.</p>
+<p>Est-il souhaitable d’industrialiser le favicon de la même manière ? Voyons voir
+ce qu’il s’est passé en un an :</p>
+<ul>
+<li>L’Iphone 6 est sorti, et avec lui la touch icon en 180x180 (avant c’était
+152x152).</li>
+<li>Android Chrome a cessé d’utiliser l’icône en 196x196 qui était autrefois
+spécifiée. À la place, il utilise une icône en 192x192 (et snobe la précédente
+quoi qu’il arrive).</li>
+<li>Oubliez cette histoire d’icône en 192x192, Android Chrome utilise désormais
+un manifeste et plusieurs versions d’icônes pour les différentes densités
+d’écran.</li>
+<li>Apple a sorti une nouvelle icône au format SVG pour les “pinned tabs” de
+Safari pour Mac OS X El Capitan.</li>
+</ul>
+<p>Autrement dit, si vous avez créé un favicon il y a un peu plus d’un an, il y a
+fort à parier qu’il rende mal sur un iPad de dernière génération et le résultat
+sur Android pourrait être assez aléatoire (Chrome utilisera une icône PNG qui
+n’est pas pour lui ou bien une Touch icon).</p>
+<p>À cet effet,
+<a href="https://realfavicongenerator.net/api">RealFaviconGenerator propose une API</a>.
+Tout ce qu’il est possible de faire via l’UI peut être reproduit via l’API.
+Hum… une API… de la doc à lire… Manifestement, ce n’est pas de cette
+façon qu’on va accélérer les choses. Mais tout n’est pas perdu car le code peut
+être généré automatiquement.</p>
+<p>Actuellement, RealFaviconGenerator supporte Grunt et Gulp. Par exemple, après
+avoir créé votre favicon, cliquez sur l’onglet “Gulp”. Vous avez le fragment de
+Gulpfile ainsi que les instructions pour intégrer votre favicon à votre
+processus de build, au même titre que la minification des CSS ou le processing
+des Coffee scripts.</p>
+<p><img src="gulp_instructions.png" alt=""></p>
+<p>Les règles :</p>
+<ul>
+<li><code>generate-favicon</code> : génère les icônes. Elle prend quelques
+secondes et c’est le genre de règle qu’on n’exécute qu’une fois de temps en
+temps, lorsqu’il y a du changement dans le paysage des favicons.</li>
+<li><code>inject-favicon-markups</code> : injecte les déclarations d’icônes
+dans les pages HTML. À exécuter à chaque modification de page, autant dire
+qu’elle va souvent servir.</li>
+<li><code>check-for-favicon-update</code> : vérifie s’il y a du nouveau sur
+RealFaviconGenerator. Si c’est le cas, elle fera échouer votre build bien
+comme il faut. Un peu brutal mais ça a le mérite d’être clair. Si vous
+avez un système d’intégration continue, arrangez-vous pour ajouter cette règle
+à votre radar.</li>
+</ul>
+<p>La favicon a toujours été un parent pauvre des projets web, à juste titre.
+Avec la prolifération des plates-formes, le négliger est de plus en plus hasardeux.
+J’ai conçu RealFaviconGenerator pour apporter un peu d’ordre à tout cela. Ce
+n’est pas la seule initiative. Hayden Bleasel développe
+<a href="https://github.com/haydenbleasel/favicons">favicons</a> qui ambitionne d’être
+<a href="https://github.com/google/web-starter-kit/issues/599">intégré au Web Starter Kit de Google</a>.</p>
+<p>Et maintenant, c’est à vous : que pensez-vous de la formule “génération de
+Gulp/Grunt/autre” ? Quelles sont les technos que vous aimeriez trouver ?</p>
+]]></description><link>http://putaindecode.io/fr/articles/favicon/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/favicon/</guid><pubDate>Tue, 17 Nov 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Gérer son thème WordPress avec Webpack]]></title><description><![CDATA[<h1 id="pourquoi-webpack-pour-g-rer-son-th-me-wordpress"><a class="markdownIt-Anchor" href="#pourquoi-webpack-pour-g-rer-son-th-me-wordpress">#</a> Pourquoi Webpack pour gérer son thème WordPress ?</h1>
+<p>La réponse est la même qu’à la simple question
+<a href="/fr/articles/js/webpack/">“pourquoi Webpack ?”</a>.
+L’intérêt principal est d’obtenir des rapports d’erreurs liés à
+la gestion des assets (images, fonts, etc).</p>
+<p>Qu’y a-t-il de si particulier à savoir pour utiliser Webpack pour gérer un thème
+WordPress ? Pas grand chose, mais voici de quoi vous faire gagner (peut-être)
+un peu de temps.</p>
+<p>Il y a certainement plusieurs façons de gérer son thème WordPress
+avec Webpack. Celle que je vous propose va se limiter à des choses
+simples en concentrant le code dans le répertoire du thème pour plus de
+modularité.</p>
+<p>Pour commencer, deux choses importantes à savoir :</p>
+<ul>
+<li>Ne mettez pas de CSS dans le fameux <code>style.css</code> à la racine de votre thème,
+laissez juste le cartouche en commentaire (sans lequel WordPress ne détectera
+pas votre thème…) ;</li>
+<li>créez un dossier <code>src</code> dans votre thème, où nous
+mettrons nos “sources”, la partie du thème “compilé” sera dans un dossier
+<code>dist</code> et n’aura donc pas besoin d’être versionnée.</li>
+</ul>
+<p>La seule petite chose à laquelle il faut faire attention finalement, c’est de
+bien configurer le <code>publicPath</code> de Webpack afin que les fichiers qu’il génère
+soient bien dans le bon chemin, et que les ressources liées (dans les fichiers CSS
+par exemple) comportent les bons chemins relatifs (à la racine du site).</p>
+<p>Avec l’arborescence suivante, nous n’aurons pas de difficulté à faire une
+configuration portable :</p>
+<pre><code>-<span class="ruby"> htdocs
+</span>  -<span class="ruby"> wp-content
+</span>    -<span class="ruby"> themes
+</span>      -<span class="ruby"> putaindetheme
+</span>        -<span class="ruby"> node_modules
+</span>        -<span class="ruby"> src
+</span>          -<span class="ruby"> index.js
+</span>          -<span class="ruby"> index.css
+</span>          -<span class="ruby"> images/*
+</span>          -<span class="ruby"> fonts/*
+</span>        -<span class="ruby"> style.css
+</span>        -<span class="ruby"> webpack.config.babel.json
+</span>        -<span class="ruby"> package.json
+</span>-<span class="ruby"> package.json</span></code></pre>
+<p>En plus de cela, nous pouvons ajouter une sorte de raccourci via un
+<code>package.json</code> supplémentaire à la racine de notre projet :</p>
+<pre><code class="language-json">{
+  "<span class="hljs-attribute">private</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">start</span>": <span class="hljs-value"><span class="hljs-string">"cd htdocs/wp-content/themes/putaindetheme &amp;&amp; npm start"</span></span>,
+    "<span class="hljs-attribute">build</span>": <span class="hljs-value"><span class="hljs-string">"cd htdocs/wp-content/themes/putaindetheme &amp;&amp; npm run build"</span>
+  </span>}
+</span>}</code></pre>
+<p>Ce petit raccourci nous évitera de devoir nous taper en CLI tout le chemin du
+thème et nous pourrions même, pourquoi pas, rajouter un
+<code>&quot;prestart&quot;: &quot;open http://yourlocalhost.tld&quot;</code> afin d’ouvrir automatiquement
+le projet dans le navigateur lorsque nous démarrerons notre développement via
+<code>$ npm start</code>.</p>
+<p>Voyons rapidement donc le <code>package.json</code> du thème ainsi que la config Webpack.</p>
+<p><code>package.json</code></p>
+<pre><code class="language-json">{
+  "<span class="hljs-attribute">private</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">start</span>": <span class="hljs-value"><span class="hljs-string">"webpack --config=webpack.config.babel.js --watch"</span></span>,
+    "<span class="hljs-attribute">build</span>": <span class="hljs-value"><span class="hljs-string">"webpack --config=webpack.config.babel.js -p"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">devDependencies</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">babel</span>": <span class="hljs-value"><span class="hljs-string">"^5.8.12"</span></span>,
+    "<span class="hljs-attribute">babel-core</span>": <span class="hljs-value"><span class="hljs-string">"^5.8.12"</span></span>,
+    "<span class="hljs-attribute">babel-loader</span>": <span class="hljs-value"><span class="hljs-string">"^5.3.2"</span></span>,
+    "<span class="hljs-attribute">css-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.15.6"</span></span>,
+    "<span class="hljs-attribute">eslint</span>": <span class="hljs-value"><span class="hljs-string">"^0.24.1"</span></span>,
+    "<span class="hljs-attribute">eslint-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.14.2"</span></span>,
+    "<span class="hljs-attribute">extract-text-webpack-plugin</span>": <span class="hljs-value"><span class="hljs-string">"^0.8.2"</span></span>,
+    "<span class="hljs-attribute">file-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.8.4"</span></span>,
+    "<span class="hljs-attribute">json-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.5.2"</span></span>,
+    "<span class="hljs-attribute">postcss-cssnext</span>": <span class="hljs-value"><span class="hljs-string">"^2.1.0"</span></span>,
+    "<span class="hljs-attribute">postcss-import</span>": <span class="hljs-value"><span class="hljs-string">"^7.0.0"</span></span>,
+    "<span class="hljs-attribute">postcss-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.6.0"</span></span>,
+    "<span class="hljs-attribute">postcss-url</span>": <span class="hljs-value"><span class="hljs-string">"^5.0.2"</span></span>,
+    "<span class="hljs-attribute">style-loader</span>": <span class="hljs-value"><span class="hljs-string">"^0.12.3"</span></span>,
+    "<span class="hljs-attribute">webpack</span>": <span class="hljs-value"><span class="hljs-string">"^1.10.5"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">normalize.css</span>": <span class="hljs-value"><span class="hljs-string">"^3.0.3"</span>
+  </span>}
+</span>}</code></pre>
+<p>Quelques petites notes sur ce contenu :</p>
+<ul>
+<li><code>private</code> sert à éviter la publication de votre “paquet” sur npm, ainsi qu’à
+devoir remplir certains champs tels que <code>name</code> et compagnie ;</li>
+<li>nous mettrons dans <code>devDependencies</code> les dépendances pour le développement et
+dans <code>dependencies</code> les dépendances qui seront dans le build final. Ici, j’ai
+simplement mis <code>normalize.css</code> pour exemple, mais vous pourriez très bien avoir
+aussi jQuery (:trollface:) ou React ;</li>
+<li>les scripts utilisent <code>webpack.config.babel.js</code> afin de pouvoir définir la
+configuration en es6/7 via <em>babel</em>.</li>
+</ul>
+<p>Voyons maintenant la config <code>webpack.config.babel.js</code> :</p>
+<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> le code ci-dessous est mal rendu</span>
+<span class="hljs-comment">// Une issue est ouverte à ce propos</span>
+<span class="hljs-comment">// https://github.com/isagalaev/highlight.js/issues/958</span>
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">"babel/polyfill"</span>
+<span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">"path"</span>
+<span class="hljs-keyword">import</span> ExtractTextPlugin <span class="hljs-keyword">from</span> <span class="hljs-string">"extract-text-webpack-plugin"</span>
+<span class="hljs-keyword">import</span> postcssImport <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-import"</span>
+<span class="hljs-keyword">import</span> postcssUrl <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-url"</span>
+<span class="hljs-keyword">import</span> postcssCssnext <span class="hljs-keyword">from</span> <span class="hljs-string">"postcss-cssnext"</span>
+
+const production = process.argv.includes(`-p`)
+
+const theme = path.basename(__dirname)
+const src = path.join(__dirname, `src`)
+
+export default {
+  entry: {
+    index: [`${ src }/index.js<span class="hljs-string">`],
+  },
+
+  output: {
+    path: path.join(__dirname, `</span>dist<span class="hljs-string">`),
+    filename: `</span>[name].js<span class="hljs-string">`,
+    publicPath: `</span>wp-content/themes/${ theme }/dist/<span class="hljs-string">`,
+  },
+  resolve: {
+    extensions: [
+      `</span><span class="hljs-string">`,
+      `</span>.js<span class="hljs-string">`,
+      `</span>.json<span class="hljs-string">`,
+    ],
+  },
+
+  module: {
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: `</span>json-loader<span class="hljs-string">`,
+      },
+      {
+        test: /\.js$/,
+        loaders: [
+          `</span>babel-loader<span class="hljs-string">`,
+          `</span>eslint-loader<span class="hljs-string">`,
+        ],
+        include: src,
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract(
+          `</span>style-loader<span class="hljs-string">`,
+          [
+            `</span>css-loader<span class="hljs-string">`,
+            `</span>postcss-loader<span class="hljs-string">`,
+          ].join(`</span>!<span class="hljs-string">`)
+        ),
+      },
+      {
+        test: /\.(ico|jpe?g|png|gif)$/,
+        loader: `</span>file-loader?name=[path][name].[ext]&amp;context=${ src }/<span class="hljs-string">`,
+      },
+    ],
+  },
+
+  plugins: [
+    new ExtractTextPlugin(`</span>[name].css<span class="hljs-string">`, {disable: !production}),
+  ],
+
+  postcss: function() {
+    // https://github.com/postcss/postcss-loader/issues/31
+    const webpack = this
+
+    return [
+      postcssImport({
+        onImport: (files) =&gt; files.forEach(webpack.addDependency),
+      }),
+      postcssUrl(),
+      postcssCssnext({
+        browsers: `</span>last <span class="hljs-number">2</span> versions<span class="hljs-string">`,
+      }),
+    ]
+  },
+}</span></code></pre>
+<p><em>Bien entendu, libre à vous d’adapter les loaders Webpack à utiliser, ainsi que
+la configuration PostCSS par exemple.</em> Faites un tour sur notre article de
+<a href="/fr/articles/js/webpack/premier-exemple/">premier exemple de configuration Webpack</a> afin
+d’y voir plus clair.</p>
+<p>Il nous reste maintenant à ajouter dans notre thème WordPress les
+références à nos points d’entrées CSS et JavaScript que sont <code>index.css</code> et
+<code>index.js</code>.</p>
+<p>Pour faire simplement, dans votre fichier <code>functions.php</code> (oui, le fichier qui a un nom
+qui n’indique pas du tout ce pour quoi tout le monde se sert du fichier, c’est à
+dire la configuration du thème au runtime…), on va ajouter une petite constante
+qui servira à adapter votre thème en fonction de l’environnement :</p>
+<pre><code class="language-php"><span class="hljs-comment">// ENV est à définir dans votre configuration Apache par exemple.</span>
+<span class="hljs-comment">// Si vous ne voulez pas y toucher, vous pouvez plutôt définir d'une autre façon</span>
+<span class="hljs-comment">// en testant le SERVER_NAME par exemple</span>
+define(<span class="hljs-string">'ENV'</span>, getenv(<span class="hljs-string">'ENV'</span>));
+
+<span class="hljs-comment">// en local, on pourrait définir ENV à "development"</span></code></pre>
+<p><em>Nous pourrions dans ce fichier utiliser l’API de Wordpress pour enregister nos
+<code>index.css</code> et <code>index.js</code> via les méthodes <code>wp_(de)register_</code>, mais nous
+resterons simples pour l’exemple.</em></p>
+<p>Vu qu’on utilise le <code>style-loader</code> de Webpack en développement, on ne va ajouter
+notre feuille de style qu’en production (dans le <code>&lt;head&gt;</code>).</p>
+<pre><code class="language-php"><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">if</span> (ENV != <span class="hljs-string">"development"</span>): <span class="hljs-preprocessor">?&gt;</span>
+  &lt;link rel=<span class="hljs-string">"stylesheet"</span> href=<span class="hljs-string">"&lt;?php echo get_bloginfo('template_directory') ?&gt;/dist/index.css"</span> /&gt;
+<span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">endif</span>; <span class="hljs-preprocessor">?&gt;</span></code></pre>
+<p>Pensez aussi à supprimer la référence à <code>style.css</code> dans <code>header.php</code>.</p>
+<p>Dans la même idée mais en plus simple, on va ajouter dans notre <code>footer.php</code>.</p>
+<pre><code class="language-php">&lt;script src=<span class="hljs-string">"&lt;?php echo get_bloginfo('template_directory') ?&gt;/dist/index.js"</span>&gt;&lt;/script&gt;</code></pre>
+<p>Rien de bien compliqué finalement.</p>
+<p><em>Attention si votre thème hérite d’un autre,
+<code>get_bloginfo('template_directory')</code> ne pointera pas vers votre thème mais le
+thème parent. Il vous faudra donc ajuster le code 😑.</em></p>
+<hr>
+<p>Pour le test vous pouvez mettre dans les CSS et JS :</p>
+<p><code>index.css</code></p>
+<pre><code class="language-css"><span class="hljs-at_rule">@<span class="hljs-keyword">import</span> <span class="hljs-string">"normalize.css"</span></span>;
+<span class="hljs-tag">body</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> red</span></span>;
+}</span></code></pre>
+<p>Notez ici que par la façon dont nous avons défini Webpack ci-dessus, vous
+devriez placer et référencer vos assets (images &amp; co), depuis <code>src</code>. Exemple :</p>
+<pre><code class="language-css"><span class="hljs-tag">html</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-function">url</span>(./images/background.jpg)
+  <span class="hljs-comment">/* =&gt; wp-content/themes/putaindetheme/src/images/background.jpg */</span>
+</span></span></span>}</code></pre>
+<p>Ensuite, dans <code>index.js</code>, je vous laisse vous débrouiller :)</p>
+<pre><code class="language-js"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Hey !"</span>)</code></pre>
+<p>Libre à vous maintenant d’ajouter vos dépendances favorites et de remplir vos
+<code>index.css</code> et <code>index.js</code> avec une gestion d’erreurs autre que des requêtes HTTP
+en 404 !</p>
+]]></description><link>http://putaindecode.io/fr/articles/wordpress/webpack/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/wordpress/webpack/</guid><pubDate>Tue, 20 Oct 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Créer un site web gratuitement avec GitHub Pages]]></title><description><![CDATA[<p>Pour une fois, on ne va pas trop parler de code dans cet article, mais
+simplement de comment créer en quelques minutes un site web basique et
+l’héberger gratuitement sur la plateforme <a href="http://github.com">github.com</a>.</p>
+<p>Transférez cet article à toute personne qui souhaiterait avoir un site web mais
+qui pense encore que c’est trop compliqué :)</p>
+<p>Dans un premier temps, vous devez simplement avoir quelques connaissances de
+base :</p>
+<ul>
+<li><strong>HTML</strong> : une bonne <a href="https://developer.mozilla.org/fr/docs/Web/Guide/HTML/Introduction">introduction</a></li>
+<li><strong>GitHub</strong> : créez un compte gratuit ici : <a href="http://github.com">github.com</a></li>
+</ul>
+<p>Nous allons utiliser <a href="http://github.com">github.com</a> pour héberger notre
+<strong>site web statique</strong> dans un <em>repository</em> (un dossier). Ce service
+incontournable permet de stocker le code du site, de le
+<a href="https://fr.wikipedia.org/wiki/Logiciel_de_gestion_de_versions">versionner</a>, et
+de le publier gratuitement sur Internet dans des conditions optimales
+(CDN, anti-DDoS…)</p>
+<p><strong>Attention</strong> : tous les fichiers hébergés sur votre compte GitHub gratuit sont
+publics, à moins de souscrire à un compte privé payant, donc n’y stockez rien
+de sensible/secret.</p>
+<h2 id="qu-est-ce-qu-un-site-web-statique"><a class="markdownIt-Anchor" href="#qu-est-ce-qu-un-site-web-statique">#</a> Qu’est-ce qu’un site web statique ?</h2>
+<p>Pour la plupart des sites, les solutions de blog (CMS de type WordPress et
+autres) sont largement surdimensionnées. Elles requièrent un hébergement
+particulier (PHP ou autre), des connaissances techniques pour l’installation,
+et surtout une maintenance à moyen/long-terme à cause des mises à jour
+de sécurité surprises et autres correctifs de bugs à appliquer.</p>
+<p>Or, il est possible de créer des sites webs modernes et performants qui n’ont
+pas besoin de code côté serveur (donc pas de PHP), et peuvent donc être hébergés
+n’importe où, et à moindre coût. Le code du site sera uniquement composé de
+HTML, CSS et JavaScript, et s’exécutera directement dans le navigateur du
+visiteur, ce qui présente de nombreux avantages :</p>
+<ul>
+<li>simple et efficace</li>
+<li>pas de maintenance</li>
+<li>pas de risque de hacking</li>
+<li>performances optimales</li>
+<li>liberté totale</li>
+</ul>
+<p>De plus, en 2015, n’importe quel service en ligne digne de ce nom propose une
+<a href="https://www.mashape.com">API</a> qui permet d’intégrer directement sur votre site
+des fonctionnalités tierces, sans avoir besoin de code côté serveur, donc cette
+approche pure <strong>client-side</strong> n’a <strong>pas de limites</strong>.</p>
+<p>Dans ce premier article nous allons voir comment créer un site web basique à
+base de HTML/CSS, mais nous verrons par la suite comment utiliser un
+<a href="http://staticgen.com">générateur de site web statique</a> pour créer des sites
+webs plus avancés.</p>
+<h2 id="cr-er-le-repository-github"><a class="markdownIt-Anchor" href="#cr-er-le-repository-github">#</a> Créer le repository GitHub</h2>
+<p>Créez votre compte GitHub, puis un nouveau <em>repository</em> pour votre site web :
+<a href="https://github.com/new">https://github.com/new</a> (exemple : supersite)</p>
+<p>Le repository sera créé à cette adresse :
+<a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a></p>
+<h2 id="cr-er-un-site-web-avec-github-page-generator"><a class="markdownIt-Anchor" href="#cr-er-un-site-web-avec-github-page-generator">#</a> Créer un site web avec <em>GitHub page generator</em></h2>
+<p>Grâce aux templates par défaut, créez votre site <em>single-page</em> en 3 clics.</p>
+<p>Allez sur la page du projet :  <a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a></p>
+<ul>
+<li>Puis <strong>Repository settings</strong> (icône en bas à droite)</li>
+<li><strong>Automatic page generator</strong> puis <strong>Launch</strong></li>
+<li>Éditez le texte du site</li>
+<li>Sélectionnez votre template préféré puis <strong>Publish Page</strong></li>
+</ul>
+<p>Attendez quelques secondes et allez sur : <a href="http://USERNAME.github.io/supersite">http://USERNAME.github.io/supersite</a> pour découvrir le résultat final.</p>
+<p><strong>✔</strong> Site web en ligne et dispo pour le monde entier :)</p>
+<h2 id="modifier-le-site-en-ligne"><a class="markdownIt-Anchor" href="#modifier-le-site-en-ligne">#</a> Modifier le site en ligne</h2>
+<p>Allez sur la page du projet, <a href="https://github.com/USERNAME/supersite">https://github.com/USERNAME/supersite</a>.</p>
+<p>C’est ici que l’on retrouve tout le code et les fichiers du site.</p>
+<p>Cliquez sur le fichier à modifier, typiquement <code>index.html</code> qui est la page
+d’accueil, cliquez sur l’icône “crayon” en haut à droite pour éditer le fichier
+et appliquez vos changements.</p>
+<p>Une fois les changements effectués, complétez le formulaire “Commit changes”
+en-dessous, avec un titre explicite permettant d’identifier votre modification.</p>
+<p>Exemple : “Ajout des infos de contact”.</p>
+<p>Cliquez sur <strong>Commit changes</strong>, attendez quelques secondes et allez sur
+<a href="http://USERNAME.github.io/supersite">http://USERNAME.github.io/supersite</a>
+pour admirer les changements.</p>
+<p><strong>✔</strong> Site web mis à jour :)</p>
+<h2 id="diter-le-site-sur-son-ordinateur"><a class="markdownIt-Anchor" href="#diter-le-site-sur-son-ordinateur">#</a> Éditer le site sur son ordinateur</h2>
+<p>Pour pouvoir éditer plus facilement le site, ajouter/modifier des fichiers…
+vous pouvez le récupérer sur votre machine, et vous pourrez alors utiliser
+votre <a href="http://atom.io">éditeur de texte préféré</a> pour le modifier.</p>
+<p>Installez et configurez l’application GitHub : <a href="http://mac.github.com">mac.github.com</a>
+ou <a href="http://windows.github.com">windows.github.com</a></p>
+<ul>
+<li><strong>Clone</strong> : va rapatrier les fichiers de votre site sur votre ordinateur</li>
+<li><strong>Éditez</strong> les fichiers directement</li>
+<li><strong>Testez</strong> si le site fonctionne comme prévu</li>
+<li>Puis choisissez <strong>Commit</strong> pour enregistrer vos modifications</li>
+<li>Et enfin <strong>Sync</strong> pour renvoyer vos fichiers sur GitHub et mettre à jour
+le site pour le reste du monde.</li>
+</ul>
+<p><strong>✔</strong> Site web mis à jour :)</p>
+<h2 id="tester-le-site-sur-votre-machine"><a class="markdownIt-Anchor" href="#tester-le-site-sur-votre-machine">#</a> Tester le site sur votre machine</h2>
+<p>Vous pouvez ouvrir le fichier <code>index.html</code> dans un navigateur pour voir le
+résultat.</p>
+<p><strong>Note :</strong> Si vous avez ajouté Google Maps ou une API JavaScript, vous devrez
+lancer un serveur web pour pouvoir voir le résultat. Par exemple, lancez
+<code>python -m SimpleHTTPServer</code> dans votre terminal depuis le dossier du site
+(où se trouve <code>index.html</code>) puis ouvrez <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> dans votre navigateur.
+(Ceci est dû à une <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Same_origin_policy_for_JavaScript">restriction de sécurité</a>)</p>
+<h2 id="installer-un-superbe-template"><a class="markdownIt-Anchor" href="#installer-un-superbe-template">#</a> Installer un superbe template</h2>
+<p>Si vous voulez des templates différents de ceux proposés par GitHub,
+vous devez simplement remplacer les fichiers présents dans le dossier
+du projet.</p>
+<p>Choisissez par exemple un des templates gratuits de haute qualité
+disponibles sur <a href="http://html5up.net">html5up.net</a> ou sur
+<a href="http://pixelarity.com">pixelarity.com</a> (payant).</p>
+<p>Téléchargez les sources et placez les fichiers dans votre projet.</p>
+<p>Éditez les fichiers, testez, puis commit &amp; sync, et voilà :)</p>
+<h2 id="et-apr-s"><a class="markdownIt-Anchor" href="#et-apr-s">#</a> Et après ?</h2>
+<ul>
+<li>Apprenez la syntaxe Markdown : <a href="https://en.support.wordpress.com/markdown-quick-reference/">réference</a></li>
+<li>Apprenez Git : <a href="https://try.github.io">try.github.io</a></li>
+<li>Apprenez JavaScript : <a href="http://jsbooks.revolunet.com">jsbooks.revolunet.com</a>
+et <a href="https://ericelliottjs.com/product/programming-javascript-applications-paper-ebook-bundle/">le livre d’Eric Elliott</a></li>
+<li>Lisez tous les articles de <a href="/">Putain de code !</a></li>
+</ul>
+<hr>
+<h2 id="faq"><a class="markdownIt-Anchor" href="#faq">#</a> FAQ</h2>
+<h3 id="comment-installer-un-nom-de-domaine"><a class="markdownIt-Anchor" href="#comment-installer-un-nom-de-domaine">#</a> Comment installer un nom de domaine ?</h3>
+<ul>
+<li>Achetez un nom de domaine sur <a href="http://gandi.net">gandi.net</a> ou
+un autre fournisseur sérieux (surtout pas chez pas 1&amp;1, lws ou
+autre discounter douteux)</li>
+<li>Éditez la “Zone DNS” du domaine et suivez les
+<a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">instructions GitHub pour DNS</a></li>
+<li>ajoutez un fichier <code>CNAME</code> dans votre projet, contenant la ligne
+<code>www.myproject.com</code>.</li>
+</ul>
+<p>Les changements DNS peuvent mettre jusqu’à 24h pour se propager
+donc essayez <a href="http://www.myproject.com">www.myproject.com</a> un peu plus tard.</p>
+<p>Ces pages d’aide sur GitHub pourront vous être utiles : <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/">Custom domain</a>, <a href="https://help.github.com/articles/tips-for-configuring-a-cname-record-with-your-dns-provider/">DNS setup</a>.</p>
+<h3 id="comment-ajouter-une-page"><a class="markdownIt-Anchor" href="#comment-ajouter-une-page">#</a> Comment ajouter une page ?</h3>
+<p>Pour créer simplement des pages supplémentaires, ajoutez un
+nouveau fichier HTML, par exemple <code>produits.html</code>, dans le projet et
+faites un lien vers cette page depuis l’index, par exemple
+<code>&lt;a href=&quot;produits.html&quot;&gt;Consulter les produits&lt;/a&gt;</code>.</p>
+<h3 id="comment-analyser-le-trafic-de-mon-site"><a class="markdownIt-Anchor" href="#comment-analyser-le-trafic-de-mon-site">#</a> Comment analyser le trafic de mon site ?</h3>
+<p>Si vous voulez tracker vos visiteurs, savoir d’où ils viennent, ce qu’ils
+font et où ils vont, créez un compte sur
+<a href="http://www.google.com/analytics">Google Analytics</a> et ajoutez le code de
+tracking sur vos pages HTML.</p>
+<h3 id="comment-ajouter-une-carte"><a class="markdownIt-Anchor" href="#comment-ajouter-une-carte">#</a> Comment ajouter une carte ?</h3>
+<p>Suivez les <a href="http://leafletjs.com/examples/quick-start.html">instructions Leaflet</a>, la cartographie open-source et gratuite qui bénéficie d’une communauté active.</p>
+<p>Si vous avez juste besoin d’une carte sous forme d’image fixe, générez le code HTML ici :
+<a href="http://staticmapmaker.com">staticmapmaker.com</a> et copiez le code dans votre page.</p>
+<h3 id="comment-ajouter-un-syst-me-de-commentaires"><a class="markdownIt-Anchor" href="#comment-ajouter-un-syst-me-de-commentaires">#</a> Comment ajouter un système de commentaires ?</h3>
+<p>Créez un compte sur <a href="http://disqus.com">disqus.com</a> et ajoutez le code JavaScript sur
+votre page.</p>
+<h3 id="comment-ajouter-un-formulaire-de-contact"><a class="markdownIt-Anchor" href="#comment-ajouter-un-formulaire-de-contact">#</a> Comment ajouter un formulaire de contact ?</h3>
+<p>Créez un compte sur <a href="http://typeform.com">typeform.com</a>, créez votre formulaire et
+ajoutez le code JavaScript “embed” sur votre page.</p>
+<p>Vous pouvez aussi créer un compte sur <a href="http://mailchimp.com">mailchimp.com</a>, créer un
+formulaire et l’ajouter sur votre page grâce au code “embed”.</p>
+<h3 id="comment-recevoir-des-paiements"><a class="markdownIt-Anchor" href="#comment-recevoir-des-paiements">#</a> Comment recevoir des paiements ?</h3>
+<p>Créez un compte sur <a href="http://stripe.com">stripe.com</a> et ajoutez le code JavaScript sur
+votre page.</p>
+<h3 id="qu-est-ce-que-gh-pages"><a class="markdownIt-Anchor" href="#qu-est-ce-que-gh-pages">#</a> Qu’est-ce que gh-pages ?</h3>
+<p><code>gh-pages</code> est une branche spéciale de votre code sur GitHub (une version du
+code) qui publie et héberge <em>automagiquement</em> votre site.</p>
+<h3 id="comment-tre-pr-sent-sur-google"><a class="markdownIt-Anchor" href="#comment-tre-pr-sent-sur-google">#</a> Comment être prêsent sur Google ?</h3>
+<p>Créez du contenu de <strong>qualité</strong>, ciblé, <strong>unique</strong> sur Internet et <strong>utile</strong> à
+vos visiteurs. Créez du lien avec des sites et communautés sur le même thème.</p>
+<p>Naturellement, d’autres sites parleront alors du vôtre, vous enverront des
+visiteurs et vous feront monter progressivement dans les résultats au fil des mois.</p>
+<hr>
+<p>Voilà pour ce premier pas vers le développement web !</p>
+<p>Les commentaires ci-dessous sont là pour recevoir vos remarques et questions :)</p>
+]]></description><link>http://putaindecode.io/fr/articles/github/pages/site-web-gratuit/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/github/pages/site-web-gratuit/</guid><pubDate>Fri, 31 Jul 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Premier exemple d'utilisation de Webpack]]></title><description><![CDATA[<p>Si vous êtes intéressé par
+<a href="/fr/articles/js/webpack/">les problématiques que peut résoudre Webpack</a>,
+vous serez sûrement intéressé par cette petite configuration détaillée, qui vous
+permettra de faire vos premiers pas avec cet outil.</p>
+<p>Nous allons mettre en place une configuration assez basique qui
+va permettre :</p>
+<ul>
+<li>d’avoir une partie JavaScript pour votre application/site web,</li>
+<li>de consommer vos CSS en tant que modules,</li>
+<li>de consommer les assets de vos CSS en tant que module (images, fonts…),</li>
+<li>d’avoir un fichier JS, un fichier CSS et vos assets à côté.</li>
+</ul>
+<p><em>Note: si vous êtes sur une application JavaScript, vous ne serez pas obligé
+d’utiliser la partie pour l’extraction de la CSS en fichier.
+En effet, Webpack consomme tout ce qui est possible en JavaScript.
+Les styles peuvent être introduit via des balises <code>&lt;styles&gt;</code> dynamiquement
+(via le <code>style-loader</code>).
+L’extraction prend du sens si vous avez un rendu serveur et que vous souhaitez
+avoir des styles au plus tôt, via une CSS dediée.</em></p>
+<p>La configuration de Webpack se fait via un fichier JavaScript.
+Par défaut, il doit être nommé <code>webpack.config.js</code>.
+Ne tournons pas autour du pot et voyons un fichier de configuration
+correspondant à ce que nous venons de décrire.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>)
+<span class="hljs-keyword">var</span> webpack = <span class="hljs-built_in">require</span>(<span class="hljs-string">"webpack"</span>)
+<span class="hljs-keyword">var</span> ExtractTextPlugin = <span class="hljs-built_in">require</span>(<span class="hljs-string">"extract-text-webpack-plugin"</span>)
+
+<span class="hljs-comment">// on peut passer à notre commande de build l'option --production</span>
+<span class="hljs-comment">// on récupère sa valeur ici en tant que booléen</span>
+<span class="hljs-keyword">var</span> production = process.argv.indexOf(<span class="hljs-string">"--production"</span>) &gt; -<span class="hljs-number">1</span>
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-comment">// nos points d'entrée, par clé</span>
+  <span class="hljs-comment">// (on peut en définir plusieurs)</span>
+  entry: {
+    index: [
+      <span class="hljs-string">"./src/index.js"</span>,
+    ],
+  },
+
+  <span class="hljs-comment">// description de nos sorties</span>
+  output: {
+    <span class="hljs-comment">// ./dist</span>
+    path: path.join(__dirname, <span class="hljs-string">"dist"</span>),
+    <span class="hljs-comment">// nous aurons (vu notre point d'entrée)</span>
+    <span class="hljs-comment">// - dist/index.js</span>
+    filename: <span class="hljs-string">"[name].js"</span>,
+    <span class="hljs-comment">// notre base url</span>
+    publicPath: <span class="hljs-string">"/"</span>,
+  },
+
+  resolve: {
+    <span class="hljs-comment">// ici, on peut ajouter nos extensions à résoudre lors d'un require()</span>
+    <span class="hljs-comment">// on va rester simple en n'autorisant rien, ou .js(on) (comme en nodejs et</span>
+    <span class="hljs-comment">// browserify)</span>
+    extensions: [
+      <span class="hljs-string">""</span>,
+      <span class="hljs-string">".js"</span>,
+      <span class="hljs-string">".json"</span>,
+    ],
+  },
+
+  <span class="hljs-built_in">module</span>: {
+    <span class="hljs-comment">// liste de nos loaders</span>
+    <span class="hljs-comment">// ! \\ à noter que les loaders sont exécutés en ordre inverse</span>
+    <span class="hljs-comment">// les premiers en dernier, en utilisant la sortie du suivant</span>
+    loaders: [
+      {
+        <span class="hljs-comment">// pour tous les fichiers qui finissent par .js</span>
+        test: <span class="hljs-regexp">/\.js$/</span>,
+        <span class="hljs-comment">// ... en prenant bien soin d'exclure les node_modules</span>
+        exclude: <span class="hljs-regexp">/node_modules/</span>,
+
+        <span class="hljs-comment">// on ajoute les loaders babel et eslint</span>
+        <span class="hljs-comment">// à vous de voir ce que vous aurez besoin</span>
+        <span class="hljs-comment">// ("rien" est une option tout à fait valable si vous codez en ES5</span>
+        <span class="hljs-comment">// sans linter)</span>
+        loaders: [
+          <span class="hljs-string">"babel"</span>,
+          <span class="hljs-string">"eslint"</span>,
+        ],
+
+        <span class="hljs-comment">// à noter que l'on peut définir les loaders de cette façon</span>
+        <span class="hljs-comment">// loader: "babel!eslint",</span>
+
+        <span class="hljs-comment">// à noter aussi, Webpack va tenter de loader des modules ayant dans</span>
+        <span class="hljs-comment">// leur nom "-loader". Si ce n'était pas le cas, ou que votre loader</span>
+        <span class="hljs-comment">// ne comporte pas -loader, vous pouvez spécifier le nom entier :</span>
+        <span class="hljs-comment">// loader: "babel-loader!eslint-loader",</span>
+      },
+      <span class="hljs-comment">// à l'inverse de node et browserify, Webpack ne gère pas les json</span>
+      <span class="hljs-comment">// nativement, il faut donc un loader pour que cela soit transparent</span>
+      {
+        test: <span class="hljs-regexp">/\.json$/</span>,
+        loaders: [
+          <span class="hljs-string">"json"</span>,
+        ],
+      },
+      {
+        <span class="hljs-comment">// pour nos CSS, on va utiliser un plugin un peu particulier</span>
+        <span class="hljs-comment">// qui va nous permettre de require() nos CSS comme un module</span>
+        <span class="hljs-comment">// mais qui va tout de même permettre de sortir tout cela dans un seul</span>
+        <span class="hljs-comment">// fichier .css pour la production</span>
+        <span class="hljs-comment">// (selon un paramètre qu'on définira ci-dessous)</span>
+        test: <span class="hljs-regexp">/\.css$/</span>,
+        <span class="hljs-comment">// cette méthode possède 2 paramètres :</span>
+        <span class="hljs-comment">// + loaders à utiliser si ce module est désactivé</span>
+        <span class="hljs-comment">// + loaders à utiliser dans tous les cas en amont</span>
+        loader: ExtractTextPlugin.extract(
+          <span class="hljs-comment">// si on extract pas, on utilisera le loader suivant</span>
+          <span class="hljs-comment">// (ce module chargera les styles dans des tags &lt;style&gt;, suffisant</span>
+          <span class="hljs-comment">// en mode dév)</span>
+          <span class="hljs-comment">// en production vous devrez vous charger d'utiliser un</span>
+          <span class="hljs-comment">// &lt;link rel="stylesheet" ...</span>
+          <span class="hljs-string">"style"</span>,
+          <span class="hljs-comment">// dans tous les cas, on utilisera cssnext ainsi que le loader CSS</span>
+          <span class="hljs-comment">// de base (celui-ci permet de gérer les ressources dans le CSS</span>
+          <span class="hljs-comment">// en temps que modules: images, font etc)</span>
+          <span class="hljs-string">"css!cssnext"</span>
+        ),
+        <span class="hljs-comment">// Si vous n'avez pas besoin d'avoir une CSS à part, vous pouvez</span>
+        <span class="hljs-comment">// simplement supprimer la partie "loader" ci-dessus et utiliser plutôt</span>
+        <span class="hljs-comment">// loaders: [</span>
+        <span class="hljs-comment">//  "style",</span>
+        <span class="hljs-comment">//  "css",</span>
+        <span class="hljs-comment">//  "cssnext",</span>
+        <span class="hljs-comment">// ],</span>
+        <span class="hljs-comment">// À noter que dans ce cas, il vous faudra supprimer le plugin</span>
+        <span class="hljs-comment">// ExtractTextPlugin dans la liste plus bas</span>
+      },
+      <span class="hljs-comment">// pour la suite, on va rester simple :</span>
+      <span class="hljs-comment">// un require() en utilisant le file-loader retournera une string avec</span>
+      <span class="hljs-comment">// le nom du fichier et (le plus important) copiera le fichier suivant</span>
+      <span class="hljs-comment">// le paramètre "name" dans l'output.path que nous avons défini tout</span>
+      <span class="hljs-comment">// au début de notre configuration.</span>
+      <span class="hljs-comment">// Notez qu'il dégagera la partie context du nom lors du retour en string</span>
+      <span class="hljs-comment">// et la remplacera par le l'output.path défini pour la copie.</span>
+      {
+        <span class="hljs-comment">// on chargera tous les formats d'images qui nous intéressent en tant</span>
+        <span class="hljs-comment">// que fichiers.</span>
+        test: <span class="hljs-regexp">/\.(ico|jpe?g|png|gif)$/</span>,
+        loaders: [
+          <span class="hljs-string">"file?name=[path][name].[ext]&amp;context=./src"</span>,
+          <span class="hljs-comment">// Vous remarquerez ici la méthode utilisée pour définir</span>
+          <span class="hljs-comment">// des options pour les loaders. Il en existe d'autres avec les</span>
+          <span class="hljs-comment">// versions les plus récentes en utilisant la clé "query"</span>
+        ],
+      },
+      {
+        <span class="hljs-comment">// idem pour les fonts</span>
+        test: <span class="hljs-regexp">/\.(woff|ttf|otf|eot\?#.+|svg#.+)$/</span>,
+        loaders: [
+          <span class="hljs-string">"file?name=[path][name].[ext]&amp;context=./src"</span>,
+        ],
+      },
+      {
+        <span class="hljs-comment">// ici on se permet de loader des fichiers html et txt tels quels</span>
+        test: <span class="hljs-regexp">/\.(html|txt)$/</span>,
+        loaders: [
+          <span class="hljs-string">"file?name=[path][name].[ext]&amp;context=./src"</span>,
+        ],
+      },
+    ],
+  },
+
+  <span class="hljs-comment">// en plus des loaders, qui premettent eux de modifier et/ou d'exploiter le</span>
+  <span class="hljs-comment">// contenu des modules, nous avons des plugins, plus globaux au processus</span>
+  plugins: (
+    [
+      <span class="hljs-comment">// une partie importante dans notre cas : on active l'extraction CSS (en</span>
+      <span class="hljs-comment">// production seulement)</span>
+      <span class="hljs-keyword">new</span> ExtractTextPlugin(<span class="hljs-string">"[name].css"</span>, {disable: !production}),
+
+      <span class="hljs-comment">// ce plugin permet de transformer les clés passés en dur dans les</span>
+      <span class="hljs-comment">// modules ainsi vous pourrez faire dans votre code js</span>
+      <span class="hljs-comment">// if (__PROD__) { ... }</span>
+      <span class="hljs-keyword">new</span> webpack.DefinePlugin({
+        __PROD__: production
+      }),
+    ]
+    <span class="hljs-comment">// en production, on peut rajouter des plugins pour optimiser</span>
+    .concat(
+      production
+      ? [
+        <span class="hljs-comment">// ici on rajoute uglify.js pour compresser nos sorties</span>
+        <span class="hljs-comment">// (vous remarquerez que certain plugins sont directement livrés dans</span>
+        <span class="hljs-comment">// le package webpack).</span>
+        <span class="hljs-keyword">new</span> webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: <span class="hljs-literal">false</span>,
+          },
+        }),
+      ]
+      : []
+    )
+  ),
+
+  <span class="hljs-comment">// certains modules permettent de définir des options en dehors de la</span>
+  <span class="hljs-comment">// définition des loaders</span>
+  cssnext: {
+    sourcemap: !production,
+    compress: production,
+  },
+}</code></pre>
+<p><em>Ce fichier est à peu près ce que nous utilisons pour notre site à l’heure où
+est écrit cet article.</em></p>
+<p>Une fois Webpack mis en place, vous aurez bien moins l’impression de bricoler
+surtout quand il s’agit de consommer des assets de modules tiers (par exemple
+Font Awesome).</p>
+<p>Sachez que vous pouvez très facilement écrire vos propres loaders pour wrapper
+l’utilisation d’un outil qui n’aurait pas encore de loader.
+<a href="https://github.com/cssnext/cssnext-loader/blob/master/index.js">Exemple du loader cssnext</a>.</p>
+<h2 id="utilisation"><a class="markdownIt-Anchor" href="#utilisation">#</a> Utilisation</h2>
+<p>Il y a plusieurs façon d’utiliser maintenant notre configuration, la plus simple
+étant surement via CLI :</p>
+<pre><code class="language-console"><span class="hljs-variable">$ </span>npm install webpack
+<span class="hljs-variable">$ </span>webpack</code></pre>
+<p>Cela devrait suffire à s’occuper de notre configuration. Cette commande comporte
+bien entendu tout un tas d’options qui correspondent souvent à ce que nous
+avons défini juste avant.
+Cela étant dit, il parait plus maintenable de gérer une fichier plutôt qu’une
+ligne de commande de 3 km.</p>
+<p>Vous devriez avoir ainsi tout le résultat dans <code>dist/</code>.</p>
+<p><em>Note: Si vous rencontrez des erreurs du type
+<code>Error: Cannot resolve module 'file'</code>, c’est tout simplement que vous n’avez pas
+installé les loaders nécessaire. En l’occurence il faudrait installer le
+<code>file-loader</code>.</em></p>
+<p>Pour avoir tous les loaders nécessaires comme dans l’exemple ci-dessus:</p>
+<pre><code class="language-console">$ npm <span class="hljs-tag">i</span> -D babel-loader eslint-loader babel-eslint
+$ npm <span class="hljs-tag">i</span> -D json-loader
+$ npm <span class="hljs-tag">i</span> -D style-loader css-loader cssnext-loader
+$ npm <span class="hljs-tag">i</span> -D file-loader</code></pre>
+<p><em>Note à propos de babel et eslint: pour le moment, il vous faudra spécifier dans
+votre configuration eslint: <code>parser: babel-eslint</code>.</em></p>
+<p>Il y a tout un tas de façon d’utiliser Webpack via une tripotée de plugins
+(Gulp, Grunt, etc.) mais nous allons voir justement ici comment ne pas avoir
+recours à ces solutions, ce qui nous permettra ainsi de s’alléger.</p>
+<h3 id="utilisation-en-d-veloppment"><a class="markdownIt-Anchor" href="#utilisation-en-d-veloppment">#</a> Utilisation en développment</h3>
+<p>Webpack CLI possède une option <code>--watch</code> qui va surveiller les sources et mettre
+à jour tout le nécessaire à la moindre modification.
+À la différence de browserify, cette fonctionnalité est dans le core et très
+bien intégré.
+De plus, le cache de Webpack est plutôt bien foutu. La première compilation peut
+paraître un peu lente, mais la suite est vraiment au top.</p>
+<pre><code class="language-console">$ webpack <span class="hljs-comment">--watch -d</span></code></pre>
+<p>L’option <code>-d</code> permet d’activer les source maps.</p>
+<p>À côté de ces options, Webpack va plus loin.</p>
+<p>En développement, nous avons besoin de servir toutes les ressources que notre
+processus va gérer.
+Plutôt que d’utiliser le système de fichier classique, abusé par Grunt et tout
+de même utilisé par Gulp &amp; co, Webpack fournit un <code>webpack-dev-server</code>.</p>
+<p>Ce petit serveur local permettra de servir tout ce dont nous avons besoin
+(nos JS, CSS, images, etc.) sans avoir recours au système de fichiers.</p>
+<p>Comme pour la commande <code>webpack</code>, le serveur de développement propose aussi
+une CLI basée sur l’option <code>--watch</code> mais sans l’inconvénient de l’écriture sur
+disque :</p>
+<pre><code class="language-console">$ webpack-dev-server <span class="hljs-comment">--content-base dist/</span></code></pre>
+<p><em>Source: <a href="http://webpack.github.io/docs/webpack-dev-server.html">http://webpack.github.io/docs/webpack-dev-server.html</a></em></p>
+<p>Une fois que votre serveur est démarré, pourrez tester que votre point d’entrée
+marche avec <code>http://localhost:8080/index.js</code>.</p>
+<p>Il existe bien entendu une API, que nous utilisons à l’heure actuelle sur notre
+site, afin d’ajuster notre configuration Webpack en développement, pour
+d’ajouter des fonctionnalités comme le “hot loading”.</p>
+<p>Vous avez à votre disposition
+<a href="https://github.com/putaindecode/putaindecode.io/blob/2c1a8f23ec05768960617625f592ea30ed6e2062/scripts/webpack-dev-server.js">notre script dev-server</a>
+(écrit en ES6/7), ainsi que son utilisation
+<a href="https://github.com/putaindecode/putaindecode.io/blob/2c1a8f23ec05768960617625f592ea30ed6e2062/scripts/build.js#L154-L159">dans notre build</a>.</p>
+<p><em>Note : pour avoir une éventuelle version plus à jour, regardez l’historique de
+ces fichiers au cas où nous ayons poussé des ajustements (ou remplacer le hash
+par “master” dans l’url et priez).</em></p>
+<h4 id="hot-re-loading"><a class="markdownIt-Anchor" href="#hot-re-loading">#</a> Hot (re)loading</h4>
+<p>Ce serveur possède bien entendu des fonctionnalités similaires au classique
+“livereload”, appelé <em>hot mode</em> (ou hot loading).</p>
+<p>Tout comme pour le livereload, il faut intégrer dans sa page un script
+particulier. Il y a plusieurs façons de faire :</p>
+<ul>
+<li>intégrer <code>http://localhost:8080/webpack-dev-server.js</code> via un tag script</li>
+<li>ajouter <code>webpack/hot/dev-server</code> dans les tableaux des points d’entrées</li>
+</ul>
+<p><em>Source: <a href="http://webpack.github.io/docs/webpack-dev-server.html#hot-mode">http://webpack.github.io/docs/webpack-dev-server.html#hot-mode</a></em></p>
+<p>Notre script dev-server référencé juste avant s’occupe d’ajouter la ressource
+automatiquement en mode dev.</p>
+<p>À la différence d’un simple livereload, ce hot loading permet des choses qu’on
+aurait jusqu’alors pas vraiment imaginées, comme du hot reload de JavaScript de
+composant React (sans rafraichissment complet de page, donc sans perte d’état).</p>
+<p><strong>Vous êtes invité à regarder la vidéo que vous trouverez sur la page du
+<a href="https://github.com/gaearon/react-hot-loader">react-hot-loader</a>.</strong></p>
+<p>Nous n’irons pas plus loin sur ce hot mode, car il nécessiterait un articlé dédié
+(non pas que ce soit compliqué mais plus parce que c’est un sujet à part).</p>
+<h3 id="utilisation-en-production"><a class="markdownIt-Anchor" href="#utilisation-en-production">#</a> Utilisation en production</h3>
+<pre><code class="language-console">$ webpack <span class="hljs-comment">--production</span></code></pre>
+<p>Notre configuration détecte l’option <code>--production</code> et ajuste déjà en
+conséquence.
+Il faut éventuellement utiliser la variable prévue pour ajuster vos loaders s’il
+propose des options d’optimisation.</p>
+<p>Maintenant, il n’y aura plus qu’à voir tout le résultat dans <code>dist/</code>.</p>
+<hr>
+<p>Nous avons vu ici un exemple assez simple qui peut être utilisé pour un site web
+ou une appplication simple.</p>
+<p>Une question se pose alors :</p>
+<blockquote>
+<p>À la vue de ce que peut gérer Webpack et ses loaders, est-il pertinent de
+continuer à utiliser des task runners pour nos assets et compagnie ?</p>
+</blockquote>
+<p><strong>La réponse est non.</strong> 😱</p>
+<p>Vous verrez assez rapidement que vous devriez pourvoir tout jeter à la poubelle.
+Sans trop de regrets, puisque Webpack va vous permettre de consommer tout ce que
+nous avions l’habitude de bricoler / copier / ajuster…</p>
+<p>Nous l’avons fait pour notre site, pourquoi pas vous ?</p>
+<p>Et notre interface n’as pas changé d’un poil puisque nous utilisons toujours les
+mêmes commandes via les
+<a href="https://docs.npmjs.com/misc/scripts">npm scripts</a>:</p>
+<ul>
+<li><code>npm start</code> pour dév</li>
+<li><code>npm run build --production</code> avant de déployer en production.</li>
+</ul>
+<p>Il existe encore beaucoup de leviers à toucher dans le cas
+d’applications full JavaScript afin d’améliorer bien des points.</p>
+<p>Vous trouverez facilement tout un tas de
+<a href="https://duckduckgo.com/?q=webpack+boilerplate">boilerplates Webpack</a>
+avec des améliorations diverses et variées selon vos besoins.</p>
+<p>Soyez curieux !</p>
+]]></description><link>http://putaindecode.io/fr/articles/js/webpack/premier-exemple/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/webpack/premier-exemple/</guid><pubDate>Tue, 21 Jul 2015 00:00:00 GMT</pubDate></item></channel></rss>
