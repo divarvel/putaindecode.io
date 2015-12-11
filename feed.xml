@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 06:55:24 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 06:59:35 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
 en conséquence enlever le spread, le destructuring, les générateurs, le for…of
 et bien d’autres. Ce concept, introduit dans l’ES6, est en fait un protocole :
 le protocole d’itération.</p>
@@ -205,7 +205,7 @@ qu’un générateur est à la fois un Iterable et un Iterator, qu’un Iterable
 </ul>
 <p>La pratique restant le meilleur moyen de se former, le site
 <a href="http://es6katas.org/">ES6 Katas</a> est très bien fait pour s’exercer.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/iterators/</guid><pubDate>Wed, 09 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : itérateurs et générateurs]]></title><description><![CDATA[<h1 id="it-rateurs-et-g-n-rateurs"><a class="markdownIt-Anchor" href="#it-rateurs-et-g-n-rateurs">#</a> Itérateurs et générateurs</h1>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/iterators/</guid><pubDate>Thu, 10 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : itérateurs et générateurs]]></title><description><![CDATA[<h1 id="it-rateurs-et-g-n-rateurs"><a class="markdownIt-Anchor" href="#it-rateurs-et-g-n-rateurs">#</a> Itérateurs et générateurs</h1>
 <p>Un gros morceau aujourd’hui : les itérateurs et les fonctions qui les génèrent,
 appelées “générateurs”.
 ES6/2015 apporte énormément de “sucres syntaxiques”, même s’ils sont
