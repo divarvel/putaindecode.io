@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 10:15:02 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : les Maps & WeakMaps]]></title><description><![CDATA[<h2 id="maps"><a class="markdownIt-Anchor" href="#maps">#</a> Maps</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 11 Dec 2015 10:30:11 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : les Maps & WeakMaps]]></title><description><![CDATA[<h2 id="maps"><a class="markdownIt-Anchor" href="#maps">#</a> Maps</h2>
 <p>Comme les objets, les maps et weak maps introduites avec ES6 sont des dictionnaires. La différence avec un objet, c’est que n’importe quelle valeur peut-être utilisée comme clé.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()
 myMap.set(<span class="hljs-built_in">window</span>, <span class="hljs-number">1</span>)
@@ -1399,7 +1399,85 @@ to be able to use classes.</p>
 <p>One last thing: when you are in a class context,
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>
 is enabled automatically.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
+Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
+feature.</p>
+<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
+<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
+<ul>
+<li>The first is a target for copies;</li>
+<li>Next are sources;</li>
+<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
+<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
+<li><strong>The target object is modified</strong> (it must be mutable);</li>
+<li>The modified target object is returned.</li>
+</ul>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
+<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
+<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
+o1 <span class="hljs-comment">// unmodified</span>
+o2 <span class="hljs-comment">// unmodified</span></code></pre>
+<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
+<p>Be warned that the target is always modified.
+Since the most frequent use-case is the creation of a new object that will be
+generated from others sources, most of the time we will pass an new empty object
+as the first parameter.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
+<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
+<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
+o <span class="hljs-comment">// { x: 1, y: 2 }</span>
+<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
+<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
+<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
+<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
+in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
+copy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
+  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
+})
+
+<span class="hljs-comment">// "standard" (wtf) mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
+o.val <span class="hljs-comment">// 42 (unmodified value)</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+
+<span class="hljs-comment">// "strict" mode:</span>
+o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
+o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
+<p>Keys that have already been copied before the throwing of the exception will
+be kept in the target object, that’s why in our example <code>x</code> have been copied
+but not <code>y</code>.</p>
+<p>Note: this is theory, but practise show us that this behavior is variable,
+depending of the platform and the context, the error might not always be thrown.
+To get a predictable behavior, you should work in <em>strict</em> mode.</p>
+<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
+<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
+return any keys and values will be ignored.
+<code>null</code> and <code>undefined</code> will also be ignored.</p>
+<p>Particular case: strings are treated as array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
+<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
+<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
+<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
+<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
+o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
+<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
+browsers (IE is not considered as modern until 12) :</p>
+<ul>
+<li>Edge (IE ≥ 12) ;</li>
+<li>Chrome stable (46) ;</li>
+<li>Firefox stable (42) ;</li>
+<li>Node ≥ 4 ;</li>
+<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
+or one of many users implementations.</li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
 lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
 rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
 <h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
@@ -1478,85 +1556,86 @@ par les navigateurs modernes (donc pas IE) :</p>
 <li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
 ou les nombreuses implémentations utilisateur.</li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: default values for arguments]]></title><description><![CDATA[<p>Tired of typing <code>if (typeof x === 'undefined') x = defaultValue</code>? Again, ES6
+will brings us a elegant solution.</p>
+<h1 id="default-values"><a class="markdownIt-Anchor" href="#default-values">#</a> Default values</h1>
+<p>The <code>=</code> operator can now help to define a default value to a parameter.</p>
+<h2 id="function-parameters"><a class="markdownIt-Anchor" href="#function-parameters">#</a> Function parameters</h2>
+<p>You can now specify a default value for a parameter of a function.
+This value will be used if the parameter is not defined, or explicitly set to
+<em>undefined</em>.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">incr</span> (<span class="hljs-params">value, step = 1</span>) </span>{
+  <span class="hljs-keyword">return</span> value + step
+}
 
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+incr(<span class="hljs-number">41</span>) <span class="hljs-comment">// 42</span>
+incr(<span class="hljs-number">41</span>, <span class="hljs-literal">undefined</span>) <span class="hljs-comment">// 42</span>
+incr(<span class="hljs-number">33</span>, <span class="hljs-number">9</span>) <span class="hljs-comment">// 42</span></code></pre>
+<h3 id="dynamic-default-values"><a class="markdownIt-Anchor" href="#dynamic-default-values">#</a> Dynamic default values</h3>
+<p>We can specify an expression as a default value.
+This expression will be evalued <strong>during the function call</strong>, not during the
+function declaration.</p>
+<pre><code class="language-js"><span class="hljs-keyword">let</span> defaultWho = <span class="hljs-string">'world!'</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hello</span> (<span class="hljs-params">who = defaultWho.toUpperCase(</span>)) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello '</span> + who
+}
 
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
+hello() <span class="hljs-comment">// 'Hello WORLD!'</span>
+defaultWho = <span class="hljs-string">'Anyone?'</span>
+hello() <span class="hljs-comment">// 'Hello ANYONE?'</span></code></pre>
+<h3 id="reusing-previous-parameters"><a class="markdownIt-Anchor" href="#reusing-previous-parameters">#</a> Reusing previous parameters</h3>
+<p>In the default value expression, you can reuse <strong>previous</strong> function parameters:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = 1, y = x + 1</span>) </span>{
+  <span class="hljs-keyword">return</span> x + y
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span> (<span class="hljs-params">x = y + 1, y = 1</span>) </span>{
+  <span class="hljs-keyword">return</span> x + y
+}
+
+foo() <span class="hljs-comment">// 1 + (1 + 1) → 3</span>
+bar() <span class="hljs-comment">// (undefined + 1) + 1 → NaN</span></code></pre>
+<h3 id="particular-case-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#particular-case-tdz-temporal-dead-zone">#</a> Particular case: TDZ (Temporal Dead Zone)</h3>
+<p>A temporal dead zone is an area of your program where a variable exists, but is
+not available yet while it didn’t get its value.</p>
+<p>The following example is obviously invalid:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// throws ReferenceError?</span>
+}</code></pre>
+<p>In fact, during the call of the function, <code>x</code> has not been defined yet,
+so it cannot be used as a default value.
+This example should trigger an
+<a href="http://dmitrysoshnikov.com/ecmascript/es6-notes-default-values-of-parameters/#tdz-temporal-dead-zone-for-parameters">error</a></p>
+<p>However, scope rules will make this example invalid:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// 'x' used here is the parameter itself</span>
+}</code></pre>
+<p>After the evaluation of the default values, we are in the scope of the function
+and in this scope, <code>x</code> corresponds to the parameter (not defined yet) and not
+the value defined above.</p>
+<p><strong>ProTip: do not reuse a variable name 3 times</strong>
+(that might helps to read and understand your code).</p>
+<h2 id="destructuring"><a class="markdownIt-Anchor" href="#destructuring">#</a> Destructuring</h2>
+<p>Like for the function arguments, assignments using
+<a href="/en/articles/js/es2015/destructuring/">destructuring</a>
+can have a default value.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {z: <span class="hljs-number">42</span>} 
+<span class="hljs-keyword">const</span> { x = <span class="hljs-number">1</span>, y = x + <span class="hljs-number">1</span>, z, w } = obj
+w <span class="hljs-comment">// undefined</span>
+x <span class="hljs-comment">// 1</span>
+y <span class="hljs-comment">// 2</span>
+z <span class="hljs-comment">// 42</span></code></pre>
+<p>As a reminder, the assignation in the previous example would have been written
+this way using ES5:</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> x = (obj.x === <span class="hljs-literal">undefined</span>) ? <span class="hljs-number">1</span> : obj.x 
+<span class="hljs-keyword">var</span> y = (obj.y === <span class="hljs-literal">undefined</span>) ? x + <span class="hljs-number">1</span> : obj.y 
+<span class="hljs-keyword">var</span> z = obj.z
+<span class="hljs-keyword">var</span> w = obj.w</code></pre>
+<h1 id="enjoy"><a class="markdownIt-Anchor" href="#enjoy">#</a> Enjoy!</h1>
+<p>There is no more reasons <em>a priori</em> to see an <code>undefined</code> in an ES6 codebase.</p>
+<p>About the compatibility (at the time of the writing): only Firefox ≥ 43
+support this feature (and just for function…).
+So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les valeurs par défaut des arguments]]></title><description><![CDATA[<p>Fatigués de taper <code>if (typeof x === 'undefined') x = defaultValue</code> ? Là encore
 ES6 va nous apporter une solution élégante.</p>
 <h1 id="valeurs-par-d-faut"><a class="markdownIt-Anchor" href="#valeurs-par-d-faut">#</a> Valeurs par défaut</h1>
 <p>L’opérateur <code>=</code> permet maintenant en plus d’affecter une valeur à une variable
@@ -1638,86 +1717,80 @@ votre code une fois passé à ES6.</p>
 implémente les valeurs par défaut, et encore seulement pour les paramètres de
 fonctions.
 Il faudra donc utiliser <a href="http://babeljs.io">Babel</a> ou Traceur pour en profiter.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: default values for arguments]]></title><description><![CDATA[<p>Tired of typing <code>if (typeof x === 'undefined') x = defaultValue</code>? Again, ES6
-will brings us a elegant solution.</p>
-<h1 id="default-values"><a class="markdownIt-Anchor" href="#default-values">#</a> Default values</h1>
-<p>The <code>=</code> operator can now help to define a default value to a parameter.</p>
-<h2 id="function-parameters"><a class="markdownIt-Anchor" href="#function-parameters">#</a> Function parameters</h2>
-<p>You can now specify a default value for a parameter of a function.
-This value will be used if the parameter is not defined, or explicitly set to
-<em>undefined</em>.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">incr</span> (<span class="hljs-params">value, step = 1</span>) </span>{
-  <span class="hljs-keyword">return</span> value + step
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
+an array based on their structure.</p>
+<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
+<span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>,
 }
 
-incr(<span class="hljs-number">41</span>) <span class="hljs-comment">// 42</span>
-incr(<span class="hljs-number">41</span>, <span class="hljs-literal">undefined</span>) <span class="hljs-comment">// 42</span>
-incr(<span class="hljs-number">33</span>, <span class="hljs-number">9</span>) <span class="hljs-comment">// 42</span></code></pre>
-<h3 id="dynamic-default-values"><a class="markdownIt-Anchor" href="#dynamic-default-values">#</a> Dynamic default values</h3>
-<p>We can specify an expression as a default value.
-This expression will be evalued <strong>during the function call</strong>, not during the
-function declaration.</p>
-<pre><code class="language-js"><span class="hljs-keyword">let</span> defaultWho = <span class="hljs-string">'world!'</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hello</span> (<span class="hljs-params">who = defaultWho.toUpperCase(</span>)) </span>{
-  <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello '</span> + who
+<span class="hljs-comment">// With ES5, you need to do</span>
+<span class="hljs-keyword">var</span> foo = myObject.foo
+<span class="hljs-keyword">var</span> bar = myObject.bar
+
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// With ES6, you can write the same with</span>
+<span class="hljs-keyword">const</span> { foo, bar } = myObject
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span>
+
+<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
+<span class="hljs-comment">// returns a function or an array)</span>
+<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    foo: <span class="hljs-number">1</span>,
+    bar: <span class="hljs-number">2</span>,
+  }
+}
+<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
+foo <span class="hljs-comment">// 1</span>
+bar <span class="hljs-comment">// 2</span></code></pre>
+<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
+<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
+<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
+<span class="hljs-comment">// of an array</span>
+<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
+<span class="hljs-comment">// commas</span>
+<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+first <span class="hljs-comment">// 1</span>
+second <span class="hljs-comment">// 2</span>
+fourth <span class="hljs-comment">// 4</span></code></pre>
+<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
+<p>For an object, the default behavior is that the name of a variable will match
+the name of the key.
+So if you have already a variable with this name, you can choose another one.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: <span class="hljs-number">1</span>,
+  bar: <span class="hljs-number">2</span>
+}
+<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
+renamedFoo <span class="hljs-comment">// 1</span></code></pre>
+<p>This syntax doesn’t offer a good readability.</p>
+<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
+<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
+	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
 }
 
-hello() <span class="hljs-comment">// 'Hello WORLD!'</span>
-defaultWho = <span class="hljs-string">'Anyone?'</span>
-hello() <span class="hljs-comment">// 'Hello ANYONE?'</span></code></pre>
-<h3 id="reusing-previous-parameters"><a class="markdownIt-Anchor" href="#reusing-previous-parameters">#</a> Reusing previous parameters</h3>
-<p>In the default value expression, you can reuse <strong>previous</strong> function parameters:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = 1, y = x + 1</span>) </span>{
-  <span class="hljs-keyword">return</span> x + y
+myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
+<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
+<p>We can also nest the assignments.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
+  foo: {
+    bar: <span class="hljs-number">1</span>,
+  },
 }
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span> (<span class="hljs-params">x = y + 1, y = 1</span>) </span>{
-  <span class="hljs-keyword">return</span> x + y
-}
-
-foo() <span class="hljs-comment">// 1 + (1 + 1) → 3</span>
-bar() <span class="hljs-comment">// (undefined + 1) + 1 → NaN</span></code></pre>
-<h3 id="particular-case-tdz-temporal-dead-zone"><a class="markdownIt-Anchor" href="#particular-case-tdz-temporal-dead-zone">#</a> Particular case: TDZ (Temporal Dead Zone)</h3>
-<p>A temporal dead zone is an area of your program where a variable exists, but is
-not available yet while it didn’t get its value.</p>
-<p>The following example is obviously invalid:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// throws ReferenceError?</span>
-}</code></pre>
-<p>In fact, during the call of the function, <code>x</code> has not been defined yet,
-so it cannot be used as a default value.
-This example should trigger an
-<a href="http://dmitrysoshnikov.com/ecmascript/es6-notes-default-values-of-parameters/#tdz-temporal-dead-zone-for-parameters">error</a></p>
-<p>However, scope rules will make this example invalid:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x = x</span>) </span>{ <span class="hljs-comment">// 'x' used here is the parameter itself</span>
-}</code></pre>
-<p>After the evaluation of the default values, we are in the scope of the function
-and in this scope, <code>x</code> corresponds to the parameter (not defined yet) and not
-the value defined above.</p>
-<p><strong>ProTip: do not reuse a variable name 3 times</strong>
-(that might helps to read and understand your code).</p>
-<h2 id="destructuring"><a class="markdownIt-Anchor" href="#destructuring">#</a> Destructuring</h2>
-<p>Like for the function arguments, assignments using
-<a href="/en/articles/js/es2015/destructuring/">destructuring</a>
-can have a default value.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {z: <span class="hljs-number">42</span>} 
-<span class="hljs-keyword">const</span> { x = <span class="hljs-number">1</span>, y = x + <span class="hljs-number">1</span>, z, w } = obj
-w <span class="hljs-comment">// undefined</span>
-x <span class="hljs-comment">// 1</span>
-y <span class="hljs-comment">// 2</span>
-z <span class="hljs-comment">// 42</span></code></pre>
-<p>As a reminder, the assignation in the previous example would have been written
-this way using ES5:</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> x = (obj.x === <span class="hljs-literal">undefined</span>) ? <span class="hljs-number">1</span> : obj.x 
-<span class="hljs-keyword">var</span> y = (obj.y === <span class="hljs-literal">undefined</span>) ? x + <span class="hljs-number">1</span> : obj.y 
-<span class="hljs-keyword">var</span> z = obj.z
-<span class="hljs-keyword">var</span> w = obj.w</code></pre>
-<h1 id="enjoy"><a class="markdownIt-Anchor" href="#enjoy">#</a> Enjoy!</h1>
-<p>There is no more reasons <em>a priori</em> to see an <code>undefined</code> in an ES6 codebase.</p>
-<p>About the compatibility (at the time of the writing): only Firefox ≥ 43
-support this feature (and just for function…).
-So you will need <a href="http://babeljs.io">Babel</a> or Traceur to be able to use it.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/defaults/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/defaults/</guid><pubDate>Thu, 03 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
+<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
+bar <span class="hljs-comment">// 1</span></code></pre>
+<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
+(if the value doesn’t exist), be sure that you will have a nesting error, since
+a value will try to be retrieved from an <code>undefined</code> property.
+To prevent this issue, you will need to define
+<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le destructuring]]></title><description><![CDATA[<h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Le destructuring consiste à assigner des variables provenant d’un objet ou
 tableau en reposant sur leur structure.</p>
 <pre><code class="language-js"><span class="hljs-comment">// Partons d'un objet `myObject`</span>
@@ -1791,80 +1864,7 @@ bar <span class="hljs-comment">// 1</span></code></pre>
 nesting, puisqu’il essaiera d’aller chercher une propriété d’<code>undefined</code>.
 Pour pallier ces soucis, rendez-vous pour l’article sur les
 <a href="/fr/articles/js/es2015/defaults/">defaults</a>.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : the destructuring]]></title><description><![CDATA[<p>The destructuring is a feature that helps you assign variables from an object or
-an array based on their structure.</p>
-<pre><code class="language-js"><span class="hljs-comment">// Let's consider this object `myObject`</span>
-<span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>,
-}
-
-<span class="hljs-comment">// With ES5, you need to do</span>
-<span class="hljs-keyword">var</span> foo = myObject.foo
-<span class="hljs-keyword">var</span> bar = myObject.bar
-
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// With ES6, you can write the same with</span>
-<span class="hljs-keyword">const</span> { foo, bar } = myObject
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span>
-
-<span class="hljs-comment">// We can even destructure the value returned by a function (if this one</span>
-<span class="hljs-comment">// returns a function or an array)</span>
-<span class="hljs-keyword">const</span> getMyObject = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    foo: <span class="hljs-number">1</span>,
-    bar: <span class="hljs-number">2</span>,
-  }
-}
-<span class="hljs-keyword">const</span> { foo, bar } = getMyObject()
-foo <span class="hljs-comment">// 1</span>
-bar <span class="hljs-comment">// 2</span></code></pre>
-<h2 id="different-syntaxes"><a class="markdownIt-Anchor" href="#different-syntaxes">#</a> Different syntaxes</h2>
-<h3 id="array"><a class="markdownIt-Anchor" href="#array">#</a> Array</h3>
-<pre><code class="language-js"><span class="hljs-comment">// For an array, we can use a syntax that is similar to a literal declaration</span>
-<span class="hljs-comment">// of an array</span>
-<span class="hljs-comment">// You might notice that you can ignore an item by just put nothing between the</span>
-<span class="hljs-comment">// commas</span>
-<span class="hljs-keyword">const</span> [ first, second, , fourth ] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
-first <span class="hljs-comment">// 1</span>
-second <span class="hljs-comment">// 2</span>
-fourth <span class="hljs-comment">// 4</span></code></pre>
-<h3 id="use-a-different-name-for-the-key"><a class="markdownIt-Anchor" href="#use-a-different-name-for-the-key">#</a> Use a different name for the key</h3>
-<p>For an object, the default behavior is that the name of a variable will match
-the name of the key.
-So if you have already a variable with this name, you can choose another one.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: <span class="hljs-number">1</span>,
-  bar: <span class="hljs-number">2</span>
-}
-<span class="hljs-keyword">const</span> { foo: renamedFoo } = myObject
-renamedFoo <span class="hljs-comment">// 1</span></code></pre>
-<p>This syntax doesn’t offer a good readability.</p>
-<h3 id="function-arguments"><a class="markdownIt-Anchor" href="#function-arguments">#</a> Function arguments</h3>
-<pre><code class="language-js"><span class="hljs-comment">// We can use destructuring directing in a function declaration</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">{ title, text }</span>) </span>{
-	<span class="hljs-keyword">return</span> title + <span class="hljs-string">": "</span> + text
-}
-
-myFunction({ title: <span class="hljs-string">"foo"</span>, text: <span class="hljs-string">"bar"</span> }) <span class="hljs-comment">// "foo: bar"</span></code></pre>
-<h3 id="nested-destructuring"><a class="markdownIt-Anchor" href="#nested-destructuring">#</a> Nested destructuring</h3>
-<p>We can also nest the assignments.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> myObject = {
-  foo: {
-    bar: <span class="hljs-number">1</span>,
-  },
-}
-<span class="hljs-keyword">const</span> { foo: { bar } } = myObject
-bar <span class="hljs-comment">// 1</span></code></pre>
-<p>Be careful, if the destructuring of the first level should return <code>undefined</code>
-(if the value doesn’t exist), be sure that you will have a nesting error, since
-a value will try to be retrieved from an <code>undefined</code> property.
-To prevent this issue, you will need to define
-<a href="/en/articles/js/es2015/defaults/">defaults</a> values.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/destructuring/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/destructuring/</guid><pubDate>Wed, 02 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015: declaring variables with const, let and var]]></title><description><![CDATA[<p>ES6 (also known as ES2015) brings you new ways to declare your variables thanks
 to <code>let</code> and <code>const</code>, but also keeps <code>var</code> in the language specification.</p>
 <p>The first thing you need to do: forget everything you know about <code>var</code>.</p>
 <h1 id="declarations"><a class="markdownIt-Anchor" href="#declarations">#</a> Declarations</h1>
