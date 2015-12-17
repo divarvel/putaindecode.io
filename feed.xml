@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 14 Dec 2015 07:02:16 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : paramètres rest et opérateur spread]]></title><description><![CDATA[<p>Identiques en apparence et en syntaxe, ils permettent d’effectuer plus
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Thu, 17 Dec 2015 12:46:14 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : paramètres rest et opérateur spread]]></title><description><![CDATA[<p>Identiques en apparence et en syntaxe, ils permettent d’effectuer plus
 simplement des opérations complexes sur les tableaux, ou tout autre objet
 itérable.</p>
 <h2 id="les-param-tres-rest"><a class="markdownIt-Anchor" href="#les-param-tres-rest">#</a> Les paramètres rest</h2>
@@ -131,14 +131,14 @@ myWeakMap.set(<span class="hljs-built_in">window</span>, <span class="hljs-numbe
     callbacks.set(<span class="hljs-keyword">this</span>, [])
   }
   addEventListener(callback) {
-    callback.set(<span class="hljs-keyword">this</span>, callback.get(<span class="hljs-keyword">this</span>).concat(callback))
+    callbacks.set(<span class="hljs-keyword">this</span>, callbacks.get(<span class="hljs-keyword">this</span>).concat(callback))
   }
   removeEventListener(callback) {
-    callback.set(<span class="hljs-keyword">this</span>, callback.get(<span class="hljs-keyword">this</span>)
+    callbacks.set(<span class="hljs-keyword">this</span>, callbacks.get(<span class="hljs-keyword">this</span>)
       .filter((func) =&gt; func !== callback))
   }
   triggerEvent(...args) {
-    callback.get(<span class="hljs-keyword">this</span>).forEach((func) =&gt; func(...args))
+    callbacks.get(<span class="hljs-keyword">this</span>).forEach((func) =&gt; func(...args))
   }
 }</code></pre>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/</guid><pubDate>Fri, 11 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : itérateurs et générateurs]]></title><description><![CDATA[<h1 id="it-rateurs-et-g-n-rateurs"><a class="markdownIt-Anchor" href="#it-rateurs-et-g-n-rateurs">#</a> Itérateurs et générateurs</h1>
