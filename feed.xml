@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 18 Dec 2015 11:14:33 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 18 Dec 2015 11:21:33 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
 fait pas partie des propositions acceptées cette année.
 La <a href="https://tc39.github.io/ecmascript-asyncawait/">spécification</a> est encore au
 stade 3 (candidate) à l’heure de cet article. Mais il ne fait plus aucun doute
@@ -174,9 +174,9 @@ valide la fonction de prédicat, alors la méthode renverra <code>undefined</cod
 simplement des opérations complexes sur les tableaux, ou tout autre objet
 itérable.</p>
 <h2 id="les-param-tres-rest"><a class="markdownIt-Anchor" href="#les-param-tres-rest">#</a> Les paramètres rest</h2>
-<p>Avez vous déjà eu l’occasion d’utiliser l’horrible variable magique <code>arguments</code>?
+<p>Avez-vous déjà eu l’occasion d’utiliser l’horrible variable magique <code>arguments</code> ?
 Disponible au sein de chaque fonction, elle permet d’en récupérer, comme son
-nom l’indique, les arguments. S’il l’objet récupéré est similaire à un <code>Array</code>,
+nom l’indique, les arguments. Si l’objet récupéré est similaire à un <code>Array</code>,
 il ne dispose d’aucune des propriétés ou des méthodes de celui-ci, à
 l’exception de <code>length</code>.</p>
 <pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunction</span>(<span class="hljs-params">separator</span>) </span>{
@@ -193,7 +193,7 @@ du simple préfixe <code>...</code> appliqué sur le <strong>dernier</strong> ar
 }
 
 myFunction(<span class="hljs-string">"-"</span>, <span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>) <span class="hljs-comment">// "foo-bar"</span></code></pre>
-<p>Il vous sera par contre impossible de lui attribuer une <a href="/fr/articles/js/es2015/defaults/">valeur par défaut</a>.</p>
+<p>Il vous sera en revanche impossible de lui attribuer une <a href="/fr/articles/js/es2015/defaults/">valeur par défaut</a>.</p>
 <h2 id="l-op-rateur-spread"><a class="markdownIt-Anchor" href="#l-op-rateur-spread">#</a> L’opérateur spread</h2>
 <p>Aussi appelé opérateur de décomposition, il permet de développer un objet
 itérable (comme un <code>Array</code>) lorsqu’on a besoin de plusieurs arguments.</p>
@@ -208,7 +208,7 @@ mélangé aux autres arguments d’une fonction.</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> myArray = [<span class="hljs-number">8</span>, <span class="hljs-number">1</span>]
 <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1991</span>, ...myArray, <span class="hljs-number">12</span>) <span class="hljs-comment">// object Date - équivaut à: new Date(1991, 8, 1, 12)</span></code></pre>
 <p>Les possibilités offertes par cette nouveauté sont très nombreuses. Voici
-quelques usages un peu plus avancés pour stimuler votre inspiration:</p>
+quelques usages un peu plus avancés pour stimuler votre inspiration :</p>
 <h4 id="viter-l-utilisation-de-apply"><a class="markdownIt-Anchor" href="#viter-l-utilisation-de-apply">#</a> Éviter l’utilisation de .apply()</h4>
 <pre><code class="language-js"><span class="hljs-comment">// ES5</span>
 <span class="hljs-built_in">console</span>.log.apply(<span class="hljs-built_in">console</span>, [<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>])
@@ -223,7 +223,7 @@ quelques usages un peu plus avancés pour stimuler votre inspiration:</p>
 
 <span class="hljs-comment">// ES6 / ES2015</span>
 [<span class="hljs-string">"go"</span>, <span class="hljs-string">"rust"</span>, ...stronglyTyped] <span class="hljs-comment">// ["go", "rust", "scala", "haskell"]</span></code></pre>
-<h4 id="destructurer-dans-un-tableau"><a class="markdownIt-Anchor" href="#destructurer-dans-un-tableau">#</a> Destructurer dans un tableau</h4>
+<h4 id="d-structurer-dans-un-tableau"><a class="markdownIt-Anchor" href="#d-structurer-dans-un-tableau">#</a> Déstructurer dans un tableau</h4>
 <p>Si vous n’avez pas encore connaissance des possibilités offertes par le
 destructuring, je vous invite à lire ce <a href="/fr/articles/js/es2015/destructuring/">précédent article</a>.</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> words = [<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>, <span class="hljs-string">"baz"</span>]
@@ -237,7 +237,7 @@ destructuring, je vous invite à lire ce <a href="/fr/articles/js/es2015/destruc
 <h4 id="it-rer-sur-le-r-sultat-d-un-queryselectorall"><a class="markdownIt-Anchor" href="#it-rer-sur-le-r-sultat-d-un-queryselectorall">#</a> Itérer sur le résultat d’un .querySelectorAll()</h4>
 <pre><code class="language-js">[...document.querySelectorAll(<span class="hljs-string">'div'</span>)] <span class="hljs-comment">// [&lt;div&gt;, &lt;div&gt;, &lt;div&gt;]</span></code></pre>
 <h2 id="en-r-sum"><a class="markdownIt-Anchor" href="#en-r-sum">#</a> En résumé</h2>
-<p>Comme vous avez pu le constater par vous même, les cas d’utilisation des
+<p>Comme vous avez pu le constater par vous-même, les cas d’utilisation des
 paramètres rest et de l’opérateur spread sont légion.</p>
 <p><a href="http://kangax.github.io/compat-table/es6/#spread_(...)_operator">Gérés</a>
 correctement par Babel et Traceur, ils vous permettront de rendre votre code
