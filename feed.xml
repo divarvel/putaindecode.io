@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 18 Dec 2015 11:00:50 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 18 Dec 2015 11:14:33 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
 fait pas partie des propositions acceptées cette année.
 La <a href="https://tc39.github.io/ecmascript-asyncawait/">spécification</a> est encore au
 stade 3 (candidate) à l’heure de cet article. Mais il ne fait plus aucun doute
@@ -243,16 +243,16 @@ paramètres rest et de l’opérateur spread sont légion.</p>
 correctement par Babel et Traceur, ils vous permettront de rendre votre code
 plus concis en évitant bien souvent l’écriture de boucles inutiles.</p>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/rest-spread/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/rest-spread/</guid><pubDate>Sat, 12 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les Maps & WeakMaps]]></title><description><![CDATA[<h2 id="maps"><a class="markdownIt-Anchor" href="#maps">#</a> Maps</h2>
-<p>Comme les objets, les maps et weak maps introduites avec ES6 sont des dictionnaires. La différence avec un objet, c’est que n’importe quelle valeur peut-être utilisée comme clé.</p>
+<p>Comme les objets, les maps et weak maps introduites avec ES6 sont des dictionnaires. La différence avec un objet, c’est que n’importe quelle valeur peut être utilisée comme clé.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()
 myMap.set(<span class="hljs-built_in">window</span>, <span class="hljs-number">1</span>)
 myMap.get(<span class="hljs-built_in">window</span>) <span class="hljs-comment">// 1</span></code></pre>
-<p>Pour créer une map avec des valeurs, on peut passer un tableau de clés/valeurs en argument:</p>
+<p>Pour créer une map avec des valeurs, on peut passer un tableau de clés/valeurs en argument :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([
   [ <span class="hljs-number">1</span>, <span class="hljs-string">"foo"</span> ],
   [ <span class="hljs-built_in">window</span>, <span class="hljs-string">"bar"</span> ],
 ])</code></pre>
-<p>Pour tester si une clé est présente, on peut utiliser la méthode <code>has</code></p>
+<p>Pour tester si une clé est présente, on peut utiliser la méthode <code>has</code> :</p>
 <pre><code class="language-javascript">map.has(<span class="hljs-number">1</span>) <span class="hljs-comment">// false</span></code></pre>
 <p>On peut itérer sur les entrées d’une map à l’aide de <code>forEach</code> :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([
@@ -263,27 +263,27 @@ myMap.get(<span class="hljs-built_in">window</span>) <span class="hljs-comment">
 myMap.forEach((value, key) =&gt; {
 	<span class="hljs-comment">// do something</span>
 })</code></pre>
-<p>On peut aussi itérer à l’aide du <code>for … of</code></p>
+<p>On peut aussi itérer à l’aide du <code>for … of</code> :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> myMap) {
   <span class="hljs-built_in">console</span>.log(key, value)
 }</code></pre>
-<p>Ainsi que convertir la map en tableau à l’aide du spread, puisqu’une map est itérable:</p>
+<p>Ainsi que convertir la map en tableau à l’aide du spread, puisqu’une map est itérable :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myEntries = [...myMap] <span class="hljs-comment">// […[key, value]]</span>
 <span class="hljs-keyword">const</span> myEntries = [...myMap.entries()] <span class="hljs-comment">// alternativement</span></code></pre>
-<p>On peut aussi récupérer des itérables par clés et valeurs:</p>
+<p>On peut aussi récupérer des itérables par clés et valeurs :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myKeys = [...myMap.keys()]
 <span class="hljs-keyword">const</span> myValues = [...myMap.values()]</code></pre>
-<p>Particularité, la valeur <code>NaN</code> qui en JS n’est pas égale à elle même, est bien gérée :</p>
+<p>Particularité, la valeur <code>NaN</code>, qui en JS n’est pas égale à elle même, est bien gérée :</p>
 <pre><code class="language-javascript">myMap.set(<span class="hljs-literal">NaN</span>, <span class="hljs-number">1</span>)
 myMap.get(<span class="hljs-literal">NaN</span>) <span class="hljs-comment">// 1</span></code></pre>
-<p>Une utilisation possible des Maps est la function <code>dedupe</code> pour éliminer les doublons d’un array:</p>
+<p>Une utilisation possible des Maps est la fonction <code>dedupe</code> pour éliminer les doublons d’un array :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> dedupe = (array) =&gt; {
   <span class="hljs-keyword">return</span> [...new <span class="hljs-built_in">Map</span>(array.map((item) =&gt; [item, <span class="hljs-literal">true</span>])).keys()]
 }
 
 dedupe([<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4</span>]) <span class="hljs-comment">// [1, 2, 3, 4]</span></code></pre>
 <h2 id="weakmaps"><a class="markdownIt-Anchor" href="#weakmaps">#</a> WeakMaps</h2>
-<p>Les WeakMaps sont comme les Maps, mais qui ne gardent pas les valeurs “oubliées”. Le garbage collector ne tient donc pas compte des weak maps.</p>
+<p>Les WeakMaps sont comme les Maps mais qui ne gardent pas les valeurs “oubliées”. Le garbage collector ne tient donc pas compte des weak maps.</p>
 <p>Les WeakMaps ne possèdent pas de méthodes d’itération et n’acceptent pas de valeurs primitives comme clés.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> myWeakMap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>()
 myWeakMap.set(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// TypeError</span></code></pre>
