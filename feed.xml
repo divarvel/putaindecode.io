@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 18 Dec 2015 11:21:33 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 18 Dec 2015 11:27:56 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
 fait pas partie des propositions acceptées cette année.
 La <a href="https://tc39.github.io/ecmascript-asyncawait/">spécification</a> est encore au
 stade 3 (candidate) à l’heure de cet article. Mais il ne fait plus aucun doute
@@ -146,15 +146,15 @@ nodes.forEach(node =&gt; <span class="hljs-built_in">console</span>.log(node))</
 <span class="hljs-built_in">console</span>.log(arr.join(<span class="hljs-string">" "</span>)) <span class="hljs-comment">// "hello world"</span></code></pre>
 <h2 id="array-prototype-keys-array-prototype-entries"><a class="markdownIt-Anchor" href="#array-prototype-keys-array-prototype-entries">#</a> Array.prototype.keys() &amp; Array.prototype.entries()</h2>
 <p>On retrouve aussi ces méthodes sur d’autres itérables comme Map ou Set.
-<code>Array.prototype.keys()</code> va renvoyer un nouveau tableau dont les valeurs seront les clefs du tableau passé en paramêtre.</p>
+<code>Array.prototype.keys()</code> va renvoyer un nouveau tableau dont les valeurs seront les clefs du tableau passé en paramètre :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> arr =  [...Array(<span class="hljs-number">3</span>).keys()]
 <span class="hljs-built_in">console</span>.log(arr) <span class="hljs-comment">// [0,1,2]</span></code></pre>
-<p><code>Array.prototype.entries()</code> quant à lui va renvoyer un tableau composé des paires clé,valeur</p>
+<p><code>Array.prototype.entries()</code> quant à lui va renvoyer un tableau composé des paires clé/valeur :</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">"hello"</span>, <span class="hljs-string">"world"</span>]
 <span class="hljs-built_in">console</span>.log(arr.entries()) <span class="hljs-comment">// [[0, "hello"], [1, "world"]]</span></code></pre>
 <h2 id="array-prototype-find"><a class="markdownIt-Anchor" href="#array-prototype-find">#</a> Array.prototype.find()</h2>
-<p>Cette méthode va permettre de renvoyer une valeur contenue dans le tableau si celle ci vérifie
-la condition définie par la fonction de prédicat passée en paramêtre. On retrouve le même principe qu’avec <code>filter</code>, <code>some</code> et <code>every</code>. Si aucune valeur ne
+<p>Cette méthode va permettre de renvoyer une valeur contenue dans le tableau si celle-ci vérifie
+la condition définie par la fonction de prédicat passée en paramètre. On retrouve le même principe qu’avec <code>filter</code>, <code>some</code> et <code>every</code>. Si aucune valeur ne
 valide la fonction de prédicat, alors la méthode renverra <code>undefined</code>.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> arr = [{id:<span class="hljs-number">1</span>, label:<span class="hljs-string">"hello"</span>}, {id:<span class="hljs-number">2</span>, name: <span class="hljs-string">"world"</span>}]
 <span class="hljs-keyword">const</span> found = arr.find(item =&gt; item.id === <span class="hljs-number">2</span>)
@@ -162,14 +162,14 @@ valide la fonction de prédicat, alors la méthode renverra <code>undefined</cod
 <span class="hljs-built_in">console</span>.log(found, notfound) <span class="hljs-comment">// {id:2, name: "worl"}, undefined</span></code></pre>
 <p>À noter qu’il existe aussi <code>Array.prototype.findIndex()</code> qui renverra non pas l’objet, mais l’index de l’objet qui validera la fonction de prédicat.</p>
 <h2 id="array-prototype-fill"><a class="markdownIt-Anchor" href="#array-prototype-fill">#</a> Array.prototype.fill()</h2>
-<p>Cette méthode va permettre de remplir un tableau avec une valeur passée en paramêtre. Il est toutefois possible de définir un index de début et un index de fin (comme avec slice par exemple), si l’on souhaite remplacer qu’une partie du tableau.</p>
+<p>Cette méthode va permettre de remplir un tableau avec une valeur passée en paramètre. Il est toutefois possible de définir un index de début et un index de fin (comme avec slice par exemple) si l’on souhaite remplacer qu’une partie du tableau.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> arr = <span class="hljs-built_in">Array</span>(<span class="hljs-number">3</span>).fill(<span class="hljs-number">1</span>)
 <span class="hljs-built_in">console</span>.log(arr) <span class="hljs-comment">// [1,1,1]</span></code></pre>
 <h2 id="array-prototype-copywithin"><a class="markdownIt-Anchor" href="#array-prototype-copywithin">#</a> Array.prototype.copyWithin()</h2>
-<p>Cette méthode va permettre de renvoyer un nouveau tableau en remplaçant une partie du tableau par une séquence de ce dernier. Pour cela on va indiquer à partir de quel index l’on souhaite démarrer la copie de la sequence ainsi que l’index de début et de fin de la séquence que l’on souhaite voir répéter.</p>
+<p>Cette méthode va permettre de renvoyer un nouveau tableau en remplaçant une partie du tableau par une séquence de ce dernier. Pour cela on va indiquer à partir de quel index on souhaite démarrer la copie de la sequence, ainsi que l’index de début et de fin de la séquence que l’on souhaite voir répéter.</p>
 <pre><code class="language-javascript"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">"hello"</span>,<span class="hljs-string">"alice"</span>, <span class="hljs-string">"my"</span>, <span class="hljs-string">"name"</span>, <span class="hljs-string">"is"</span> <span class="hljs-string">"bob"</span>]
 <span class="hljs-built_in">console</span>.log(arr.copyWithin(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>)]) <span class="hljs-comment">//  "hello","bob", "my", "name", "is" "bob"]</span></code></pre>
-<p>Certaines méthodes paraissent pas forcément super utiles alors n’hésitez à utiliser les commentaires pour partager des exemples d’utilisation plus intéressants :p</p>
+<p>Certaines méthodes ne paraissent pas forcément super utiles alors n’hésitez à utiliser les commentaires pour partager des exemples d’utilisation plus intéressants :p</p>
 ]]></description><link>http://putaindecode.io/fr/articles/js/es2015/array-methods-addition/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/array-methods-addition/</guid><pubDate>Sun, 13 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : paramètres rest et opérateur spread]]></title><description><![CDATA[<p>Identiques en apparence et en syntaxe, ils permettent d’effectuer plus
 simplement des opérations complexes sur les tableaux, ou tout autre objet
 itérable.</p>
