@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 19 Dec 2015 18:17:50 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les fonctions fléchées]]></title><description><![CDATA[<p>ES2015 nous apporte encore du sucre syntaxique qui risque très probablement de
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 19 Dec 2015 18:27:14 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les fonctions fléchées]]></title><description><![CDATA[<p>ES2015 nous apporte encore du sucre syntaxique qui risque très probablement de
 vous faire oublier <code>Function.prototype.bind()</code>.</p>
 <p>Les fonctions fléchées offrent une syntaxe raccourcie des fonctions en utilisant
 la syntaxe <code>=&gt;</code>.</p>
@@ -78,8 +78,13 @@ class Stuff extends Component {
         &lt;/button&gt;
 
         { /* REGARDE MAMAN, JE BIND RIEN */ }
-        &lt;button onClick={ (e) =&gt; this.setState({ omg: true }) }&gt;
+        &lt;button onClick={ (e) =&gt; this.onClick(e) }&gt;
           I don’t need `bind` anymore !
+        &lt;/button&gt;
+
+        { /* Encore plus simplement */ }
+        &lt;button onClick={ (e) =&gt; this.setState({ omg: true }) }&gt;
+          Hell yeah
         &lt;/button&gt;
       &lt;/div&gt;
     )
@@ -178,8 +183,13 @@ class Stuff extends Component {
         &lt;/button&gt;
 
         { /* LOOK MA', NO BIND ! */ }
-        &lt;button onClick={ (e) =&gt; this.setState({ omg: true }) }&gt;
+        &lt;button onClick={ (e) =&gt; this.onClick(e) }&gt;
           I don’t need `bind` anymore !
+        &lt;/button&gt;
+
+        { /* Simpler way */ }
+        &lt;button onClick={ (e) =&gt; this.setState({ omg: true }) }&gt;
+          Hell yeah
         &lt;/button&gt;
       &lt;/div&gt;
     )
