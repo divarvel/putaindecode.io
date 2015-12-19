@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 19 Dec 2015 18:28:33 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : la boucle for..of]]></title><description><![CDATA[<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction">#</a> Introduction</h2>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 19 Dec 2015 18:32:14 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : la boucle for..of]]></title><description><![CDATA[<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction">#</a> Introduction</h2>
 <p>Avec l’arrivée de nouveaux objets itérables, ECMAScript avait la nécessité de s’enrichir de
 nouvelles façons de parcourir ces derniers. Dans l’unique soucis de maintenir la rétro-compatibilité
 avec l’existant, l’ES6 se devait de garder la boucle <code>for..in</code> intacte.</p>
@@ -49,7 +49,7 @@ permettant de maintenir la rétro-compatibilité avec les versions antérieures 
 <p>Le principe est le même : parcourir n’importe quel type <em>d’objet itérable</em>.</p>
 <p>Dans sa forme la plus simple, la boucle <code>for..of</code> permet donc d’itérer sur l’ensemble des valeurs des clés d’un tableau.</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];
-arr.baz = <span class="hljs-string">'and mars'</span>; 
+arr.baz = <span class="hljs-string">'and mars'</span>;
 
 <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> arrValue <span class="hljs-keyword">of</span> arr ) {
   <span class="hljs-built_in">console</span>.log( arrValue ); <span class="hljs-comment">// 'hello', 'world'</span>
@@ -63,10 +63,10 @@ arr.baz = <span class="hljs-string">'and mars'</span>;
   <span class="hljs-built_in">console</span>.log(chr); <span class="hljs-comment">// 's', 'm', '0', '0', 't', 'h'</span>
 }</code></pre>
 <h3 id="les-nodelist"><a class="markdownIt-Anchor" href="#les-nodelist">#</a> les <em>NodeList</em></h3>
-<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> Cela ne fonctionnera que sur les environnements </span>
+<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> Cela ne fonctionnera que sur les environnements</span>
 <span class="hljs-comment">// implémentant NodeList.prototype[Symbol.iterator]</span>
 
-<span class="hljs-comment">// ce code ajoute une class "read" à toutes les balises &lt;p&gt; </span>
+<span class="hljs-comment">// ce code ajoute une class "read" à toutes les balises &lt;p&gt;</span>
 <span class="hljs-comment">// contenues dans la(les) balises &lt;article&gt;</span>
 
 <span class="hljs-keyword">const</span> articleParagraphs = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"article &gt; p"</span>);
@@ -132,7 +132,7 @@ permet de parcourir, de manière native, les tout nouveaux <em>objets itérables
 <li><a href="http://tc39wiki.calculist.org/es6/for-of/">Le post de Dave Herman</a></li>
 <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-for-in-and-for-of-statements">Specification ECMA-262</a></li>
 </ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/for-of/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/for-of/</guid><pubDate>Sat, 19 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la boucle for..of]]></title><description><![CDATA[<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction">#</a> Introduction</h2>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/for-of/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/for-of/</guid><pubDate>Wed, 16 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : for..of loop]]></title><description><![CDATA[<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction">#</a> Introduction</h2>
 <p>With the arrival of new iterable objects, ECMAScript had to create new ways to read through them.
 In the unique concern of maintaining the backward compatibility, ES6 had to const his <code>for..in</code> loop untouched.</p>
 <blockquote>
@@ -181,7 +181,7 @@ the backward compatibility with former version of the standard.</p>
 <p>The principal is the same : run across any type of <em>iterable object</em>.</p>
 <p>In its simplest form, the <code>for..of</code> loop therefore allow to iterate over all values of a table keys.</p>
 <pre><code class="language-js"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];
-arr.baz = <span class="hljs-string">'and mars'</span>; 
+arr.baz = <span class="hljs-string">'and mars'</span>;
 
 <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> arrValue <span class="hljs-keyword">of</span> arr ) {
   <span class="hljs-built_in">console</span>.log( arrValue ); <span class="hljs-comment">// 'hello', 'world'</span>
@@ -198,7 +198,7 @@ arr.baz = <span class="hljs-string">'and mars'</span>;
 <pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> This will only work in platforms that have</span>
 <span class="hljs-comment">// implemented NodeList.prototype[Symbol.iterator]</span>
 
-<span class="hljs-comment">// this code add a "read" class to each &lt;p&gt; markup </span>
+<span class="hljs-comment">// this code add a "read" class to each &lt;p&gt; markup</span>
 <span class="hljs-comment">// contained in each &lt;article&gt; markup</span>
 
 <span class="hljs-keyword">const</span> articleParagraphs = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"article &gt; p"</span>);
@@ -259,12 +259,12 @@ automated coercion of index to string.</p>
 allows to run through, in a native way, the brand new <em>iterable objects</em> of the language.</p>
 <p>For information about this feature :</p>
 <ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of">Documentation MDN</a></li>
-<li><a href="https://hacks.mozilla.org/2015/04/es6-in-depth-iterators-and-the-for-of-loop/">Le post de Jason Orendorff</a></li>
-<li><a href="http://tc39wiki.calculist.org/es6/for-of/">Le post de Dave Herman</a></li>
-<li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-for-in-and-for-of-statements">Specification ECMA-262</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of">MDN Documentation</a></li>
+<li><a href="https://hacks.mozilla.org/2015/04/es6-in-depth-iterators-and-the-for-of-loop/">The post of Jason Orendorff</a></li>
+<li><a href="http://tc39wiki.calculist.org/es6/for-of/">The post of Dave Herman</a></li>
+<li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-for-in-and-for-of-statements">ECMA-262 Specification</a></li>
 </ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/for-of/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/for-of/</guid><pubDate>Sat, 19 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Arrow functions]]></title><description><![CDATA[<p>ES2015 brings us some new syntax sugar that will likely make you stop using
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/for-of/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/for-of/</guid><pubDate>Wed, 16 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Arrow functions]]></title><description><![CDATA[<p>ES2015 brings us some new syntax sugar that will likely make you stop using
 <code>Function.prototype.bind()</code>.</p>
 <p>Arrow functions are just a function shorthand using the <code>=&gt;</code> syntax.</p>
 <pre><code class="language-js"><span class="hljs-comment">// es5</span>
