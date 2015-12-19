@@ -1,4 +1,374 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 19 Dec 2015 18:27:14 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : Les fonctions fléchées]]></title><description><![CDATA[<p>ES2015 nous apporte encore du sucre syntaxique qui risque très probablement de
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[putaindecode.io]]></title><description><![CDATA[putaindecode.io]]></description><link>http://putaindecode.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 19 Dec 2015 18:28:33 GMT</lastBuildDate><atom:link href="http://putaindecode.io/feed.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[ES6, ES2015 : la boucle for..of]]></title><description><![CDATA[<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction">#</a> Introduction</h2>
+<p>Avec l’arrivée de nouveaux objets itérables, ECMAScript avait la nécessité de s’enrichir de
+nouvelles façons de parcourir ces derniers. Dans l’unique soucis de maintenir la rétro-compatibilité
+avec l’existant, l’ES6 se devait de garder la boucle <code>for..in</code> intacte.</p>
+<blockquote>
+<p>Mais alors, comment créer une variante de cette même boucle avec des capacités améliorées ?</p>
+</blockquote>
+<p>La solution est simple : “Bienvenue au mot clé <code>of</code> !”</p>
+<p>Mais avant d’en dire plus, et pour comprendre l’utilité de ce nouveau mot clé, revoyons un peu l’existant.</p>
+<h2 id="le-bon-vieux-for-in"><a class="markdownIt-Anchor" href="#le-bon-vieux-for-in">#</a> Le bon vieux <code>for..in</code></h2>
+<p>Tout <em>JavaScript enthousiast</em> qui se respecte connaissait déjà la fameuse boucle <code>for..in</code>
+dont l’utilité première est d’itérer sur les différentes clés d’un objet ou d’un tableau.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = { foo : <span class="hljs-string">'hello'</span>, bar : <span class="hljs-string">'world'</span> };
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> obj ) {
+  <span class="hljs-built_in">console</span>.log( key + <span class="hljs-string">'-&gt;'</span> + obj[key] );  <span class="hljs-comment">// 'foo-&gt;hello', 'bar-&gt;world'</span>
+}</code></pre>
+<p>La boucle <code>for..in</code>, malgré sont apparente simplicité d’utilisation cache certains pièges :</p>
+<ul>
+<li>
+<p>Lors de l’itération sur un tableau la valeur de l’index est convertis en chaine
+de caractères : “0”, “1”, “2”, etc… Ce qui peut potentiellement poser problème lors de
+l’utilisation de l’index dans des opérations de calcul.</p>
+</li>
+<li>
+<p>La boucle itère sur l’ensemble des clés du tableau, mais aussi sur chacune de ses propriétés.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">'foo'</span>, <span class="hljs-string">'bar'</span>];
+arr.oups = <span class="hljs-string">'baz'</span>;
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> arr ) {
+  <span class="hljs-built_in">console</span>.log( key + <span class="hljs-string">'-&gt;'</span> + arr[key] ); <span class="hljs-comment">// '0-&gt;foo', '1-&gt;bar', 'oups-&gt;baz'</span>
+}</code></pre>
+</li>
+<li>
+<p>L’ordre d’itération sur l’ensemble des clés d’un object peut varier selon l’environnement d’execution du code.</p>
+</li>
+</ul>
+<h2 id="la-methode-alternative-foreach"><a class="markdownIt-Anchor" href="#la-methode-alternative-foreach">#</a> La methode alternative <code>.forEach()</code></h2>
+<p>La boucle <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/forEach"><code>Array.prototype.forEach()</code></a>
+permet une itération plus sécurisé, mais présente certains autres inconvénients tels que :</p>
+<ul>
+<li>Impossibilité d’interrompre la boucle avec les instructions traditionnelles <code>break;</code> et <code>return;</code></li>
+<li>Méthode réservée aux tableaux.</li>
+</ul>
+<h2 id="for-of-la-rescousse"><a class="markdownIt-Anchor" href="#for-of-la-rescousse">#</a> <code>for..of</code> à la rescousse</h2>
+<p>Le consortium ECMA a donc décidé de procéder à la création d’une nouvelle version améliorée
+de la boucle <code>for..in</code>. Ainsi nait la boucle <code>for..of</code> qui coexistera désormais avec la précédente
+permettant de maintenir la rétro-compatibilité avec les versions antérieures de la norme.</p>
+<p>Le principe est le même : parcourir n’importe quel type <em>d’objet itérable</em>.</p>
+<p>Dans sa forme la plus simple, la boucle <code>for..of</code> permet donc d’itérer sur l’ensemble des valeurs des clés d’un tableau.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];
+arr.baz = <span class="hljs-string">'and mars'</span>; 
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> arrValue <span class="hljs-keyword">of</span> arr ) {
+  <span class="hljs-built_in">console</span>.log( arrValue ); <span class="hljs-comment">// 'hello', 'world'</span>
+}</code></pre>
+<p>La boucle <code>for..of</code> peut aussi itérer sur des types plus complexes comme :</p>
+<h3 id="les-strings"><a class="markdownIt-Anchor" href="#les-strings">#</a> les <em>Strings</em></h3>
+<p>Dans ce cas, chaque caractère est traité comme une entité Unicode.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str = <span class="hljs-string">'sm00th'</span>;
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> chr <span class="hljs-keyword">of</span> str ){
+  <span class="hljs-built_in">console</span>.log(chr); <span class="hljs-comment">// 's', 'm', '0', '0', 't', 'h'</span>
+}</code></pre>
+<h3 id="les-nodelist"><a class="markdownIt-Anchor" href="#les-nodelist">#</a> les <em>NodeList</em></h3>
+<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> Cela ne fonctionnera que sur les environnements </span>
+<span class="hljs-comment">// implémentant NodeList.prototype[Symbol.iterator]</span>
+
+<span class="hljs-comment">// ce code ajoute une class "read" à toutes les balises &lt;p&gt; </span>
+<span class="hljs-comment">// contenues dans la(les) balises &lt;article&gt;</span>
+
+<span class="hljs-keyword">const</span> articleParagraphs = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"article &gt; p"</span>);
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> paragraph <span class="hljs-keyword">of</span> articleParagraphs ) {
+  paragraph.classList.add(<span class="hljs-string">"read"</span>);
+}</code></pre>
+<h3 id="les-maps"><a class="markdownIt-Anchor" href="#les-maps">#</a> les <em>Maps</em></h3>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> m = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[<span class="hljs-string">'foo'</span>, <span class="hljs-string">'hello'</span>], [<span class="hljs-string">'bar'</span>, <span class="hljs-string">'world'</span>]]);
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> [name, value] <span class="hljs-keyword">of</span> m ) {
+  <span class="hljs-built_in">console</span>.log(name + <span class="hljs-string">"-&gt;"</span> + value); <span class="hljs-comment">//"foo-&gt;hello", "bar-&gt;world"</span>
+}</code></pre>
+<h3 id="les-sets"><a class="markdownIt-Anchor" href="#les-sets">#</a> les <em>Sets</em></h3>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> s = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'foo'</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">42</span>]);
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> value <span class="hljs-keyword">of</span> s ) {
+  <span class="hljs-built_in">console</span>.log(value); <span class="hljs-comment">// 'foo', true, 42</span>
+}</code></pre>
+<h3 id="les-generators"><a class="markdownIt-Anchor" href="#les-generators">#</a> les <em>Generators</em></h3>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> *<span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">yield</span> <span class="hljs-string">'foo'</span>;
+    <span class="hljs-keyword">yield</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">yield</span> <span class="hljs-number">42</span>;
+    <span class="hljs-keyword">yield</span> <span class="hljs-string">'bar'</span>;
+}
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> v <span class="hljs-keyword">of</span> foo() ) {
+    <span class="hljs-built_in">console</span>.log( v ); <span class="hljs-comment">// 'foo', false, 42, 'bar'</span>
+}</code></pre>
+<blockquote>
+<p>Et les objets traditionnels dans tout ça ?</p>
+</blockquote>
+<p>Etonnement, les objets ne peuvent pas être parcouru directement avec l’aide de
+cette nouvelle boucle. Heureusement il existe une solution de contournement
+par l’utilisation de <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/keys"><code>Object.keys()</code></a></p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = { foo : <span class="hljs-string">'hello'</span>, bar : <span class="hljs-string">'world'</span> };
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> key <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.keys(obj) ) {
+  <span class="hljs-built_in">console</span>.log(key + <span class="hljs-string">"-&gt;"</span> + obj[key]); <span class="hljs-comment">// 'foo-&gt;hello', 'bar-&gt;world'</span>
+}</code></pre>
+<h2 id="en-r-sum"><a class="markdownIt-Anchor" href="#en-r-sum">#</a> En résumé</h2>
+<p><code>for..of</code> vient compléter les manques de <code>for..in</code> et permet
+une itération simplifiée sur les <em>objets itérables</em> tels que :</p>
+<ul>
+<li><a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array">Array</a></li>
+<li><a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/String">String</a></li>
+<li><a href="http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/">Maps &amp; WeakMaps</a></li>
+<li><a href="http://putaindecode.io/fr/articles/js/es2015/sets-weaksets/">Sets &amp; WeakSets</a></li>
+<li><a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Instructions/function*">Generators</a></li>
+<li><a href="https://developer.mozilla.org/fr/docs/Web/API/NodeList">NodeList</a></li>
+<li><a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Fonctions/arguments">arguments</a></li>
+</ul>
+<p>De plus, <code>for..of</code> résout à présent les pièges tels que l’ordre d’itération non constant ou la coercion
+automatique des index en chaine de caractères.</p>
+<h2 id="pour-aller-plus-loin"><a class="markdownIt-Anchor" href="#pour-aller-plus-loin">#</a> Pour aller plus loin</h2>
+<p>La boucle <code>for..of</code> est donc une corde de plus à l’arc de l’ES6 qui
+permet de parcourir, de manière native, les tout nouveaux <em>objets itérables</em> du langage.</p>
+<p>Pour en savoir plus sur ses spécificités :</p>
+<ul>
+<li><a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Instructions/for...of">Documentation MDN</a></li>
+<li><a href="https://hacks.mozilla.org/2015/04/es6-in-depth-iterators-and-the-for-of-loop/">Le post de Jason Orendorff</a></li>
+<li><a href="http://tc39wiki.calculist.org/es6/for-of/">Le post de Dave Herman</a></li>
+<li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-for-in-and-for-of-statements">Specification ECMA-262</a></li>
+</ul>
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/for-of/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/for-of/</guid><pubDate>Sat, 19 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : la boucle for..of]]></title><description><![CDATA[<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction">#</a> Introduction</h2>
+<p>With the arrival of new iterable objects, ECMAScript had to create new ways to read through them.
+In the unique concern of maintaining the backward compatibility, ES6 had to const his <code>for..in</code> loop untouched.</p>
+<blockquote>
+<p>But then, how to create a copycat of this same loop with improved capabilities ?</p>
+</blockquote>
+<p>Solution is quite simple: “Welcome to the <code>of</code> keyword!”</p>
+<p>But before I tell you more, and to fully understand the usefulness of this new keyword, const review the existing.</p>
+<h2 id="the-good-ol-for-in"><a class="markdownIt-Anchor" href="#the-good-ol-for-in">#</a> The good ol’ <code>for..in</code></h2>
+<p>All self-respecting <em>JavaScript enthousiast</em> already knows the famous <code>for..in</code> loop
+whose first value is to iterate over the different keys of an object or an array.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = { foo : <span class="hljs-string">'hello'</span>, bar : <span class="hljs-string">'world'</span> };
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> obj ) {
+  <span class="hljs-built_in">console</span>.log( key + <span class="hljs-string">'-&gt;'</span> + obj[key] );  <span class="hljs-comment">// 'foo-&gt;hello', 'bar-&gt;world'</span>
+}</code></pre>
+<p>The <code>for..in</code> loop, despite its ease of use hide some pitfalls:</p>
+<ul>
+<li>
+<p>When itarating over an array, index value is parsed to string : “0”, “1”, “2”, etc…
+This behaviour can lead to potential error when index is used in computation.</p>
+</li>
+<li>
+<p>The loop iterate across all the table keys, but also over each of its properties.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">'foo'</span>, <span class="hljs-string">'bar'</span>];
+arr.oups = <span class="hljs-string">'baz'</span>;
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> arr ) {
+  <span class="hljs-built_in">console</span>.log( key + <span class="hljs-string">'-&gt;'</span> + arr[key] ); <span class="hljs-comment">// '0-&gt;foo', '1-&gt;bar', 'oups-&gt;baz'</span>
+}</code></pre>
+</li>
+<li>
+<p>Iteration order over a given object properties may vary across depending on the code executing environment.</p>
+</li>
+</ul>
+<h2 id="the-alternative-foreach-method"><a class="markdownIt-Anchor" href="#the-alternative-foreach-method">#</a> The alternative <code>.forEach()</code> method</h2>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach"><code>Array.prototype.forEach()</code></a>
+loop allow a more secure iteration, but bring other downsides as:</p>
+<ul>
+<li>Impossibility to halt the loop with the traditional <code>break;</code> and <code>return;</code> statements.</li>
+<li>Array only dedicated method.</li>
+</ul>
+<h2 id="for-of-to-the-rescue"><a class="markdownIt-Anchor" href="#for-of-to-the-rescue">#</a> <code>for..of</code> to the rescue</h2>
+<p>ECMA consortium has so decided to proceed with establishment of a new enhanced version of the <code>for..in</code> loop.
+Thus was born the <code>for..of</code> loop which, from now on, will coexist with the previous one allowing to maintain
+the backward compatibility with former version of the standard.</p>
+<p>The principal is the same : run across any type of <em>iterable object</em>.</p>
+<p>In its simplest form, the <code>for..of</code> loop therefore allow to iterate over all values of a table keys.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];
+arr.baz = <span class="hljs-string">'and mars'</span>; 
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> arrValue <span class="hljs-keyword">of</span> arr ) {
+  <span class="hljs-built_in">console</span>.log( arrValue ); <span class="hljs-comment">// 'hello', 'world'</span>
+}</code></pre>
+<p>The <code>for..of</code> loop can also iterate over more complex types like:</p>
+<h3 id="strings"><a class="markdownIt-Anchor" href="#strings">#</a> <em>Strings</em></h3>
+<p>In this case, each character is evaluated as a Unicode entity.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str = <span class="hljs-string">'sm00th'</span>;
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> chr <span class="hljs-keyword">of</span> str ){
+  <span class="hljs-built_in">console</span>.log(chr); <span class="hljs-comment">// 's', 'm', '0', '0', 't', 'h'</span>
+}</code></pre>
+<h3 id="nodelist"><a class="markdownIt-Anchor" href="#nodelist">#</a> <em>NodeList</em></h3>
+<pre><code class="language-js"><span class="hljs-comment">// <span class="hljs-doctag">Note:</span> This will only work in platforms that have</span>
+<span class="hljs-comment">// implemented NodeList.prototype[Symbol.iterator]</span>
+
+<span class="hljs-comment">// this code add a "read" class to each &lt;p&gt; markup </span>
+<span class="hljs-comment">// contained in each &lt;article&gt; markup</span>
+
+<span class="hljs-keyword">const</span> articleParagraphs = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"article &gt; p"</span>);
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> paragraph <span class="hljs-keyword">of</span> articleParagraphs ) {
+  paragraph.classList.add(<span class="hljs-string">"read"</span>);
+}</code></pre>
+<h3 id="maps"><a class="markdownIt-Anchor" href="#maps">#</a> <em>Maps</em></h3>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> m = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[<span class="hljs-string">'foo'</span>, <span class="hljs-string">'hello'</span>], [<span class="hljs-string">'bar'</span>, <span class="hljs-string">'world'</span>]]);
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> [name, value] <span class="hljs-keyword">of</span> m ) {
+  <span class="hljs-built_in">console</span>.log(name + <span class="hljs-string">"-&gt;"</span> + value); <span class="hljs-comment">//"foo-&gt;hello", "bar-&gt;world"</span>
+}</code></pre>
+<h3 id="sets"><a class="markdownIt-Anchor" href="#sets">#</a> <em>Sets</em></h3>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> s = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'foo'</span>, <span class="hljs-literal">true</span>, <span class="hljs-number">42</span>]);
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> value <span class="hljs-keyword">of</span> s ) {
+  <span class="hljs-built_in">console</span>.log(value); <span class="hljs-comment">// 'foo', true, 42</span>
+}</code></pre>
+<h3 id="generators"><a class="markdownIt-Anchor" href="#generators">#</a> <em>Generators</em></h3>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> *<span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">yield</span> <span class="hljs-string">'foo'</span>;
+    <span class="hljs-keyword">yield</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">yield</span> <span class="hljs-number">42</span>;
+    <span class="hljs-keyword">yield</span> <span class="hljs-string">'bar'</span>;
+}
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> v <span class="hljs-keyword">of</span> foo() ) {
+    <span class="hljs-built_in">console</span>.log( v ); <span class="hljs-comment">// 'foo', false, 42, 'bar'</span>
+}</code></pre>
+<blockquote>
+<p>What about traditional object ?</p>
+</blockquote>
+<p>Suprisingly, objects can’t be directly browsed by this brand new loop.
+Fortunately a workaround exists such as
+<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/keys"><code>Object.keys()</code></a></p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = { foo : <span class="hljs-string">'hello'</span>, bar : <span class="hljs-string">'world'</span> };
+
+<span class="hljs-keyword">for</span> ( <span class="hljs-keyword">const</span> key <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.keys(obj) ) {
+  <span class="hljs-built_in">console</span>.log(key + <span class="hljs-string">"-&gt;"</span> + obj[key]); <span class="hljs-comment">// 'foo-&gt;hello', 'bar-&gt;world'</span>
+}</code></pre>
+<h2 id="in-a-nutshell"><a class="markdownIt-Anchor" href="#in-a-nutshell">#</a> In a nutshell</h2>
+<p><code>for..of</code> comes to address <code>for..in</code> loop gaps and allow
+a simplified iteration over <em>iterable objects</em> such as:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Maps &amp; WeakMaps</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Sets &amp; WeakSets</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function%2A">Generators</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/NodeList">NodeList</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments">arguments</a></li>
+</ul>
+<p>Furthermore, <code>for..of</code> as of now resolve pitfalls such as unpredictable iteration order or
+automated coercion of index to string.</p>
+<h2 id="to-go-further"><a class="markdownIt-Anchor" href="#to-go-further">#</a> To go further</h2>
+<p><code>for..of</code> loop is another added arrow to ES6 bow that
+allows to run through, in a native way, the brand new <em>iterable objects</em> of the language.</p>
+<p>For information about this feature :</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of">Documentation MDN</a></li>
+<li><a href="https://hacks.mozilla.org/2015/04/es6-in-depth-iterators-and-the-for-of-loop/">Le post de Jason Orendorff</a></li>
+<li><a href="http://tc39wiki.calculist.org/es6/for-of/">Le post de Dave Herman</a></li>
+<li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-for-in-and-for-of-statements">Specification ECMA-262</a></li>
+</ul>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/for-of/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/for-of/</guid><pubDate>Sat, 19 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Arrow functions]]></title><description><![CDATA[<p>ES2015 brings us some new syntax sugar that will likely make you stop using
+<code>Function.prototype.bind()</code>.</p>
+<p>Arrow functions are just a function shorthand using the <code>=&gt;</code> syntax.</p>
+<pre><code class="language-js"><span class="hljs-comment">// es5</span>
+<span class="hljs-keyword">var</span> myFn = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">x</span>) </span>{
+    <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span>
+}
+
+<span class="hljs-comment">// es6</span>
+<span class="hljs-keyword">const</span> myFn = (x) =&gt; {
+  <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span>
+}</code></pre>
+<p>Arrow functions are syntactically similar to the related feature that exists in
+other languages like CoffeeScript, Java (8+), C#…</p>
+<p>They support both expression and statement bodies.
+In our example above, we have seen a classic statement.
+But for simple function, we can use an simple expression, to make things shorter.
+That means that the previous example can be also written like this:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = (x) =&gt; x + <span class="hljs-number">1</span></code></pre>
+<p>Note that when you have only one argument, you can omit parenthesis around it.
+So we can also wrote the example like this</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = x =&gt; x + <span class="hljs-number">1</span></code></pre>
+<p>And you can also wrap the body in parenthesis if you want to make a multiline expression</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = x =&gt; (
+  x +
+  <span class="hljs-number">1</span> <span class="hljs-comment">// that can be multilines, you can imagine some JSX here ;)</span>
+)</code></pre>
+<p>So this examples are all the same :</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = (x) =&gt; {
+  <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span>
+}
+<span class="hljs-comment">// ===</span>
+<span class="hljs-keyword">const</span> myFn = (x) =&gt; x + <span class="hljs-number">1</span>
+<span class="hljs-comment">// ===</span>
+<span class="hljs-keyword">const</span> myFn = x =&gt; x + <span class="hljs-number">1</span>
+<span class="hljs-comment">// ===</span>
+<span class="hljs-keyword">const</span> myFn = x =&gt; (x + <span class="hljs-number">1</span>)</code></pre>
+<p>In practice you will use this small functions in method like Array
+reduce/filter/map etc.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> nums = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+<span class="hljs-keyword">const</span> odds = nums.filter(v =&gt; v%<span class="hljs-number">2</span>) <span class="hljs-comment">// [1, 3, 5]</span>
+<span class="hljs-keyword">const</span> oddsSum = odds.reduce((sum, v) =&gt; sum+v, <span class="hljs-number">0</span>) <span class="hljs-comment">// 9</span></code></pre>
+<h2 id="arrow-functions-don-t-have-a-this"><a class="markdownIt-Anchor" href="#arrow-functions-don-t-have-a-this">#</a> Arrow functions don’t have a <code>this</code></h2>
+<p>Yes your read correctly: unlike functions, arrows function share the same lexical this as their surrounding code.
+So that means the <code>this</code> you might use use in the body of an arrow function refer to the parent scope:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> Someone = {
+  name: “MoOx”,
+  friends: [], <span class="hljs-comment">// he got no friends atm :(</span>
+  printFriends() {
+    <span class="hljs-keyword">this</span>._friends.forEach(f =&gt;
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>._name + <span class="hljs-string">" knows "</span> + f)
+      <span class="hljs-comment">// `this` is not the function of the forEach !</span>
+    )
+  }
+}</code></pre>
+<p>By reading this code, you might understand that you are likely to stop using
+<code>bind()</code>:</p>
+<pre><code class="language-js">import React, { Component } from “react”
+class Stuff extends Component {
+
+  // old way
+  onClick(e) {
+    this.setState({ omg: false })
+  }
+
+  render() {
+    return (
+      &lt;div&gt;
+        { /* old way */ }
+        &lt;button onClick={ this.onClick.bind(this) }&gt;
+          Old binded call
+        &lt;/button&gt;
+
+        { /* LOOK MA', NO BIND ! */ }
+        &lt;button onClick={ (e) =&gt; this.onClick(e) }&gt;
+          I don’t need `bind` anymore !
+        &lt;/button&gt;
+
+        { /* Simpler way */ }
+        &lt;button onClick={ (e) =&gt; this.setState({ omg: true }) }&gt;
+          Hell yeah
+        &lt;/button&gt;
+      &lt;/div&gt;
+    )
+  }
+}</code></pre>
+<h2 id="note-about-expression-body-and-object"><a class="markdownIt-Anchor" href="#note-about-expression-body-and-object">#</a> Note about expression body and Object</h2>
+<p>If you want to return an object you might be surprised to get a syntax error
+with this code</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> aFn = (obj) =&gt; {key: obj.value}</code></pre>
+<p>Keep in mind that in this context, a brace is to start a statement body, not an
+object.
+So you will need this</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> aFn = (obj) =&gt; { <span class="hljs-keyword">return</span> {key: obj.value} }</code></pre>
+<p>But wait, there is a trick: a stupid couple of parenthesis:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> aFn = (obj) =&gt; ({key: obj.value}) <span class="hljs-comment">// It works !</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>Take a look to the
+<a href="https://kangax.github.io/compat-table/es6/#test-arrow_functions">compatibility table</a>.
+You will see that arrow functions are already supported by most browsers but you
+might need <a href="http://babeljs.io">Babel</a> to use it today.</p>
+<p>You will probably use this more and more.
+Even if <code>function</code> keyword is not dead, arrow functions <code>=&gt;</code> are probably
+going to be a thing !</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/arrow-functions/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/arrow-functions/</guid><pubDate>Tue, 15 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Les fonctions fléchées]]></title><description><![CDATA[<p>ES2015 nous apporte encore du sucre syntaxique qui risque très probablement de
 vous faire oublier <code>Function.prototype.bind()</code>.</p>
 <p>Les fonctions fléchées offrent une syntaxe raccourcie des fonctions en utilisant
 la syntaxe <code>=&gt;</code>.</p>
@@ -109,111 +479,7 @@ surement d’avoir à utiliser <a href="http://babeljs.io">Babel</a> afin d’ê
 <p>Vous verrez que vous utiliserez les fonctions fléchées de plus en plus.
 Même si le mot clé <code>function</code> n’est pas mort, les fonctions fléchées ont un
 avenir certain !</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/arrow-functions/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/arrow-functions/</guid><pubDate>Tue, 15 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Arrow functions]]></title><description><![CDATA[<p>ES2015 brings us some new syntax sugar that will likely make you stop using
-<code>Function.prototype.bind()</code>.</p>
-<p>Arrow functions are just a function shorthand using the <code>=&gt;</code> syntax.</p>
-<pre><code class="language-js"><span class="hljs-comment">// es5</span>
-<span class="hljs-keyword">var</span> myFn = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">x</span>) </span>{
-    <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span>
-}
-
-<span class="hljs-comment">// es6</span>
-<span class="hljs-keyword">const</span> myFn = (x) =&gt; {
-  <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span>
-}</code></pre>
-<p>Arrow functions are syntactically similar to the related feature that exists in
-other languages like CoffeeScript, Java (8+), C#…</p>
-<p>They support both expression and statement bodies.
-In our example above, we have seen a classic statement.
-But for simple function, we can use an simple expression, to make things shorter.
-That means that the previous example can be also written like this:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = (x) =&gt; x + <span class="hljs-number">1</span></code></pre>
-<p>Note that when you have only one argument, you can omit parenthesis around it.
-So we can also wrote the example like this</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = x =&gt; x + <span class="hljs-number">1</span></code></pre>
-<p>And you can also wrap the body in parenthesis if you want to make a multiline expression</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = x =&gt; (
-  x +
-  <span class="hljs-number">1</span> <span class="hljs-comment">// that can be multilines, you can imagine some JSX here ;)</span>
-)</code></pre>
-<p>So this examples are all the same :</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> myFn = (x) =&gt; {
-  <span class="hljs-keyword">return</span> x + <span class="hljs-number">1</span>
-}
-<span class="hljs-comment">// ===</span>
-<span class="hljs-keyword">const</span> myFn = (x) =&gt; x + <span class="hljs-number">1</span>
-<span class="hljs-comment">// ===</span>
-<span class="hljs-keyword">const</span> myFn = x =&gt; x + <span class="hljs-number">1</span>
-<span class="hljs-comment">// ===</span>
-<span class="hljs-keyword">const</span> myFn = x =&gt; (x + <span class="hljs-number">1</span>)</code></pre>
-<p>In practice you will use this small functions in method like Array
-reduce/filter/map etc.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> nums = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
-<span class="hljs-keyword">const</span> odds = nums.filter(v =&gt; v%<span class="hljs-number">2</span>) <span class="hljs-comment">// [1, 3, 5]</span>
-<span class="hljs-keyword">const</span> oddsSum = odds.reduce((sum, v) =&gt; sum+v, <span class="hljs-number">0</span>) <span class="hljs-comment">// 9</span></code></pre>
-<h2 id="arrow-functions-don-t-have-a-this"><a class="markdownIt-Anchor" href="#arrow-functions-don-t-have-a-this">#</a> Arrow functions don’t have a <code>this</code></h2>
-<p>Yes your read correctly: unlike functions, arrows function share the same lexical this as their surrounding code.
-So that means the <code>this</code> you might use use in the body of an arrow function refer to the parent scope:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> Someone = {
-  name: “MoOx”,
-  friends: [], <span class="hljs-comment">// he got no friends atm :(</span>
-  printFriends() {
-    <span class="hljs-keyword">this</span>._friends.forEach(f =&gt;
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>._name + <span class="hljs-string">" knows "</span> + f)
-      <span class="hljs-comment">// `this` is not the function of the forEach !</span>
-    )
-  }
-}</code></pre>
-<p>By reading this code, you might understand that you are likely to stop using
-<code>bind()</code>:</p>
-<pre><code class="language-js">import React, { Component } from “react”
-class Stuff extends Component {
-
-  // old way
-  onClick(e) {
-    this.setState({ omg: false })
-  }
-
-  render() {
-    return (
-      &lt;div&gt;
-        { /* old way */ }
-        &lt;button onClick={ this.onClick.bind(this) }&gt;
-          Old binded call
-        &lt;/button&gt;
-
-        { /* LOOK MA', NO BIND ! */ }
-        &lt;button onClick={ (e) =&gt; this.onClick(e) }&gt;
-          I don’t need `bind` anymore !
-        &lt;/button&gt;
-
-        { /* Simpler way */ }
-        &lt;button onClick={ (e) =&gt; this.setState({ omg: true }) }&gt;
-          Hell yeah
-        &lt;/button&gt;
-      &lt;/div&gt;
-    )
-  }
-}</code></pre>
-<h2 id="note-about-expression-body-and-object"><a class="markdownIt-Anchor" href="#note-about-expression-body-and-object">#</a> Note about expression body and Object</h2>
-<p>If you want to return an object you might be surprised to get a syntax error
-with this code</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> aFn = (obj) =&gt; {key: obj.value}</code></pre>
-<p>Keep in mind that in this context, a brace is to start a statement body, not an
-object.
-So you will need this</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> aFn = (obj) =&gt; { <span class="hljs-keyword">return</span> {key: obj.value} }</code></pre>
-<p>But wait, there is a trick: a stupid couple of parenthesis:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> aFn = (obj) =&gt; ({key: obj.value}) <span class="hljs-comment">// It works !</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>Take a look to the
-<a href="https://kangax.github.io/compat-table/es6/#test-arrow_functions">compatibility table</a>.
-You will see that arrow functions are already supported by most browsers but you
-might need <a href="http://babeljs.io">Babel</a> to use it today.</p>
-<p>You will probably use this more and more.
-Even if <code>function</code> keyword is not dead, arrow functions <code>=&gt;</code> are probably
-going to be a thing !</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/arrow-functions/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/arrow-functions/</guid><pubDate>Tue, 15 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui, une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/arrow-functions/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/arrow-functions/</guid><pubDate>Tue, 15 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES2016 (?): fonctions asynchrones (async/await)]]></title><description><![CDATA[<p>Aujourd’hui, une fonctionnalité taggée peut-être abusivement “ES6” puisqu’elle ne
 fait pas partie des propositions acceptées cette année : les fonctions asynchrones (async/await).
 La <a href="https://tc39.github.io/ecmascript-asyncawait/">spécification</a> est encore au
 stade 3 (candidate) à l’heure de cet article. Mais il ne fait plus aucun doute
@@ -528,7 +794,223 @@ myWeakMap.set(<span class="hljs-built_in">window</span>, <span class="hljs-numbe
     callbacks.get(<span class="hljs-keyword">this</span>).forEach((func) =&gt; func(...args))
   }
 }</code></pre>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/</guid><pubDate>Fri, 11 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : itérateurs et générateurs]]></title><description><![CDATA[<p>Un gros morceau aujourd’hui : les itérateurs et les fonctions qui les génèrent,
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/maps-weakmaps/</guid><pubDate>Fri, 11 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : iterators and generators]]></title><description><![CDATA[<p>ES2015 brings a lot of syntax sugar but not a lot of new real features.
+Generators are a new feature to generate iterators that follow the
+<a href="/en/articles/js/es2015/iterators/">iterator protocol</a>.
+They allow to take control of the execution of a function from the outside.</p>
+<h2 id="idle-function"><a class="markdownIt-Anchor" href="#idle-function">#</a> Idle function</h2>
+<p>A function followed by an asterisk (<code>function*</code>) is never executed directly
+and instead calling it will return an iterator.
+A generator is able to pause itself (and will do that by default).
+It’s also capable of continue where it was paused: the iterator returned is an
+object that contains a <code>next</code> method which allows (when you call it) to
+continue the execution of the generator where it was paused.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">idleFunction</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'World'</span>)
+}
+
+<span class="hljs-keyword">const</span> iterator = idleFunction()
+<span class="hljs-comment">// The execution is paused, and is waiting to be continued</span>
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Hello'</span>)
+iterator.next() <span class="hljs-comment">// The execution will now continue and will log "World"</span></code></pre>
+<p>Note that this is not <strong>blocking</strong> code: the function is paused, the execution
+can continue later, but meanwhile, the <em>event-loop</em> is still running.</p>
+<h2 id="emitting-new-values-with-yield"><a class="markdownIt-Anchor" href="#emitting-new-values-with-yield">#</a> Emitting new values with <code>yield</code></h2>
+<p>Following the <a href="/en/articles/js/es2015/iterators/">iterator protocol</a>, the
+<code>next()</code> method will returns an object with 2 properties :</p>
+<ul>
+<li><code>done</code> is equal to <code>true</code> when generator has finished its job exécution</li>
+<li><code>value</code> is the value emitted by the generator when it become idle</li>
+</ul>
+<p>How to emit a value ? The keyword <code>yield</code> is made for this:
+it will returns a value and idle the execution of the function.
+The thing is: you are going to use yield multiple times in the same function.
+Otherwise a generator does not make sense, and a simple function with <code>return</code>
+is enough.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">numbers</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = numbers()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+iterator.next() <span class="hljs-comment">// { value: 2, done: false }</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<p>Note: if our generator <code>return</code>s a value, it will be affected to the <code>value</code>
+of the last iteration.</p>
+<h3 id="use-case-infinite-lists"><a class="markdownIt-Anchor" href="#use-case-infinite-lists">#</a> <em>Use case</em> : infinite lists</h3>
+<p>At this stage, the first interesting use case is to handle an infinite list.
+We can loop on a list that do not have a precise length.
+Here is an example with the Fibonacci sequence to get all results lower than
+100 :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fibo</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> [a, b] = [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]
+  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) { <span class="hljs-comment">// Who can stop me?</span>
+    [a, b] = [b, a + b]
+    <span class="hljs-keyword">yield</span> a
+  }
+}
+
+<span class="hljs-keyword">const</span> iterator = fibo()
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> n <span class="hljs-keyword">of</span> iterator) {
+  <span class="hljs-keyword">if</span> (n &gt;= <span class="hljs-number">100</span>) {
+    <span class="hljs-keyword">break</span> <span class="hljs-comment">// *I* can stop you</span>
+  }
+  <span class="hljs-built_in">console</span>.log(n)
+}
+<span class="hljs-comment">// 1 2 3 5 8 13 21 34 55 89</span></code></pre>
+<p>Note : The <code>for … of</code> will be explained in another article.</p>
+<h2 id="sending-value-to-the-generator"><a class="markdownIt-Anchor" href="#sending-value-to-the-generator">#</a> Sending value to the generator</h2>
+<p>We have seen that <code>yield</code> allows to emit a value from the generator.
+The opposite is possible too : <code>next</code> accepts a value that will be returned by
+<code>yield</code> :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">math</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// the first next() will "start" the generator</span>
+  <span class="hljs-keyword">const</span> x = <span class="hljs-keyword">yield</span> <span class="hljs-comment">// the first value will be undefined</span>
+  <span class="hljs-comment">// x = the argument of the other next() call</span>
+  <span class="hljs-keyword">const</span> y = <span class="hljs-keyword">yield</span> x + <span class="hljs-number">1</span> <span class="hljs-comment">// value of the second iteration : x + 1</span>
+  <span class="hljs-comment">// y = third call of next()</span>
+  <span class="hljs-keyword">yield</span> y <span class="hljs-comment">// value of the last iteration : y</span>
+  <span class="hljs-comment">// the fourth call and the others will return { value: undefined, done: true }</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = math()
+iterator.next(<span class="hljs-number">42</span>) <span class="hljs-comment">// { value: undefined, done: false }</span>
+<span class="hljs-comment">// Passer un paramètre au premier appel à next() n'est pas utile : cette valeur</span>
+<span class="hljs-comment">// n'est pas accessible dans le générateur car aucun "yield" correspondant</span>
+
+iterator.next(<span class="hljs-number">33</span>) <span class="hljs-comment">// { value: 34, done: false }, x = 33 dans le générateur</span>
+iterator.next(<span class="hljs-number">27</span>) <span class="hljs-comment">// { value: 27, done: false }, y = 27 dans le générateur</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<p>This might sound not really useful, but keep in mind that you can send any type
+of data to <code>next()</code> : a function, an object, another iterator…
+Possiblities are limitless ! Let’s take a look to an example using promises.</p>
+<h3 id="use-case-co-routines"><a class="markdownIt-Anchor" href="#use-case-co-routines">#</a> <em>Use case</em> : co-routines</h3>
+<p>The code of the generator itself cannot be async: call to <code>yield</code> follow each
+others synchronously.
+The main controller can still be free to call <code>next()</code> when it wants to.</p>
+<p>So we have functions that we can play and pause whenever we want.
+What if our generator emitted a promise? In order to tell when it’s time to
+continue.
+What if the controller, when it knows it got a promise wait for it to be
+resolved in order to send back the value to the generator?
+This way, the generator will be able to run synchronous code in an non blocking
+way when handling async operations :</p>
+<pre><code class="language-js">execAsync(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Ajax request…"</span>)
+  <span class="hljs-keyword">var</span> rows = <span class="hljs-keyword">yield</span> fetch(<span class="hljs-string">"http://my.api/get"</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Work…"</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Save…"</span>)
+  <span class="hljs-keyword">yield</span> fetch(<span class="hljs-string">"http://my.api/post"</span>)
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"OK."</span>)
+}) <span class="hljs-comment">// Ajax request… Work… Save… OK.</span></code></pre>
+<p>How cool is that? This is clearly the most interesting use case for us and is
+actually pretty simple :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execAsync</span> (<span class="hljs-params">promiseGenerator</span>) </span>{
+  <span class="hljs-keyword">const</span> iter = promiseGenerator() <span class="hljs-comment">// pause…</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loop</span> (<span class="hljs-params">iteration</span>) </span>{
+    <span class="hljs-keyword">if</span> (iteration.done) { <span class="hljs-comment">// That's the part to detect the last return</span>
+      <span class="hljs-keyword">return</span> iteration.value
+    }
+
+    <span class="hljs-comment">// this is a generator of promise, we we wait for the resolution</span>
+    <span class="hljs-keyword">return</span> iteration.value.then(result =&gt; {
+      <span class="hljs-comment">// promise is resolved so we can send back the value to the generator</span>
+      <span class="hljs-keyword">const</span> nextIteration = iter.next(result) <span class="hljs-comment">// this value is returned by the</span>
+      <span class="hljs-comment">// same "yield" which emitted the promise, how convenient is that?</span>
+
+      <span class="hljs-comment">// NE<span class="hljs-label">XXXTTTT</span></span>
+      <span class="hljs-keyword">return</span> next(nextIteration)
+    })
+  }
+
+  <span class="hljs-keyword">const</span> promiseIteration = iter.next()
+  <span class="hljs-comment">// we continue the execution until the next "yield"</span>
+  <span class="hljs-comment">// the generator will be paused again until the next call to "iter.next"</span>
+
+  <span class="hljs-comment">// We run the first iteration it and return it</span>
+  <span class="hljs-keyword">return</span> loop(promiseIteration)
+}</code></pre>
+<h2 id="more-more-more"><a class="markdownIt-Anchor" href="#more-more-more">#</a> More! more! more!</h2>
+<h3 id="error-handling"><a class="markdownIt-Anchor" href="#error-handling">#</a> Error handling</h3>
+<p>Errors, like everything, can be emitted in both directions.
+The generator can <code>throw</code> (the code is synchronous) :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fail</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'oops'</span>)
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = fail()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+<span class="hljs-keyword">try</span> {
+  iterator.next() <span class="hljs-comment">// throws</span>
+} <span class="hljs-keyword">catch</span> (e) {
+  e <span class="hljs-comment">// Error('oops')</span>
+}</code></pre>
+<p>The controller can also emit an error inside with the <code>throw</code> method of the
+iterator :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fail</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  } <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-built_in">console</span>.error(e)
+  }
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = fail()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+iterator.throw(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"nope"</span>)) <span class="hljs-comment">// "[Error: nope]"</span>
+iterator.next() <span class="hljs-comment">// { value: 2, done: false }</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<p>Note: you need to keep in mind that the first <code>next</code> is used to unlock
+the execution of the generator, until the first <code>yield</code>, evaluate the emitted
+expression, and send it in the <code>next()</code>, and pause the function.
+That’s the second <code>yield</code> that will continue <strong>from the <code>yield 1</code></strong>.
+This is a part not really intuitive that can be hard to understand.</p>
+<h3 id="delegation"><a class="markdownIt-Anchor" href="#delegation">#</a> Delegation</h3>
+<p>The <code>yield*</code> operator allow to emit value from another iterator :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">oneToThree</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">zeroToFour</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">0</span>
+  <span class="hljs-keyword">yield</span> * oneToThree()
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">4</span>
+}</code></pre>
+<p>That works with all <a href="/en/articles/js/es2015/iterators/"><em>iterables</em></a> :
+for example <code>yield * [1, 2, 3]</code> is valid.</p>
+<h3 id="anticipated-return"><a class="markdownIt-Anchor" href="#anticipated-return">#</a> Anticipated return</h3>
+<p>It’s possible to end an operation of a generator from the controller using the
+<code>return</code> method of the iterator.
+Everything will happen like if the generator was ending immediately with the
+returned value.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">numbers</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
+  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>
+}
+
+<span class="hljs-keyword">const</span> iterator = numbers()
+iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
+iterator.return(<span class="hljs-number">4</span>) <span class="hljs-comment">// { value: 4, done: true } → yield 2 and yield 3 are skipped</span>
+iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>Take a look to the
+<a href="https://kangax.github.io/compat-table/es6/#test-generators">compatibility table</a>.</p>
+<p>Generators bring us a new bundle of feature that allow us to inverse
+responsibility : the code that calling the generator can take over the way the
+called function will be executed.
+They represent a new concept that will probably really change the way we will
+code in the incoming months/years :
+async function, observables… take their roots in generators.
+Understanding generators will helps you to work with those other new features.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/generators/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/generators/</guid><pubDate>Thu, 10 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : itérateurs et générateurs]]></title><description><![CDATA[<p>Un gros morceau aujourd’hui : les itérateurs et les fonctions qui les génèrent,
 appelées “générateurs”.
 ES6/2015 apporte énormément de “sucres syntaxiques”, même s’ils sont
 terriblement pratiques. Les valeurs par défaut, l’affectation par
@@ -757,223 +1239,7 @@ vers d’autres concepts qui bouleverseront probablement votre façon de coder d
 quelques mois/années : fonctions asynchrones, observables… prennent leurs
 racines dans les générateurs. Les comprendre permettra de mieux appréhender de
 futures fonctionnalités.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/generators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/generators/</guid><pubDate>Thu, 10 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : iterators and generators]]></title><description><![CDATA[<p>ES2015 brings a lot of syntax sugar but not a lot of new real features.
-Generators are a new feature to generate iterators that follow the
-<a href="/en/articles/js/es2015/iterators/">iterator protocol</a>.
-They allow to take control of the execution of a function from the outside.</p>
-<h2 id="idle-function"><a class="markdownIt-Anchor" href="#idle-function">#</a> Idle function</h2>
-<p>A function followed by an asterisk (<code>function*</code>) is never executed directly
-and instead calling it will return an iterator.
-A generator is able to pause itself (and will do that by default).
-It’s also capable of continue where it was paused: the iterator returned is an
-object that contains a <code>next</code> method which allows (when you call it) to
-continue the execution of the generator where it was paused.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">idleFunction</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'World'</span>)
-}
-
-<span class="hljs-keyword">const</span> iterator = idleFunction()
-<span class="hljs-comment">// The execution is paused, and is waiting to be continued</span>
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Hello'</span>)
-iterator.next() <span class="hljs-comment">// The execution will now continue and will log "World"</span></code></pre>
-<p>Note that this is not <strong>blocking</strong> code: the function is paused, the execution
-can continue later, but meanwhile, the <em>event-loop</em> is still running.</p>
-<h2 id="emitting-new-values-with-yield"><a class="markdownIt-Anchor" href="#emitting-new-values-with-yield">#</a> Emitting new values with <code>yield</code></h2>
-<p>Following the <a href="/en/articles/js/es2015/iterators/">iterator protocol</a>, the
-<code>next()</code> method will returns an object with 2 properties :</p>
-<ul>
-<li><code>done</code> is equal to <code>true</code> when generator has finished its job exécution</li>
-<li><code>value</code> is the value emitted by the generator when it become idle</li>
-</ul>
-<p>How to emit a value ? The keyword <code>yield</code> is made for this:
-it will returns a value and idle the execution of the function.
-The thing is: you are going to use yield multiple times in the same function.
-Otherwise a generator does not make sense, and a simple function with <code>return</code>
-is enough.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">numbers</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
-}
-
-<span class="hljs-keyword">const</span> iterator = numbers()
-iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
-iterator.next() <span class="hljs-comment">// { value: 2, done: false }</span>
-iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
-<p>Note: if our generator <code>return</code>s a value, it will be affected to the <code>value</code>
-of the last iteration.</p>
-<h3 id="use-case-infinite-lists"><a class="markdownIt-Anchor" href="#use-case-infinite-lists">#</a> <em>Use case</em> : infinite lists</h3>
-<p>At this stage, the first interesting use case is to handle an infinite list.
-We can loop on a list that do not have a precise length.
-Here is an example with the Fibonacci sequence to get all results lower than
-100 :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fibo</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">let</span> [a, b] = [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]
-  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) { <span class="hljs-comment">// Who can stop me?</span>
-    [a, b] = [b, a + b]
-    <span class="hljs-keyword">yield</span> a
-  }
-}
-
-<span class="hljs-keyword">const</span> iterator = fibo()
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> n <span class="hljs-keyword">of</span> iterator) {
-  <span class="hljs-keyword">if</span> (n &gt;= <span class="hljs-number">100</span>) {
-    <span class="hljs-keyword">break</span> <span class="hljs-comment">// *I* can stop you</span>
-  }
-  <span class="hljs-built_in">console</span>.log(n)
-}
-<span class="hljs-comment">// 1 2 3 5 8 13 21 34 55 89</span></code></pre>
-<p>Note : The <code>for … of</code> will be explained in another article.</p>
-<h2 id="sending-value-to-the-generator"><a class="markdownIt-Anchor" href="#sending-value-to-the-generator">#</a> Sending value to the generator</h2>
-<p>We have seen that <code>yield</code> allows to emit a value from the generator.
-The opposite is possible too : <code>next</code> accepts a value that will be returned by
-<code>yield</code> :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">math</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// the first next() will "start" the generator</span>
-  <span class="hljs-keyword">const</span> x = <span class="hljs-keyword">yield</span> <span class="hljs-comment">// the first value will be undefined</span>
-  <span class="hljs-comment">// x = the argument of the other next() call</span>
-  <span class="hljs-keyword">const</span> y = <span class="hljs-keyword">yield</span> x + <span class="hljs-number">1</span> <span class="hljs-comment">// value of the second iteration : x + 1</span>
-  <span class="hljs-comment">// y = third call of next()</span>
-  <span class="hljs-keyword">yield</span> y <span class="hljs-comment">// value of the last iteration : y</span>
-  <span class="hljs-comment">// the fourth call and the others will return { value: undefined, done: true }</span>
-}
-
-<span class="hljs-keyword">const</span> iterator = math()
-iterator.next(<span class="hljs-number">42</span>) <span class="hljs-comment">// { value: undefined, done: false }</span>
-<span class="hljs-comment">// Passer un paramètre au premier appel à next() n'est pas utile : cette valeur</span>
-<span class="hljs-comment">// n'est pas accessible dans le générateur car aucun "yield" correspondant</span>
-
-iterator.next(<span class="hljs-number">33</span>) <span class="hljs-comment">// { value: 34, done: false }, x = 33 dans le générateur</span>
-iterator.next(<span class="hljs-number">27</span>) <span class="hljs-comment">// { value: 27, done: false }, y = 27 dans le générateur</span>
-iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
-<p>This might sound not really useful, but keep in mind that you can send any type
-of data to <code>next()</code> : a function, an object, another iterator…
-Possiblities are limitless ! Let’s take a look to an example using promises.</p>
-<h3 id="use-case-co-routines"><a class="markdownIt-Anchor" href="#use-case-co-routines">#</a> <em>Use case</em> : co-routines</h3>
-<p>The code of the generator itself cannot be async: call to <code>yield</code> follow each
-others synchronously.
-The main controller can still be free to call <code>next()</code> when it wants to.</p>
-<p>So we have functions that we can play and pause whenever we want.
-What if our generator emitted a promise? In order to tell when it’s time to
-continue.
-What if the controller, when it knows it got a promise wait for it to be
-resolved in order to send back the value to the generator?
-This way, the generator will be able to run synchronous code in an non blocking
-way when handling async operations :</p>
-<pre><code class="language-js">execAsync(<span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Ajax request…"</span>)
-  <span class="hljs-keyword">var</span> rows = <span class="hljs-keyword">yield</span> fetch(<span class="hljs-string">"http://my.api/get"</span>)
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Work…"</span>)
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Save…"</span>)
-  <span class="hljs-keyword">yield</span> fetch(<span class="hljs-string">"http://my.api/post"</span>)
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"OK."</span>)
-}) <span class="hljs-comment">// Ajax request… Work… Save… OK.</span></code></pre>
-<p>How cool is that? This is clearly the most interesting use case for us and is
-actually pretty simple :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execAsync</span> (<span class="hljs-params">promiseGenerator</span>) </span>{
-  <span class="hljs-keyword">const</span> iter = promiseGenerator() <span class="hljs-comment">// pause…</span>
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loop</span> (<span class="hljs-params">iteration</span>) </span>{
-    <span class="hljs-keyword">if</span> (iteration.done) { <span class="hljs-comment">// That's the part to detect the last return</span>
-      <span class="hljs-keyword">return</span> iteration.value
-    }
-
-    <span class="hljs-comment">// this is a generator of promise, we we wait for the resolution</span>
-    <span class="hljs-keyword">return</span> iteration.value.then(result =&gt; {
-      <span class="hljs-comment">// promise is resolved so we can send back the value to the generator</span>
-      <span class="hljs-keyword">const</span> nextIteration = iter.next(result) <span class="hljs-comment">// this value is returned by the</span>
-      <span class="hljs-comment">// same "yield" which emitted the promise, how convenient is that?</span>
-
-      <span class="hljs-comment">// NE<span class="hljs-label">XXXTTTT</span></span>
-      <span class="hljs-keyword">return</span> next(nextIteration)
-    })
-  }
-
-  <span class="hljs-keyword">const</span> promiseIteration = iter.next()
-  <span class="hljs-comment">// we continue the execution until the next "yield"</span>
-  <span class="hljs-comment">// the generator will be paused again until the next call to "iter.next"</span>
-
-  <span class="hljs-comment">// We run the first iteration it and return it</span>
-  <span class="hljs-keyword">return</span> loop(promiseIteration)
-}</code></pre>
-<h2 id="more-more-more"><a class="markdownIt-Anchor" href="#more-more-more">#</a> More! more! more!</h2>
-<h3 id="error-handling"><a class="markdownIt-Anchor" href="#error-handling">#</a> Error handling</h3>
-<p>Errors, like everything, can be emitted in both directions.
-The generator can <code>throw</code> (the code is synchronous) :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fail</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
-  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'oops'</span>)
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
-}
-
-<span class="hljs-keyword">const</span> iterator = fail()
-iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
-<span class="hljs-keyword">try</span> {
-  iterator.next() <span class="hljs-comment">// throws</span>
-} <span class="hljs-keyword">catch</span> (e) {
-  e <span class="hljs-comment">// Error('oops')</span>
-}</code></pre>
-<p>The controller can also emit an error inside with the <code>throw</code> method of the
-iterator :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">fail</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">try</span> {
-    <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
-  } <span class="hljs-keyword">catch</span> (e) {
-    <span class="hljs-built_in">console</span>.error(e)
-  }
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
-}
-
-<span class="hljs-keyword">const</span> iterator = fail()
-iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
-iterator.throw(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"nope"</span>)) <span class="hljs-comment">// "[Error: nope]"</span>
-iterator.next() <span class="hljs-comment">// { value: 2, done: false }</span>
-iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
-<p>Note: you need to keep in mind that the first <code>next</code> is used to unlock
-the execution of the generator, until the first <code>yield</code>, evaluate the emitted
-expression, and send it in the <code>next()</code>, and pause the function.
-That’s the second <code>yield</code> that will continue <strong>from the <code>yield 1</code></strong>.
-This is a part not really intuitive that can be hard to understand.</p>
-<h3 id="delegation"><a class="markdownIt-Anchor" href="#delegation">#</a> Delegation</h3>
-<p>The <code>yield*</code> operator allow to emit value from another iterator :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">oneToThree</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>
-}
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">zeroToFour</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">0</span>
-  <span class="hljs-keyword">yield</span> * oneToThree()
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">4</span>
-}</code></pre>
-<p>That works with all <a href="/en/articles/js/es2015/iterators/"><em>iterables</em></a> :
-for example <code>yield * [1, 2, 3]</code> is valid.</p>
-<h3 id="anticipated-return"><a class="markdownIt-Anchor" href="#anticipated-return">#</a> Anticipated return</h3>
-<p>It’s possible to end an operation of a generator from the controller using the
-<code>return</code> method of the iterator.
-Everything will happen like if the generator was ending immediately with the
-returned value.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">numbers</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>
-  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>
-}
-
-<span class="hljs-keyword">const</span> iterator = numbers()
-iterator.next() <span class="hljs-comment">// { value: 1, done: false }</span>
-iterator.return(<span class="hljs-number">4</span>) <span class="hljs-comment">// { value: 4, done: true } → yield 2 and yield 3 are skipped</span>
-iterator.next() <span class="hljs-comment">// { value: undefined, done: true }</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>Take a look to the
-<a href="https://kangax.github.io/compat-table/es6/#test-generators">compatibility table</a>.</p>
-<p>Generators bring us a new bundle of feature that allow us to inverse
-responsibility : the code that calling the generator can take over the way the
-called function will be executed.
-They represent a new concept that will probably really change the way we will
-code in the incoming months/years :
-async function, observables… take their roots in generators.
-Understanding generators will helps you to work with those other new features.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/generators/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/generators/</guid><pubDate>Thu, 10 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/generators/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/generators/</guid><pubDate>Thu, 10 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : le protocole d'itération]]></title><description><![CDATA[<p>Imaginez un concept si important que si vous l’enleviez du langage, il faudrait
 en conséquence enlever le spread, le destructuring, les générateurs, le for…of
 et bien d’autres. Ce concept, introduit dans l’ES6, est en fait un protocole :
 le protocole d’itération.</p>
@@ -1376,7 +1642,59 @@ That’s important to rely on commons patterns so we can reach an agreement.</p>
 </ul>
 <p>The practice remains the best way to train yourself, so take a look to
 <a href="http://es6katas.org/">ES6 Katas</a> which has been made for that.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/iterators/</guid><pubDate>Wed, 09 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/iterators/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/iterators/</guid><pubDate>Wed, 09 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
+creating new object.</p>
+<h2 id="shorter-property-name"><a class="markdownIt-Anchor" href="#shorter-property-name">#</a> Shorter property name</h2>
+<p>When you create an object, you might create a variable and then reuse it to
+define a property of an object that have the same name.</p>
+<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
+
+<span class="hljs-keyword">return</span> {
+  firstname: firstname,
+  lastname: lastname,
+}</code></pre>
+<p>Thanks to ES6, you can directly write:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
+<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
+
+<span class="hljs-keyword">return</span> {
+  firstname,
+  lastname,
+}
+<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
+<p>In the same spirit, you will be able to declare methods without the <code>function</code>
+keyword (this also apply for <em>getter</em> and <em>setter</em>).</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
+  get email() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
+  },
+  set email(email) {
+    <span class="hljs-keyword">this</span>.email = email
+  },
+  validateEmail(email) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+  },
+}</code></pre>
+<h2 id="dynamic-property-name"><a class="markdownIt-Anchor" href="#dynamic-property-name">#</a> Dynamic property name</h2>
+<p>One last thing for <em>objects literal</em> will allow you to create dynamic property
+name using an expression, directly when you create an object.
+With ES5 you have to do that in two steps:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">var</span> payload = {}
+  payload[type] = data
+  <span class="hljs-keyword">return</span> payload
+}</code></pre>
+<p>Now with ES6, you can do:</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    [type]: data
+  }
+}</code></pre>
+<p><strong>Note:</strong> with dynamic properties, declaring multiples properties with the same
+name is accepted and do not throw an error. Keep in mind that only the last
+value will be kept.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Les object literals]]></title><description><![CDATA[<p>Là encore, cette évolution du langage amène un sucre syntaxique bien pratique
 lors de l’initialisation d’objets.</p>
 <h2 id="nom-des-propri-t-s-raccourcies"><a class="markdownIt-Anchor" href="#nom-des-propri-t-s-raccourcies">#</a> Nom des propriétés raccourcies</h2>
 <p>Lorsqu’on crée un objet, il arrive fréquemment que lorsqu’on définisse une
@@ -1429,161 +1747,7 @@ puis affectation.</p>
 <p><strong>À noter</strong> qu’avec l’introduction des propriétés calculées, on va pouvoir
 aussi déclarer plusieurs fois une même propriété, la dernière déclaration
 écrasant les précédentes (et plus de <code>syntaxError</code>).</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object literals]]></title><description><![CDATA[<p>Again, ES6 brings us more syntax sugar, that you might appreciate when
-creating new object.</p>
-<h2 id="shorter-property-name"><a class="markdownIt-Anchor" href="#shorter-property-name">#</a> Shorter property name</h2>
-<p>When you create an object, you might create a variable and then reuse it to
-define a property of an object that have the same name.</p>
-<pre><code class="language-js"><span class="hljs-keyword">var</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">var</span> lastname = <span class="hljs-string">"Laiponje"</span>
-
-<span class="hljs-keyword">return</span> {
-  firstname: firstname,
-  lastname: lastname,
-}</code></pre>
-<p>Thanks to ES6, you can directly write:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> firstname = <span class="hljs-string">"Robert"</span>
-<span class="hljs-keyword">const</span> lastname = <span class="hljs-string">"Laiponje"</span>
-
-<span class="hljs-keyword">return</span> {
-  firstname,
-  lastname,
-}
-<span class="hljs-comment">// { firstname: "Robert", lastname: "Laiponje" }</span></code></pre>
-<p>In the same spirit, you will be able to declare methods without the <code>function</code>
-keyword (this also apply for <em>getter</em> and <em>setter</em>).</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> obj = {
-  get email() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.email()
-  },
-  set email(email) {
-    <span class="hljs-keyword">this</span>.email = email
-  },
-  validateEmail(email) {
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
-  },
-}</code></pre>
-<h2 id="dynamic-property-name"><a class="markdownIt-Anchor" href="#dynamic-property-name">#</a> Dynamic property name</h2>
-<p>One last thing for <em>objects literal</em> will allow you to create dynamic property
-name using an expression, directly when you create an object.
-With ES5 you have to do that in two steps:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">var</span> payload = {}
-  payload[type] = data
-  <span class="hljs-keyword">return</span> payload
-}</code></pre>
-<p>Now with ES6, you can do:</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">type, data</span>) </span>{
-  <span class="hljs-keyword">return</span> {
-    [type]: data
-  }
-}</code></pre>
-<p><strong>Note:</strong> with dynamic properties, declaring multiples properties with the same
-name is accepted and do not throw an error. Keep in mind that only the last
-value will be kept.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
-the <em>template strings</em>.</p>
-<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
-<p>To define a string in JavaScript, we have single quotes or double quotes.
-No one is really better than the other since you need to escape the quotes you
-are using in the string itself.</p>
-<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
-<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
-<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
-<p>Now you can directly use expression in a <em>template string</em> if you use the new
-place holder syntax.: <code>${ expression }</code>.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
-<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
-<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
-<p>Here we are just using a variable, but we can use any expression:</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
-  <span class="hljs-keyword">return</span> num * num;
-}
-<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
-<p>This is what make <em>template strings</em> awesome.</p>
-<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
-<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
-<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
-<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
-                 bar \
-                 baz"</span>;
-
-<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
-multiline2 += <span class="hljs-string">"bar"</span>;
-multiline2 += <span class="hljs-string">"baz"</span>;
-
-<span class="hljs-comment">// ES6</span>
-<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
-                   bar
-                   baz`</span>;</code></pre>
-<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
-bar`</span>;
-
-<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
-             bar`</span>;
-
-str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
-<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
-<p>Let’s dive into another interesting feature of <em>template strings</em>.
-Tags are functions that will use just before the <em>template string</em> and they
-allow us to enhance the string result.</p>
-<p>A tag take an array of “literals” (strings), and then all interpolated
-(evaluated) expressions that we can still modify.</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
-      <span class="hljs-keyword">return</span> c.toUpperCase();
-    });
-  }
-
-  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
-  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
-    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
-    result += replaceVowels(strings[i]);
-    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
-      result += replaceVowels(nextValue)
-    } <span class="hljs-keyword">else</span> {
-      result += nextValue;
-    }
-  }
-  <span class="hljs-keyword">return</span> result;
-}
-
-
-capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
-<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
-<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
-<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
-capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
-<p>Here is an interesting example of tagged <em>template strings</em> to handle
-<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
-<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
-<p>A new function has been added to <code>String</code> prototype that allows us display raw
-content so you can see unescaped characters:</p>
-<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>When you will start to use <em>template strings</em>, you are likely going to like
-them. They are clearly really useful in a daily basis.</p>
-<p>Almost all
-<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
-today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
-hesitate to use <em>template strings</em>.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-literals/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-literals/</guid><pubDate>Tue, 08 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les template strings]]></title><description><![CDATA[<p>ES2015 ajoute le support des <em>template strings</em> qui va permettre enfin de se
 simplifier la vie lorsqu’on doit manipuler des chaînes de caractères.</p>
 <h2 id="le-principe"><a class="markdownIt-Anchor" href="#le-principe">#</a> Le principe</h2>
 <p>Pour définir une chaîne en JavaScript, il faut utiliser soit des single quotes,
@@ -1694,7 +1858,276 @@ automatiquement gérés avec une <em>template string</em>.</p>
 simplifie grandement la vie et permet d’oublier les erreurs d’échappement.</p>
 <p>Aujourd’hui, <a href="https://kangax.github.io/compat-table/es6/#test-template_strings">la grande majorité des navigateurs les supportent</a>
 ainsi que babel et traceur, donc usez et abusez des <em>template strings</em>…</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promesses]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Template strings]]></title><description><![CDATA[<p>ES2015 add a new way to write better strings that will simplify our code:
+the <em>template strings</em>.</p>
+<h2 id="principle"><a class="markdownIt-Anchor" href="#principle">#</a> Principle</h2>
+<p>To define a string in JavaScript, we have single quotes or double quotes.
+No one is really better than the other since you need to escape the quotes you
+are using in the string itself.</p>
+<p><em>Template strings</em> use <em>back-tick</em> (grave accent) to delimitate strings.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> myString = <span class="hljs-string">'I\'m a "string"'</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> myNewString = <span class="hljs-string">`I'm a "template string"`</span></code></pre>
+<p>Nothing really awesome. So let’s see the interesting new feature: interpolation.</p>
+<h2 id="interpolation"><a class="markdownIt-Anchor" href="#interpolation">#</a> Interpolation</h2>
+<p>Now you can directly use expression in a <em>template string</em> if you use the new
+place holder syntax.: <code>${ expression }</code>.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> name = <span class="hljs-string">"world"</span>;
+<span class="hljs-keyword">var</span> myStrin = <span class="hljs-string">"Hello "</span> + name; <span class="hljs-comment">// =&gt; Hello world</span>
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> newName = <span class="hljs-string">`developer`</span>;
+<span class="hljs-keyword">const</span> myStrin = <span class="hljs-string">`Hello <span class="hljs-subst">${ newName }</span>`</span>; <span class="hljs-comment">// =&gt; Hello developer</span></code></pre>
+<p>Here we are just using a variable, but we can use any expression:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> x = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> y = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${ x }</span> + <span class="hljs-subst">${ y }</span> = <span class="hljs-subst">${ x + y }</span>`</span> <span class="hljs-comment">// =&gt; 1 + 2 = 3</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">num</span>) </span>{
+  <span class="hljs-keyword">return</span> num * num;
+}
+<span class="hljs-keyword">const</span> result = <span class="hljs-string">`<span class="hljs-subst">${square(5)}</span>`</span> <span class="hljs-comment">// =&gt; 25</span></code></pre>
+<p>This is what make <em>template strings</em> awesome.</p>
+<h2 id="template-strings-are-multi-lines-capable"><a class="markdownIt-Anchor" href="#template-strings-are-multi-lines-capable">#</a> <em>template strings</em> are multi-lines capable</h2>
+<p>Another cool thing is that <em>template strings</em> handle multi-lines.</p>
+<pre><code class="language-js"><span class="hljs-comment">// ES5</span>
+<span class="hljs-keyword">var</span> multiline = <span class="hljs-string">"foo \
+                 bar \
+                 baz"</span>;
+
+<span class="hljs-keyword">var</span> multiline2 = <span class="hljs-string">"foo"</span>;
+multiline2 += <span class="hljs-string">"bar"</span>;
+multiline2 += <span class="hljs-string">"baz"</span>;
+
+<span class="hljs-comment">// ES6</span>
+<span class="hljs-keyword">const</span> multiline = <span class="hljs-string">`foo
+                   bar
+                   baz`</span>;</code></pre>
+<p><em>Note</em> keep in mind that spaces are as you write them, which can surprise you.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> str1 = <span class="hljs-string">`foo
+bar`</span>;
+
+<span class="hljs-keyword">const</span> str2 = <span class="hljs-string">`foo
+             bar`</span>;
+
+str1 === str2 <span class="hljs-comment">// =&gt; false</span></code></pre>
+<h2 id="tagged-template-strings"><a class="markdownIt-Anchor" href="#tagged-template-strings">#</a> Tagged <em>template strings</em></h2>
+<p>Let’s dive into another interesting feature of <em>template strings</em>.
+Tags are functions that will use just before the <em>template string</em> and they
+allow us to enhance the string result.</p>
+<p>A tag take an array of “literals” (strings), and then all interpolated
+(evaluated) expressions that we can still modify.</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">capitalizeVowels</span>(<span class="hljs-params">strings, ...values</span>) </span>{
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceVowels</span>(<span class="hljs-params">string</span>) </span>{
+    <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/[aeiou]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c</span>)</span>{
+      <span class="hljs-keyword">return</span> c.toUpperCase();
+    });
+  }
+
+  <span class="hljs-keyword">let</span> result = <span class="hljs-string">""</span>;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; ++i) {
+    <span class="hljs-keyword">const</span> nextValue = values[i] || <span class="hljs-string">""</span>;
+    result += replaceVowels(strings[i]);
+    <span class="hljs-keyword">if</span>(! <span class="hljs-built_in">parseInt</span>(nextValue)) {
+      result += replaceVowels(nextValue)
+    } <span class="hljs-keyword">else</span> {
+      result += nextValue;
+    }
+  }
+  <span class="hljs-keyword">return</span> result;
+}
+
+
+capitalizeVowels<span class="hljs-string">`foo bar ?`</span> <span class="hljs-comment">// =&gt; fOO bAr ?</span>
+<span class="hljs-keyword">const</span> n = <span class="hljs-number">42</span>
+<span class="hljs-keyword">const</span> c = <span class="hljs-string">"f"</span>
+<span class="hljs-keyword">const</span> v = <span class="hljs-string">"o"</span>
+capitalizeVowels<span class="hljs-string">`foo <span class="hljs-subst">${ n }</span> bar <span class="hljs-subst">${ c }</span><span class="hljs-subst">${ v }</span><span class="hljs-subst">${ v }</span> ?`</span> <span class="hljs-comment">// =&gt; fOO 42 bAr fOO ?</span></code></pre>
+<p>Here is an interesting example of tagged <em>template strings</em> to handle
+<a href="http://jaysoo.ca/2014/03/20/i18n-with-es6-template-strings/">i18n for strings</a>.</p>
+<h2 id="string-raw"><a class="markdownIt-Anchor" href="#string-raw">#</a> String.raw</h2>
+<p>A new function has been added to <code>String</code> prototype that allows us display raw
+content so you can see unescaped characters:</p>
+<pre><code class="language-js"><span class="hljs-built_in">String</span>.raw<span class="hljs-string">`FOO\nbar`</span> <span class="hljs-comment">// =&gt; FOO\\nbar</span></code></pre>
+<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
+<p>When you will start to use <em>template strings</em>, you are likely going to like
+them. They are clearly really useful in a daily basis.</p>
+<p>Almost all
+<a href="https://kangax.github.io/compat-table/es6/#test-template_strings">modern browser handle template strings</a>
+today, as well as <a href="http://babeljs.io/">Babel</a> and Traceur, so you do not
+hesitate to use <em>template strings</em>.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/template-strings/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/template-strings/</guid><pubDate>Mon, 07 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
+promises.
+The concept of promises exists is not new in the JavaScript world, but now
+we got an official feature!</p>
+<h2 id="what-s-a-promise"><a class="markdownIt-Anchor" href="#what-s-a-promise">#</a> What’s a promise?</h2>
+<p>It’s a promise of an incoming value, not available yet. It’s a promise so it can
+be fulfilled or not (rejected). If fulfilled, it will give us the the value we
+were waiting for. If rejected, we will get the error so we can handle it.</p>
+<p>This mechanism allows to avoid the callback hell :</p>
+<pre><code class="language-js"><span class="hljs-comment">// With callbacks.</span>
+<span class="hljs-comment">// Let's say that all those function are doing async tasks (like http or</span>
+<span class="hljs-comment">// database request, fs read...)</span>
+<span class="hljs-keyword">const</span> functionWithCallback1 = (callback) =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback5 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+<span class="hljs-keyword">const</span> functionWithCallback6 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
+
+functionWithCallback1((result1, err) =&gt; {
+  <span class="hljs-keyword">if</span> (err) {
+    <span class="hljs-keyword">throw</span> err
+  }
+  functionWithCallback2(result1, (result2, err) =&gt; {
+    <span class="hljs-keyword">if</span> (err) {
+      <span class="hljs-keyword">throw</span> err
+    }
+    functionWithCallback3(result2, (result3, err) =&gt; {
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">throw</span> err
+      }
+      functionWithCallback4(result3, (result4, err) =&gt; {
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">throw</span> err
+        }
+        functionWithCallback5(result4, (result5, err) =&gt; {
+          <span class="hljs-keyword">if</span> (err) {
+            <span class="hljs-keyword">throw</span> err
+          }
+          functionWithCallback6(result5, (result6, err) =&gt; {
+            <span class="hljs-keyword">if</span> (err) {
+              <span class="hljs-keyword">throw</span> err
+            }
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with callbacks: <span class="hljs-subst">${result6}</span>`</span>)
+          })
+        })
+      })
+    })
+  })
+})
+
+<span class="hljs-comment">// Now the same thing with promises</span>
+<span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
+<span class="hljs-keyword">const</span> functionWithPromise2 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise3 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise4 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise5 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+<span class="hljs-keyword">const</span> functionWithPromise6 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
+
+functionWithPromise1()
+  .then(functionWithPromise2)
+  .then(functionWithPromise3)
+  .then(functionWithPromise4)
+  .then(functionWithPromise5)
+  .then(functionWithPromise6)
+  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with promises: <span class="hljs-subst">${result}</span>`</span>))
+  .catch(err =&gt; {
+    <span class="hljs-keyword">throw</span> err
+  })</code></pre>
+<p>As you can see, example with promises is clear and more concise.</p>
+<h2 id="that-s-cool-how-can-i-use-promises"><a class="markdownIt-Anchor" href="#that-s-cool-how-can-i-use-promises">#</a> That’s cool. How can I use promises?</h2>
+<p>A promise can have different status:</p>
+<ul>
+<li>in progress: value is not ready yet</li>
+<li>resolved: value is here, we can use it</li>
+<li>rejected: an error has been thrown, we should handle it.</li>
+</ul>
+<p>A promise have 2 functions: <code>then</code> and <code>catch</code>.
+You can use <code>then</code> to wait for the result (or handle an error), and <code>catch</code> to
+catch all possibles errors of one promise or more.</p>
+<p>Let’s see how to use promises with an example of the incoming standardized
+<a href="https://fetch.spec.whatwg.org"><code>fetch</code></a> method.</p>
+<pre><code class="language-js"><span class="hljs-comment">// At this moment, promise is in progress</span>
+<span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+
+<span class="hljs-comment">// When promise is resolved, you go a value you can work with</span>
+<span class="hljs-keyword">const</span> parsePromise = fetchPromise.then(fetchResult =&gt; {
+  <span class="hljs-comment">// I can return a new result that can be used as a new promise</span>
+  <span class="hljs-comment">// Here we call .text() which parse the content of the request and return</span>
+  <span class="hljs-comment">// promise</span>
+  <span class="hljs-keyword">return</span> fetchResult.text()
+})
+
+<span class="hljs-comment">// When parsing is done, we can work with the content</span>
+parsePromise.then(textResult =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
+})
+
+<span class="hljs-comment">// If the request encounter an issue, promise might be rejected with an error</span>
+fetchPromise.catch(fetchError =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
+})
+
+<span class="hljs-comment">// If there is an issue during the parsing, we can handle it too</span>
+parsePromise.catch(parseError =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
+})
+
+<span class="hljs-comment">// The same can be written like this</span>
+fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+  .then((fetchResult) =&gt; fetchResult.text())
+  .then((textResult) =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
+  })
+  .catch((error) =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request or the parsing`</span>, fetchError)
+  })
+
+<span class="hljs-comment">// Or like this</span>
+fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
+  .then(
+    (fetchResult) =&gt; {
+      <span class="hljs-keyword">return</span> fetchResult.text()
+    },
+    (fetchError) =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
+    })
+  .then(
+    (textResult) =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
+    },
+    (parseError) =&gt; {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
+    }
+  )</code></pre>
+<h2 id="how-do-i-create-my-own-promises"><a class="markdownIt-Anchor" href="#how-do-i-create-my-own-promises">#</a> How do I create my own promises?</h2>
+<p>Using a promise is nice, but creating yours is even better. Let’s be clear: it’s
+easy.</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> functionThatReturnAPromise = (success) =&gt; {
+  <span class="hljs-comment">// We will need to use Promise class to use one.</span>
+  <span class="hljs-comment">// constructor takes 2 arguments:</span>
+  <span class="hljs-comment">// - resolve, a callback to pass the value you want to send</span>
+  <span class="hljs-comment">// - reject, a callback to throw an error</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
+    <span class="hljs-keyword">if</span> (success) {
+      resolve(<span class="hljs-string">'success'</span>)
+    }
+    <span class="hljs-keyword">else</span> {
+      reject(<span class="hljs-string">'failed'</span>)
+    }
+  })
+}
+
+<span class="hljs-comment">// You can use this promise like this</span>
+functionThatReturnAPromise(success)
+  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res))
+  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error))
+
+<span class="hljs-comment">// In our case, the previous example can be also written</span>
+functionThatReturnAPromise(success)
+  .then(
+    (res) =&gt; <span class="hljs-built_in">console</span>.log(res),
+    (error) =&gt; <span class="hljs-built_in">console</span>.log(error)
+  )</code></pre>
+<h2 id="what-s-next"><a class="markdownIt-Anchor" href="#what-s-next">#</a> What’s next?</h2>
+<p>A new way to write asynchronous will land in JavaScript with <code>async</code> and <code>await</code>
+keywords, but we will need to way another ES year (or two) for it !</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les promesses]]></title><description><![CDATA[<p>ES2015 apporte une fonctionnalité simplifiant grandement l’asynchrone en
 JavaScript, les promesses ! Visible depuis longtemps dans l’écosystème
 JavaScript grâce a diverses librairies, on peut maintenant utiliser directement
 la spécification officielle.</p>
@@ -1870,286 +2303,7 @@ functionThatReturnAPromise(success)
 les mots-clés <code>async</code> et <code>await</code> ! Ces mots-clés vous permettront d’avoir un
 code encore plus lisible quand vous ferez de l’asynchrone, mais ça ne concerne
 pas ES2015 :)</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Promises]]></title><description><![CDATA[<p>With ES2015, you can now very easily write asynchronous code thanks to the
-promises.
-The concept of promises exists is not new in the JavaScript world, but now
-we got an official feature!</p>
-<h2 id="what-s-a-promise"><a class="markdownIt-Anchor" href="#what-s-a-promise">#</a> What’s a promise?</h2>
-<p>It’s a promise of an incoming value, not available yet. It’s a promise so it can
-be fulfilled or not (rejected). If fulfilled, it will give us the the value we
-were waiting for. If rejected, we will get the error so we can handle it.</p>
-<p>This mechanism allows to avoid the callback hell :</p>
-<pre><code class="language-js"><span class="hljs-comment">// With callbacks.</span>
-<span class="hljs-comment">// Let's say that all those function are doing async tasks (like http or</span>
-<span class="hljs-comment">// database request, fs read...)</span>
-<span class="hljs-keyword">const</span> functionWithCallback1 = (callback) =&gt; callback(<span class="hljs-string">'test'</span>, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback2 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback3 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback4 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback5 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-<span class="hljs-keyword">const</span> functionWithCallback6 = (arg, callback) =&gt; callback(arg, <span class="hljs-literal">undefined</span>)
-
-functionWithCallback1((result1, err) =&gt; {
-  <span class="hljs-keyword">if</span> (err) {
-    <span class="hljs-keyword">throw</span> err
-  }
-  functionWithCallback2(result1, (result2, err) =&gt; {
-    <span class="hljs-keyword">if</span> (err) {
-      <span class="hljs-keyword">throw</span> err
-    }
-    functionWithCallback3(result2, (result3, err) =&gt; {
-      <span class="hljs-keyword">if</span> (err) {
-        <span class="hljs-keyword">throw</span> err
-      }
-      functionWithCallback4(result3, (result4, err) =&gt; {
-        <span class="hljs-keyword">if</span> (err) {
-          <span class="hljs-keyword">throw</span> err
-        }
-        functionWithCallback5(result4, (result5, err) =&gt; {
-          <span class="hljs-keyword">if</span> (err) {
-            <span class="hljs-keyword">throw</span> err
-          }
-          functionWithCallback6(result5, (result6, err) =&gt; {
-            <span class="hljs-keyword">if</span> (err) {
-              <span class="hljs-keyword">throw</span> err
-            }
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with callbacks: <span class="hljs-subst">${result6}</span>`</span>)
-          })
-        })
-      })
-    })
-  })
-})
-
-<span class="hljs-comment">// Now the same thing with promises</span>
-<span class="hljs-keyword">const</span> functionWithPromise1 = () =&gt; <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'test'</span>)
-<span class="hljs-keyword">const</span> functionWithPromise2 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise3 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise4 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise5 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-<span class="hljs-keyword">const</span> functionWithPromise6 = (arg) =&gt; <span class="hljs-built_in">Promise</span>.resolve(arg)
-
-functionWithPromise1()
-  .then(functionWithPromise2)
-  .then(functionWithPromise3)
-  .then(functionWithPromise4)
-  .then(functionWithPromise5)
-  .then(functionWithPromise6)
-  .then(result =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example with promises: <span class="hljs-subst">${result}</span>`</span>))
-  .catch(err =&gt; {
-    <span class="hljs-keyword">throw</span> err
-  })</code></pre>
-<p>As you can see, example with promises is clear and more concise.</p>
-<h2 id="that-s-cool-how-can-i-use-promises"><a class="markdownIt-Anchor" href="#that-s-cool-how-can-i-use-promises">#</a> That’s cool. How can I use promises?</h2>
-<p>A promise can have different status:</p>
-<ul>
-<li>in progress: value is not ready yet</li>
-<li>resolved: value is here, we can use it</li>
-<li>rejected: an error has been thrown, we should handle it.</li>
-</ul>
-<p>A promise have 2 functions: <code>then</code> and <code>catch</code>.
-You can use <code>then</code> to wait for the result (or handle an error), and <code>catch</code> to
-catch all possibles errors of one promise or more.</p>
-<p>Let’s see how to use promises with an example of the incoming standardized
-<a href="https://fetch.spec.whatwg.org"><code>fetch</code></a> method.</p>
-<pre><code class="language-js"><span class="hljs-comment">// At this moment, promise is in progress</span>
-<span class="hljs-keyword">const</span> fetchPromise = fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-
-<span class="hljs-comment">// When promise is resolved, you go a value you can work with</span>
-<span class="hljs-keyword">const</span> parsePromise = fetchPromise.then(fetchResult =&gt; {
-  <span class="hljs-comment">// I can return a new result that can be used as a new promise</span>
-  <span class="hljs-comment">// Here we call .text() which parse the content of the request and return</span>
-  <span class="hljs-comment">// promise</span>
-  <span class="hljs-keyword">return</span> fetchResult.text()
-})
-
-<span class="hljs-comment">// When parsing is done, we can work with the content</span>
-parsePromise.then(textResult =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
-})
-
-<span class="hljs-comment">// If the request encounter an issue, promise might be rejected with an error</span>
-fetchPromise.catch(fetchError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
-})
-
-<span class="hljs-comment">// If there is an issue during the parsing, we can handle it too</span>
-parsePromise.catch(parseError =&gt; {
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
-})
-
-<span class="hljs-comment">// The same can be written like this</span>
-fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-  .then((fetchResult) =&gt; fetchResult.text())
-  .then((textResult) =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
-  })
-  .catch((error) =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request or the parsing`</span>, fetchError)
-  })
-
-<span class="hljs-comment">// Or like this</span>
-fetch(<span class="hljs-string">'http://putaindecode.io'</span>)
-  .then(
-    (fetchResult) =&gt; {
-      <span class="hljs-keyword">return</span> fetchResult.text()
-    },
-    (fetchError) =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`We got an issue during the request`</span>, fetchError)
-    })
-  .then(
-    (textResult) =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Here is the text result : <span class="hljs-subst">${textResult}</span>`</span>)
-    },
-    (parseError) =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"We got an issue during the parsing"</span>, parseError)
-    }
-  )</code></pre>
-<h2 id="how-do-i-create-my-own-promises"><a class="markdownIt-Anchor" href="#how-do-i-create-my-own-promises">#</a> How do I create my own promises?</h2>
-<p>Using a promise is nice, but creating yours is even better. Let’s be clear: it’s
-easy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> functionThatReturnAPromise = (success) =&gt; {
-  <span class="hljs-comment">// We will need to use Promise class to use one.</span>
-  <span class="hljs-comment">// constructor takes 2 arguments:</span>
-  <span class="hljs-comment">// - resolve, a callback to pass the value you want to send</span>
-  <span class="hljs-comment">// - reject, a callback to throw an error</span>
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
-    <span class="hljs-keyword">if</span> (success) {
-      resolve(<span class="hljs-string">'success'</span>)
-    }
-    <span class="hljs-keyword">else</span> {
-      reject(<span class="hljs-string">'failed'</span>)
-    }
-  })
-}
-
-<span class="hljs-comment">// You can use this promise like this</span>
-functionThatReturnAPromise(success)
-  .then(res =&gt; <span class="hljs-built_in">console</span>.log(res))
-  .catch(error =&gt; <span class="hljs-built_in">console</span>.log(error))
-
-<span class="hljs-comment">// In our case, the previous example can be also written</span>
-functionThatReturnAPromise(success)
-  .then(
-    (res) =&gt; <span class="hljs-built_in">console</span>.log(res),
-    (error) =&gt; <span class="hljs-built_in">console</span>.log(error)
-  )</code></pre>
-<h2 id="what-s-next"><a class="markdownIt-Anchor" href="#what-s-next">#</a> What’s next?</h2>
-<p>A new way to write asynchronous will land in JavaScript with <code>async</code> and <code>await</code>
-keywords, but we will need to way another ES year (or two) for it !</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
-They don’t really bring anything.
-That said, this can helps to improve code readability and make the code more
-accessible.</p>
-<h2 id="class-declaration"><a class="markdownIt-Anchor" href="#class-declaration">#</a> Class declaration</h2>
-<p>Forget functions and prototypes, semantic is taking the relay as you will see in
-the following example :</p>
-<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
-  constructor(firstname, lastname) {
-    <span class="hljs-keyword">this</span>.firstname = firstname;
-    <span class="hljs-keyword">this</span>.lastname = lastname;
-  }
-
-  sayName() {
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span> <span class="hljs-subst">${this.lastname}</span>`</span>
-  }
-}
-
-<span class="hljs-comment">// instanciation</span>
-<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
-
-<span class="hljs-comment">// call of the method sayName()</span>
-<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
-<p>As a reminder, here is one
-<a href="https://gist.github.com/magsout/a876b2fa8240a987e523">way to code</a>
-this class in <code>es5</code> :</p>
-<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">User</span>(<span class="hljs-params">firstname, lastname</span>) </span>{
-  <span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> User)) {
-    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">"Class constructors cannot be invoked without 'new'"</span>)
-  }
-  <span class="hljs-keyword">this</span>.firstname = firstname
-  <span class="hljs-keyword">this</span>.lastname = lastname
-}
-
-User.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstname + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.lastname
-}
-
-<span class="hljs-comment">// instanciation</span>
-<span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
-
-<span class="hljs-comment">// call of the method sayName()</span>
-<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
-<h2 id="classes-expressions"><a class="markdownIt-Anchor" href="#classes-expressions">#</a> Classes expressions</h2>
-<p>All methods should be written as simple function inside the class.
-You might denote the nice way to write getter and setter :</p>
-<pre><code class="language-JS"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
-  constructor(firstname, lastname, type) {
-    <span class="hljs-keyword">this</span>.firstname = firstname
-    <span class="hljs-keyword">this</span>.lastname = lastname
-    <span class="hljs-keyword">this</span>.type = type
-  }
-
-  <span class="hljs-comment">// method</span>
-  sayName() {
-   <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span>  <span class="hljs-subst">${this.lastname}</span>`</span>
-  }
-
-  <span class="hljs-comment">// getter</span>
-  get role() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type
-  }
-
-  <span class="hljs-comment">// setter</span>
-  set role(value) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type = value
-  }
-}
-
-<span class="hljs-comment">// the `new` is mandatory to instanciate a class</span>
-<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>, <span class="hljs-string">"Contributor"</span>)
-
-<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span>
-<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Contributor</span>
-user.role = <span class="hljs-string">"owner"</span>
-<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Owner</span></code></pre>
-<h2 id="inheritance"><a class="markdownIt-Anchor" href="#inheritance">#</a> Inheritance</h2>
-<p>In order to have a class that inherite from another, we have the <code>extends</code>
-keyword.</p>
-<p>Here is the an example :</p>
-<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">User</span> </span>{
-  constructor(firstname, lastname, numberCommit) {
-
-    <span class="hljs-comment">// keyword `super` is used to call the constructor of the parent class</span>
-    <span class="hljs-keyword">super</span>(firstname, lastname)
-    <span class="hljs-keyword">this</span>.numberCommit = numberCommit
-  }
-
-  sayNameWithCommit() {
-    <span class="hljs-comment">// we can can also use `super` to call a method of the parent class</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.sayName() + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.sayNumberCommit()
-  }
-
-  sayNumberCommit() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numberCommit
-  }
-}
-
-<span class="hljs-keyword">const</span> contributor = <span class="hljs-keyword">new</span> Contributor(<span class="hljs-string">'Jane'</span>, <span class="hljs-string">'Smith'</span>, <span class="hljs-number">10</span>)
-
-<span class="hljs-built_in">console</span>.log(contributor.sayName())
-<span class="hljs-built_in">console</span>.log(contributor.sayNumberCommit())</code></pre>
-<p><strong>Reminder: <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">prefer inheritance to composition</a>.</strong></p>
-<h2 id="that-s-it"><a class="markdownIt-Anchor" href="#that-s-it">#</a> That’s it</h2>
-<p>As you saw, all what you can do know was already possible
-<a href="https://gist.github.com/bloodyowl/7edc9c973d2236ed17e1">before</a>.</p>
-<p>We just have a more readable code that should be more easily maintainable.</p>
-<p>For now, you will need to use a transpiler like <a href="https://babeljs.io/">babel</a>
-to be able to use classes.</p>
-<p>One last thing: when you are in a class context,
-<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>
-is enabled automatically.</p>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/promises/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/promises/</guid><pubDate>Sun, 06 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : les classes]]></title><description><![CDATA[<p>Les classes introduites par <code>ES2015</code> ne sont clairement que du sucre syntaxique.
 Elles n’apportent rien de plus en terme de fonctionnalité. Toutefois, l’objectif
 de cette évolution est de rendre le code plus lisible et plus facilement
 accessible.</p>
@@ -2269,161 +2423,116 @@ l’était bien entendu
 <p>Une dernière petite chose, en utilisant les classes on active automatiquement le
 <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">mode strict</a>,
 il n’est donc pas nécessaire de le rajouter manuellement.</p>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>You probably know underscore or lodash <code>extend</code> method (at leat lodash right)?
-Like most of these utilities functions, those are deprecated by an ES6 (ES2015)
-feature.</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>The new static method <code>Object.assign</code> take a bunch of objects as arguments :</p>
-<ul>
-<li>The first is a target for copies;</li>
-<li>Next are sources;</li>
-<li>All <em>own properties</em> (enumerable keys and non inherited, even those which are
-<code>undefined</code>) will be copied  in the target (so last ones take precedences);</li>
-<li><strong>The target object is modified</strong> (it must be mutable);</li>
-<li>The modified target object is returned.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// unmodified</span>
-o2 <span class="hljs-comment">// unmodified</span></code></pre>
-<h2 id="becareful-to-mutability"><a class="markdownIt-Anchor" href="#becareful-to-mutability">#</a> Becareful to mutability</h2>
-<p>Be warned that the target is always modified.
-Since the most frequent use-case is the creation of a new object that will be
-generated from others sources, most of the time we will pass an new empty object
-as the first parameter.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 and o2 are unmodified</span></code></pre>
-<h2 id="specific-use-cases"><a class="markdownIt-Anchor" href="#specific-use-cases">#</a> Specific use-cases</h2>
-<h3 id="error-during-the-copy"><a class="markdownIt-Anchor" href="#error-during-the-copy">#</a> Error during the copy</h3>
-<p>If a property in the target is read-only, <code>Object.assign</code> should behave like
-in strict mode (unlike the <em>wtf</em> mode) and throw an error before stoping the
-copy.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
+]]></description><link>http://putaindecode.io/fr/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Classes]]></title><description><![CDATA[<p>Classes introduced by ES2015 are just some syntax sugar.
+They don’t really bring anything.
+That said, this can helps to improve code readability and make the code more
+accessible.</p>
+<h2 id="class-declaration"><a class="markdownIt-Anchor" href="#class-declaration">#</a> Class declaration</h2>
+<p>Forget functions and prototypes, semantic is taking the relay as you will see in
+the following example :</p>
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname) {
+    <span class="hljs-keyword">this</span>.firstname = firstname;
+    <span class="hljs-keyword">this</span>.lastname = lastname;
+  }
 
-<span class="hljs-comment">// "standard" (wtf) mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// no error</span>
-o.val <span class="hljs-comment">// 42 (unmodified value)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+  sayName() {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span> <span class="hljs-subst">${this.lastname}</span>`</span>
+  }
+}
 
-<span class="hljs-comment">// "strict" mode:</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Keys that have already been copied before the throwing of the exception will
-be kept in the target object, that’s why in our example <code>x</code> have been copied
-but not <code>y</code>.</p>
-<p>Note: this is theory, but practise show us that this behavior is variable,
-depending of the platform and the context, the error might not always be thrown.
-To get a predictable behavior, you should work in <em>strict</em> mode.</p>
-<h3 id="scalar-sources"><a class="markdownIt-Anchor" href="#scalar-sources">#</a> Scalar sources</h3>
-<p>When sources are scalar values (number, boolean, etc) <code>Object.keys</code> will not
-return any keys and values will be ignored.
-<code>null</code> and <code>undefined</code> will also be ignored.</p>
-<p>Particular case: strings are treated as array.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined are ignored</span>
-<span class="hljs-comment">// "toto" is converted to {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] is converted to {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>We can forget <code>_.clone</code>, <code>_.extend</code> and friends with this method!</p>
-<p>About compatiblity, <code>Object.assign</code> is pretty well supported by all modern
-browsers (IE is not considered as modern until 12) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>If you need to support old browsers, you will need <a href="http://babeljs.io">Babel</a>
-or one of many users implementations.</li>
-</ul>
-]]></description><link>http://putaindecode.io/en/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[ES6, ES2015 : Object.assign]]></title><description><![CDATA[<p>Vous connaissez les méthodes <code>extend</code> d’underscore ou lodash (mais plutôt
-lodash quand même) ? Comme la plupart de ces fonctions utilitaires, elles sont
-rendues obsolètes par une fonctionnalité d’ES6 (aka ES2015).</p>
-<h1 id="object-assign"><a class="markdownIt-Anchor" href="#object-assign">#</a> Object.assign</h1>
-<p>La nouvelle méthode statique <code>Object.assign</code> prend en paramètres une série
-d’objets :</p>
-<ul>
-<li>le premier objet est la “cible” des copies ;</li>
-<li>les suivants sont les sources ;</li>
-<li>toutes les clés propres (<em>own properties</em>, soit les clés énumérables et non
-héritées, même celles dont la valeur est <code>undefined</code>) des sources sont
-copiées vers la cible (les suivantes écrasant les précédentes) ;</li>
-<li><strong>l’objet cible est donc modifié</strong> (il doit être mutable) ;</li>
-<li>puis on retourne l’objet cible.</li>
-</ul>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = { y: <span class="hljs-number">0</span> }
-<span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o2 = { x: <span class="hljs-literal">undefined</span>, z: <span class="hljs-number">3</span> }
-<span class="hljs-built_in">Object</span>.assign(o, o1, o2) <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o <span class="hljs-comment">// { x: undefined, y: 2, z: 3 }</span>
-o1 <span class="hljs-comment">// non modifié</span>
-o2 <span class="hljs-comment">// non modifié</span></code></pre>
-<h2 id="attention-la-mutabilit"><a class="markdownIt-Anchor" href="#attention-la-mutabilit">#</a> Attention à la mutabilité</h2>
-<p>Prenez garde au fait que la source est systématiquement modifiée. Le <em>use-case</em>
-général étant plutôt la création d’un nouvel objet résultant de la fusion des
-sources, on passera habituellement un nouvel objet en premier paramètre.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o1 = { x: <span class="hljs-number">1</span> }
-<span class="hljs-keyword">const</span> o2 = { y: <span class="hljs-number">2</span> }
-<span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.assign({}, o1, o2)
-o <span class="hljs-comment">// { x: 1, y: 2 }</span>
-<span class="hljs-comment">// o1 et o2 n'ont pas été modifiés</span></code></pre>
-<h2 id="cas-particuliers"><a class="markdownIt-Anchor" href="#cas-particuliers">#</a> Cas particuliers</h2>
-<h3 id="erreurs-lors-de-la-copie"><a class="markdownIt-Anchor" href="#erreurs-lors-de-la-copie">#</a> Erreurs lors de la copie</h3>
-<p>Si une propriété de la cible est en lecture seule, <code>Object.assign</code> devrait se
-comporter comme en mode <em>strict</em> (par opposition au mode <em>WTF</em>), et lever
-l’erreur correspondante avant d’interrompre la copie.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = <span class="hljs-built_in">Object</span>.create({}, {
-  val: { value: <span class="hljs-number">42</span>, enumerable: <span class="hljs-literal">true</span>, writable: <span class="hljs-literal">false</span> }
-})
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
 
-<span class="hljs-comment">// En mode "standard":</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// pas d'erreur</span>
-o.val <span class="hljs-comment">// 42 (valeur non modifiée)</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span>
+<span class="hljs-comment">// call of the method sayName()</span>
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
+<p>As a reminder, here is one
+<a href="https://gist.github.com/magsout/a876b2fa8240a987e523">way to code</a>
+this class in <code>es5</code> :</p>
+<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">User</span>(<span class="hljs-params">firstname, lastname</span>) </span>{
+  <span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> User)) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">"Class constructors cannot be invoked without 'new'"</span>)
+  }
+  <span class="hljs-keyword">this</span>.firstname = firstname
+  <span class="hljs-keyword">this</span>.lastname = lastname
+}
 
-<span class="hljs-comment">// En mode "strict":</span>
-o.val = <span class="hljs-number">0</span> <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-<span class="hljs-built_in">Object</span>.assign(o, { x: <span class="hljs-number">1</span>, val: <span class="hljs-number">0</span>, y: <span class="hljs-number">2</span> }) <span class="hljs-comment">// Uncaught TypeError: Cannot assign…</span>
-o <span class="hljs-comment">// { val: 42, x: 1 }</span></code></pre>
-<p>Les clés déjà copiées avant la levée d’erreur sont conservées dans la cible,
-ainsi dans notre exemple <code>x</code> a été copiée mais pas <code>y</code>.</p>
-<p>Note : ça c’est la théorie, lors de mes tests ce comportement a été le plus
-variable, en fonction de la plate-forme et du contexte, l’erreur n’est pas
-toujours levée. Le mieux est de travailler en mode <em>strict</em> pour s’assurer d’un
-comportement prédictible.</p>
-<h3 id="sources-scalaires"><a class="markdownIt-Anchor" href="#sources-scalaires">#</a> Sources scalaires</h3>
-<p>Lorsque les sources sont des valeurs scalaires (nombre, booléen, etc.)
-<code>Object.keys</code> ne listera généralement aucune clé et ces valeurs seront donc
-ignorées. Les valeurs <code>null</code> et <code>undefined</code> également.</p>
-<p>Cas particulier : les chaînes de caractères sont traitées comme des tableaux.</p>
-<pre><code class="language-js"><span class="hljs-keyword">const</span> o = {}
-<span class="hljs-built_in">Object</span>.assign(o, <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"toto"</span>, [<span class="hljs-string">"b"</span>, <span class="hljs-string">"a"</span>], <span class="hljs-literal">undefined</span>)
-<span class="hljs-comment">// 1, true, null, undefined sont ignorées</span>
-<span class="hljs-comment">// "toto" est converti en {0: "t", 1: "o", 2: "t", 3: "o"}</span>
-<span class="hljs-comment">// ["b", "a"] est converti en {0: "b", 1: "a"}</span>
-o <span class="hljs-comment">// {0: "b", 1: "a", 2: "t", 3: "o"}</span></code></pre>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion">#</a> Conclusion</h2>
-<p>Plus besoin de <code>_.clone</code>, <code>_.extend</code>, etc. avec cette méthode :)</p>
-<p>Pour finir, le topo compatibilité : <code>Object.assign</code> est plutôt bien supportée
-par les navigateurs modernes (donc pas IE) :</p>
-<ul>
-<li>Edge (IE ≥ 12) ;</li>
-<li>Chrome stable (46) ;</li>
-<li>Firefox stable (42) ;</li>
-<li>Node ≥ 4 ;</li>
-<li>et si vous devez supporter IE, il y a bien sûr <a href="http://babeljs.io/">Babel</a>
-ou les nombreuses implémentations utilisateur.</li>
-</ul>
-]]></description><link>http://putaindecode.io/fr/articles/js/es2015/object-assign/</link><guid isPermaLink="true">http://putaindecode.io/fr/articles/js/es2015/object-assign/</guid><pubDate>Fri, 04 Dec 2015 00:00:00 GMT</pubDate></item></channel></rss>
+User.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstname + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.lastname
+}
+
+<span class="hljs-comment">// instanciation</span>
+<span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>)
+
+<span class="hljs-comment">// call of the method sayName()</span>
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span></code></pre>
+<h2 id="classes-expressions"><a class="markdownIt-Anchor" href="#classes-expressions">#</a> Classes expressions</h2>
+<p>All methods should be written as simple function inside the class.
+You might denote the nice way to write getter and setter :</p>
+<pre><code class="language-JS"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname, type) {
+    <span class="hljs-keyword">this</span>.firstname = firstname
+    <span class="hljs-keyword">this</span>.lastname = lastname
+    <span class="hljs-keyword">this</span>.type = type
+  }
+
+  <span class="hljs-comment">// method</span>
+  sayName() {
+   <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${this.firstname}</span>  <span class="hljs-subst">${this.lastname}</span>`</span>
+  }
+
+  <span class="hljs-comment">// getter</span>
+  get role() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type
+  }
+
+  <span class="hljs-comment">// setter</span>
+  set role(value) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type = value
+  }
+}
+
+<span class="hljs-comment">// the `new` is mandatory to instanciate a class</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"John"</span>, <span class="hljs-string">"Doe"</span>, <span class="hljs-string">"Contributor"</span>)
+
+<span class="hljs-built_in">console</span>.log(user.sayName()) <span class="hljs-comment">// John Doe</span>
+<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Contributor</span>
+user.role = <span class="hljs-string">"owner"</span>
+<span class="hljs-built_in">console</span>.log(user.role) <span class="hljs-comment">// Owner</span></code></pre>
+<h2 id="inheritance"><a class="markdownIt-Anchor" href="#inheritance">#</a> Inheritance</h2>
+<p>In order to have a class that inherite from another, we have the <code>extends</code>
+keyword.</p>
+<p>Here is the an example :</p>
+<pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contributor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">User</span> </span>{
+  constructor(firstname, lastname, numberCommit) {
+
+    <span class="hljs-comment">// keyword `super` is used to call the constructor of the parent class</span>
+    <span class="hljs-keyword">super</span>(firstname, lastname)
+    <span class="hljs-keyword">this</span>.numberCommit = numberCommit
+  }
+
+  sayNameWithCommit() {
+    <span class="hljs-comment">// we can can also use `super` to call a method of the parent class</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.sayName() + <span class="hljs-string">" "</span> + <span class="hljs-keyword">this</span>.sayNumberCommit()
+  }
+
+  sayNumberCommit() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numberCommit
+  }
+}
+
+<span class="hljs-keyword">const</span> contributor = <span class="hljs-keyword">new</span> Contributor(<span class="hljs-string">'Jane'</span>, <span class="hljs-string">'Smith'</span>, <span class="hljs-number">10</span>)
+
+<span class="hljs-built_in">console</span>.log(contributor.sayName())
+<span class="hljs-built_in">console</span>.log(contributor.sayNumberCommit())</code></pre>
+<p><strong>Reminder: <a href="https://www.youtube.com/watch?v=wfMtDGfHWpA">prefer inheritance to composition</a>.</strong></p>
+<h2 id="that-s-it"><a class="markdownIt-Anchor" href="#that-s-it">#</a> That’s it</h2>
+<p>As you saw, all what you can do know was already possible
+<a href="https://gist.github.com/bloodyowl/7edc9c973d2236ed17e1">before</a>.</p>
+<p>We just have a more readable code that should be more easily maintainable.</p>
+<p>For now, you will need to use a transpiler like <a href="https://babeljs.io/">babel</a>
+to be able to use classes.</p>
+<p>One last thing: when you are in a class context,
+<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>
+is enabled automatically.</p>
+]]></description><link>http://putaindecode.io/en/articles/js/es2015/classes/</link><guid isPermaLink="true">http://putaindecode.io/en/articles/js/es2015/classes/</guid><pubDate>Sat, 05 Dec 2015 00:00:00 GMT</pubDate></item></channel></rss>
